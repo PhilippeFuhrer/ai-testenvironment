@@ -1,7 +1,13 @@
+import ChatBot from "@/components/chatBot/page";
+
+
 export default function Home() {
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      Hello World
+    <main className="">
+      <div>
+        <ChatBot></ChatBot>
+      </div>
     </main>
   );
 }
