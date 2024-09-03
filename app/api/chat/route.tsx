@@ -1,8 +1,14 @@
+import { NextResponse } from 'next/server';
+import handleMessage from '@/chatBot';
 
-import { NextRequest, NextResponse } from "next/server";
-
-export async function POST(request: NextRequest) {
-    const body = await request.json();
-    console.log(body);
-    return NextResponse.json(body, {status:201});
+export async function POST(request: { json: () => any; }) {
+  const body = await request.json();
+  console.log(body);
+  var content = "";
+  body.messages.forEach((message: { content: any; }) => {
+    content = message.content;
+  });
+  console.log(content);
+  const aiResponse = await handleMessage(content);
+  return NextResponse.json({ response: aiResponse }, { status: 200 });
 }
