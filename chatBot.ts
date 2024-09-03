@@ -1,3 +1,5 @@
+import { Content } from "next/font/google";
+
 const OpenAI = require("openai");
 require("dotenv").config();
 
@@ -10,11 +12,9 @@ export default async function handleMessage(input: any) {
       role: "system",
       content: "You are a helpful support agent for issues related to Abacus Business Software.",
     },
-    {
-      role: "user",
-      content: input,
-    },
   ];
+
+  messages.push({role: "user", content: input})
 
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
@@ -22,6 +22,9 @@ export default async function handleMessage(input: any) {
   });
 
   const response = completion.choices[0].message.content;
-  console.log(response);
+  
+  messages.push(({role: "system", content: response}))
+  console.log(messages);
+
   return response;
 }
