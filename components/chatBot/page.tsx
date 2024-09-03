@@ -53,7 +53,7 @@ const ChatBot = () => {
 
       <form onSubmit={handleSubmit}>
         <input
-          className="w-full max-w-md p-2 mb-8 border border-gray-300 rounded shadow-xl text-2xl"
+          className="w-full max-w-md p-2 mb-8 border border-gray-300 rounded shadow-xl text-2xl text-black"
           value={input}
           placeholder="Hi, hier ist Arcon GPT, wie kann ich dir helfen?"
           onChange={handleInputChange}
