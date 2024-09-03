@@ -1,17 +1,46 @@
 "use client";
-import React from "react";
-import { useChat } from "ai/react";
+import React, { useState } from "react";
 
-const chatBot = () => {
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
-    api: "/api/chat",
-  });
+type Message = {
+  role: string;
+  content: string;
+};
+
+
+const ChatBot = () => {
+  const [messages, setMessages] = useState<Message[]>([])
+  const [input, setInput] = useState("");
+
+  const handleInputChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+    setInput(e.target.value);
+  };
+
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    const newMessage = { role: "user", content: input };
+    setMessages([...messages, newMessage]);
+
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ messages: [...messages, newMessage] }),
+    });
+
+    const data = await response.json();
+    const aiMessage = { role: "assistant", content: data.response };
+
+    setMessages([...messages, newMessage, aiMessage]);
+    setInput("");
+  };
 
   return (
     <div className="flex flex-col w-full max-w-md py-24 mx-auto">
-      {messages.map((message) => (
+      {messages.map((message, index) => (
         <div
-          key={message.id}
+          key={index}
           className="whitespace-pre-wrap"
           style={{ color: message.role === "user" ? "black" : "green" }}
         >
@@ -34,4 +63,5 @@ const chatBot = () => {
   );
 };
 
-export default chatBot;
+export default ChatBot;
+
