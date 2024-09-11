@@ -37,7 +37,7 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="flex flex-col w-full max-w-md py-24 mx-auto">
+    <div className="flex flex-col w-full max-w-md mx-auto">
       {messages.map((message, index) => (
         <div
           key={index}
@@ -53,7 +53,7 @@ const ChatBot = () => {
 
       <form onSubmit={handleSubmit}>
         <input
-          className="w-full max-w-md p-2 mb-8 border border-gray-300 rounded shadow-xl text-2xl text-black"
+          className="w-72 max-w-xl p-2 mb-8 border border-gray-300 rounded shadow-xl text-2xl bg-white text-white appearance-none"
           value={input}
           placeholder="Hi, hier ist Arcon GPT, wie kann ich dir helfen?"
           onChange={handleInputChange}

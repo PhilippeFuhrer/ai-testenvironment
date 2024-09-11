@@ -1,4 +1,5 @@
-import ChatBot from "@/components/chatBot/page";
+import ChatBot from "@/chatBot/page";
+import NavBar from "@/components/navBar";
 
 
 export default function Home() {
@@ -6,7 +7,10 @@ export default function Home() {
   return (
     <main className="">
       <div>
+        <NavBar></NavBar>
+        <div className="bg-arcon-green flex justify-center py-24 h-screen">
         <ChatBot></ChatBot>
+        </div>
       </div>
     </main>
   );
