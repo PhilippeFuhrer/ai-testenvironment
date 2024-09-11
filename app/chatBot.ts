@@ -1,5 +1,3 @@
-import { Content } from "next/font/google";
-
 const OpenAI = require("openai");
 require("dotenv").config();
 
