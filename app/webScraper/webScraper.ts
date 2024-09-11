@@ -1,5 +1,5 @@
-import axios from 'axios';
-import * as cheerio from 'cheerio';
+const axios = require('axios');
+const cheerio = require('cheerio');
 require("dotenv").config();
 
 // Function to log in and get cookies
@@ -33,7 +33,7 @@ async function scrapeData(url: string, cookies: string[]) {
 
         // Example: Extracting all text within paragraph tags
         const scrapedData: string[] = [];
-        $('p').each((index, element) => {
+        $('p').each((_index: any, element: any) => {
             scrapedData.push($(element).text());
         });
 
@@ -49,7 +49,7 @@ async function main() {
     const loginUrl = 'https://arcon.drupal-wiki.net/login';
     const scrapeUrl = 'https://arcon.drupal-wiki.net/';
     const username = 'philippe.fuhrer@arcon.ch';
-    const password = 'drupal_wiki_pw';
+    const password = String(process.env.drupal_wiki_pw);
 
     const cookies = await login(loginUrl, username, password);
     if (!cookies) {
