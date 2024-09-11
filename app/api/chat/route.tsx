@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import handleMessage from "@/app/chatBot";
+import handleMessage from "@/chatBot/chatBot";
 
 export async function POST(request: { json: () => any; }) {
   const body = await request.json();
