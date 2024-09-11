@@ -6,16 +6,17 @@ type Message = {
   content: string;
 };
 
-
 const ChatBot = () => {
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
 
-  const handleInputChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const handleInputChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setInput(e.target.value);
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     const newMessage = { role: "user", content: input };
@@ -37,31 +38,25 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="flex flex-col w-full max-w-md mx-auto">
+    <div className="flex-row w-full max-w-4xl mx-auto">
+      <form onSubmit={handleSubmit} className="mb-8">
+        <input
+          className="w-full min-w-96 p-2 border border-gray-300 rounded shadow-xl text-2xl bg-white"
+          value={input}
+          placeholder="Hi, hier ist Arcon GPT, wie kann ich dir helfen?"
+          onChange={handleInputChange}
+        />
+      </form>
       {messages.map((message, index) => (
-        <div
-          key={index}
-          className="whitespace-pre-wrap"
-          style={{ color: message.role === "user" ? "black" : "green" }}
-        >
+        <div key={index} className="whitespace-pre-wrap text-white text-xl">
           <strong>{`${message.role}: `}</strong>
           {message.content}
           <br />
           <br />
         </div>
       ))}
-
-      <form onSubmit={handleSubmit}>
-        <input
-          className="w-72 max-w-xl p-2 mb-8 border border-gray-300 rounded shadow-xl text-2xl bg-white text-white appearance-none"
-          value={input}
-          placeholder="Hi, hier ist Arcon GPT, wie kann ich dir helfen?"
-          onChange={handleInputChange}
-        />
-      </form>
     </div>
   );
 };
 
 export default ChatBot;
-
