@@ -39,12 +39,12 @@ const ChatBot = () => {
 
   return (
     <div className="flex-row w-full max-w-4xl mx-auto">
-      <h1 className='text-3xl text-white mb-6'>Arcon GPT</h1>
+      <h1 className='text-4xl text-white mb-6'>Arcon GPT</h1>
       <h2 className='text-xl text-white mb-6'>Platziere deine Abacus oder ICT Anfrage und lasse dir vom Arcon GPT helfen.</h2>
       <div className="flex-col w-full">
         <form onSubmit={handleSubmit} className="mb-12">
           <textarea
-            className="w-full h-36 p-3 border border-gray-300 rounded shadow-xl text-xl bg-white mb-4"
+            className="w-full h-36 p-3 border-2 border-gray-300 hover:border-arcon-light-green focus:border-arcon-light-green rounded shadow-xl text-xl bg-white mb-4"
             value={input}
             placeholder="Hi, hier ist Arcon GPT, wie kann ich dir helfen?"
             onChange={handleInputChange}
@@ -58,7 +58,7 @@ const ChatBot = () => {
         </form>
       </div>
       {messages.map((message, index) => (
-        <div key={index} className="whitespace-pre-wrap text-white text-xl">
+        <div key={index} className="whitespace-pre-wrap text-white text-xl bg-arcon-green">
           <strong>{`${message.role}: `}</strong>
           {message.content}
           <br />
