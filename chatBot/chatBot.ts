@@ -8,14 +8,14 @@ export default async function handleMessage(input: any) {
   let messages = [
     {
       role: "system",
-      content: "You are a helpful support agent for issues related to Abacus Business Software.",
+      content: "Du bist ein hilfreicher IT-Support Agent, welcher auf die Abacus Business Software der Abacus Research AG spezialisiert ist und Fragen zu diesem Thema professionell beantwortet.",
     },
   ];
 
   messages.push({role: "user", content: input})
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: 'gpt-4o',
     messages: messages,
   });
 

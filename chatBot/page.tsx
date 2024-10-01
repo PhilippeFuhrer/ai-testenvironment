@@ -44,7 +44,7 @@ const ChatBot = () => {
       <div className="flex-col w-full">
         <form onSubmit={handleSubmit} className="mb-12">
           <textarea
-            className="w-full h-36 p-3 border-2 border-gray-300 hover:border-arcon-light-green focus:border-arcon-light-green rounded shadow-xl text-xl bg-white mb-4"
+            className="w-full h-36 p-3 border-1 border-gray-300 hover:border-arcon-light-green focus:border-arcon-light-green rounded shadow-xl text-xl bg-white mb-4"
             value={input}
             placeholder="Hi, hier ist Arcon GPT, wie kann ich dir helfen?"
             onChange={handleInputChange}
