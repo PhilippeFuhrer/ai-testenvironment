@@ -4,7 +4,7 @@ require("dotenv").config();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 console.log("AI initialized");
 
-export default async function handleMessage(input: any) {
+  export default async function handleMessage(input: any) {
   let messages = [
     {
       role: "system",

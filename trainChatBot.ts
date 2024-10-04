@@ -38,9 +38,9 @@ async function createFineTunedModel() {
 }
 
 
-async function main() {
+async function main2() {
   await uploadTrainingData();
   await createFineTunedModel();
 }
 
-main();
+main2()
