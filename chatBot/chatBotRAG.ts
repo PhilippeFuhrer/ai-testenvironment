@@ -1,9 +1,9 @@
 import { OpenAI } from "openai";
 import { config } from "dotenv";
-import { CharacterTextSplitter } from "langchain/text_splitter";
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
-import { RetrievalQAChain } from "langchain/chains";
+import { RetrievalQAChain, loadQAStuffChain } from "langchain/chains";
 import { ChatOpenAI } from "@langchain/openai";
 import * as fs from 'fs';
 
@@ -18,7 +18,10 @@ console.log("AI initialized");
 // Function to initialize the vector store
 async function initializeVectorStore() {
   const text = fs.readFileSync('trainingData/drupal-combined-text-only.txt', 'utf8');
-  const textSplitter = new CharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 0 });
+  const textSplitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 1000,
+    chunkOverlap: 200,
+  });
   const docs = await textSplitter.createDocuments([text]);
   
   const embeddings = new OpenAIEmbeddings();
@@ -33,8 +36,17 @@ let chain: RetrievalQAChain;
 
 async function initializeChain() {
   vectorStore = await initializeVectorStore();
-  const model = new ChatOpenAI({ modelName: 'gpt-4' });
-  chain = RetrievalQAChain.fromLLM(model, vectorStore.asRetriever());
+  const model = new ChatOpenAI({ 
+    modelName: 'gpt-4',
+    temperature: 0,
+    maxTokens: 500 // Limit the response length
+  });
+  
+  const qaChain = loadQAStuffChain(model);
+  chain = new RetrievalQAChain({
+    combineDocumentsChain: qaChain,
+    retriever: vectorStore.asRetriever(3), // Limit to top 3 relevant chunks
+  });
 }
 
 // Call this function when your app starts
