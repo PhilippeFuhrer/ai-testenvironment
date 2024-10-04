@@ -3,7 +3,7 @@ import { config } from "dotenv";
 import { CharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
-import { VectorDBQAChain } from "langchain/chains";
+import { RetrievalQAChain } from "langchain/chains";
 import { ChatOpenAI } from "@langchain/openai";
 import * as fs from 'fs';
 
@@ -17,7 +17,7 @@ console.log("AI initialized");
 
 // Function to initialize the vector store
 async function initializeVectorStore() {
-  const text = fs.readFileSync('database.txt', 'utf8');
+  const text = fs.readFileSync('trainingData/drupal-combined-text-only.txt', 'utf8');
   const textSplitter = new CharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 0 });
   const docs = await textSplitter.createDocuments([text]);
   
@@ -29,12 +29,12 @@ async function initializeVectorStore() {
 let vectorStore: MemoryVectorStore;
 
 // Create the chain
-let chain: VectorDBQAChain;
+let chain: RetrievalQAChain;
 
 async function initializeChain() {
   vectorStore = await initializeVectorStore();
   const model = new ChatOpenAI({ modelName: 'gpt-4' });
-  chain = VectorDBQAChain.fromLLM(model, vectorStore);
+  chain = RetrievalQAChain.fromLLM(model, vectorStore.asRetriever());
 }
 
 // Call this function when your app starts
@@ -50,7 +50,7 @@ export default async function handleMessage(input: string) {
   // Use the chain to get a response
   const result = await chain.call({
     query: input,
-    chat_history: [{ role: "system", content: systemMessage }],
+    chatHistory: [{ role: "system", content: systemMessage }],
   });
 
   console.log("Query:", input);
