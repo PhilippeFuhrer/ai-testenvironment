@@ -73,7 +73,7 @@ async function initializeChain() {
   // Create the QA chain with model, retriever, and prompt
   chain = RetrievalQAChain.fromLLM(
     model,
-    vectorStore.asRetriever(3), // retrieving 3 most relevant documents
+    vectorStore.asRetriever(5), // retrieving 3 most relevant documents
     {
       prompt,
       returnSourceDocuments: true,
@@ -101,7 +101,7 @@ export default async function handleMessage(input: string) {
     console.log("---");
   });
 
-  console.log("Response:", result.text);
+  console.log("Response from result.text:", result.text);
 
   return result.text;
 }
