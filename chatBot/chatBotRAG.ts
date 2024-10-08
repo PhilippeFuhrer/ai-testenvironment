@@ -10,6 +10,7 @@ import * as fs from 'fs';
 
 config();
 
+// Initialize OpenAI with API key
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -18,40 +19,46 @@ console.log("AI initialized");
 
 // Function to initialize the vector store
 async function initializeVectorStore() {
-  const text = fs.readFileSync('trainingData/drupal-combined-text-only-better-format.txt', 'utf8');
+  // Ensure correct files are being read
+  const drupalWiki = fs.readFileSync('trainingData/drupal-combined-text-only-better-format.txt', 'utf8');
+  const j_hr_pdfs = fs.readFileSync('trainingData/Export-J-patches-und-support-HR-cleaned.txt', 'utf8');
+  const combined = drupalWiki + '\n' + j_hr_pdfs;
+
+  // Split text into chunks for embedding
   const textSplitter = new RecursiveCharacterTextSplitter({
     chunkSize: 1000,
     chunkOverlap: 200,
   });
-  const docs = await textSplitter.createDocuments([text]);
-  
+  const docs = await textSplitter.createDocuments([combined]);
+
+  console.log(`Number of chunks created: ${docs.length}`);
+
+  // Create embeddings and vector store
   const embeddings = new OpenAIEmbeddings();
   return await MemoryVectorStore.fromDocuments(docs, embeddings);
 }
 
-// Initialize the vector store
+// Initialize vector store and chain
 let vectorStore: MemoryVectorStore;
-
-// Create the chain
 let chain: RetrievalQAChain;
 
 async function initializeChain() {
   vectorStore = await initializeVectorStore();
-  const model = new ChatOpenAI({ 
+  const model = new ChatOpenAI({
     modelName: 'gpt-4',
     temperature: 0.7,
-    maxTokens: 500
+    maxTokens: 500,
   });
-  
+
+  // Define the prompt template
   const prompt = PromptTemplate.fromTemplate(`
     You are an expert IT Support Agent specializing in Abacus Business Software by Abacus Research AG. Your role is to provide accurate, helpful, and professional responses to questions about this software. Use the following guidelines:
-
     1. Context: {context}
     2. Question: {question}
 
     Instructions:
     - Always base your answers on the provided context and your knowledge about Abacus software.
-    - Respond in the german language.
+    - Respond in the German language.
     - If the context doesn't contain relevant information, use your general knowledge about Abacus software, but clearly state when you're doing so.
     - Provide step-by-step instructions when explaining processes.
     - Use technical terms related to Abacus software, but explain them if they're complex.
@@ -63,6 +70,7 @@ async function initializeChain() {
     Response:
   `);
 
+  // Create the QA chain with model, retriever, and prompt
   chain = RetrievalQAChain.fromLLM(
     model,
     vectorStore.asRetriever(3),
@@ -73,20 +81,26 @@ async function initializeChain() {
   );
 }
 
-// Call this function when your app starts
-initializeChain();
-
+// Function to handle incoming messages
 export default async function handleMessage(input: string) {
   if (!chain) {
     await initializeChain();
   }
+
+  console.log("Query:", input);
 
   // Use the chain to get a response
   const result = await chain.call({
     query: input,
   });
 
-  console.log("Query:", input);
+  console.log("Retrieved Documents:");
+  result.sourceDocuments.forEach((doc: { pageContent: any; }, index: number) => {
+    console.log(`Document ${index + 1}:`);
+    console.log(doc.pageContent);
+    console.log("---");
+  });
+
   console.log("Response:", result.text);
 
   return result.text;
