@@ -17,6 +17,7 @@ const config: Config = {
       colors: {
         "arcon-green": "#004132",
         "arcon-light-green": "#1BCB80",
+        "arcon-light-grey": "#f4f6f7",
       },
       fontFamily: {
         sans: ["Karelia-Medium", "sans-serif"],

@@ -40,6 +40,14 @@ const ChatBot = () => {
     setInput("");
   };
 
+  //function to start a new conversation
+
+  const newConversation = () => {
+    setLoading(false);
+    setMessages([]);
+    setInput("");
+  };
+
   return (
     <div className="flex-row w-full max-w-4xl mx-auto">
       <h1 className="text-4xl text-white mb-6">Arcon GPT</h1>
@@ -55,9 +63,10 @@ const ChatBot = () => {
             placeholder="Hi, hier ist Arcon GPT, wie kann ich dir helfen?"
             onChange={handleInputChange}
           />
+          <div className="space-x-4">
           <button
             type="submit"
-            className="btn bg-arcon-light-green border-none text-slate-50 max-w-40 text-md"
+            className="btn bg-arcon-light-green border-none text-slate-50 max-w-40 text-md "
           >
             {loading ? (
               <span className="loading loading-spinner"></span>
@@ -65,6 +74,14 @@ const ChatBot = () => {
               "Los geht's!"
             )}
           </button>
+          <button
+            className="btn border-2 border-arcon-light-green bg-transparent text-slate-50 max-w-60 text-md h-2"
+            type="button"
+            onClick={newConversation}
+          >
+            Neues Thema
+          </button>
+          </div>
         </form>
       </div>
       {messages.map((message, index) => (

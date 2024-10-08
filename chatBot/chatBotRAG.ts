@@ -51,6 +51,7 @@ async function initializeChain() {
 
     Instructions:
     - Always base your answers on the provided context and your knowledge about Abacus software.
+    - Respond in the german language.
     - If the context doesn't contain relevant information, use your general knowledge about Abacus software, but clearly state when you're doing so.
     - Provide step-by-step instructions when explaining processes.
     - Use technical terms related to Abacus software, but explain them if they're complex.
