@@ -75,7 +75,7 @@ const ChatBot = () => {
             )}
           </button>
           <button
-            className="btn border-2 border-arcon-light-green bg-transparent text-slate-50 max-w-60 text-md h-2"
+            className="btn border-2 border-arcon-light-green bg-transparent text-slate-50 max-w-60 text-md h-2 absolute ml-4"
             type="button"
             onClick={newConversation}
           >
