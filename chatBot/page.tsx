@@ -9,6 +9,7 @@ type Message = {
 const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -18,6 +19,7 @@ const ChatBot = () => {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    setLoading(true);
 
     const newMessage = { role: "User", content: input };
     setMessages([...messages, newMessage]);
@@ -34,13 +36,17 @@ const ChatBot = () => {
     const aiMessage = { role: "Arcon GPT", content: data.response };
 
     setMessages([...messages, newMessage, aiMessage]);
+    setLoading(false);
     setInput("");
   };
 
   return (
     <div className="flex-row w-full max-w-4xl mx-auto">
-      <h1 className='text-4xl text-white mb-6'>Arcon GPT</h1>
-      <h2 className='text-xl text-white mb-6'>Platziere deine Abacus oder ICT Anfrage und lasse dir vom Arcon GPT helfen.</h2>
+      <h1 className="text-4xl text-white mb-6">Arcon GPT</h1>
+      <h2 className="text-xl text-white mb-6">
+        Platziere deine Abacus oder ICT Anfrage und lasse dir vom Arcon GPT
+        helfen.
+      </h2>
       <div className="flex-col w-full">
         <form onSubmit={handleSubmit} className="mb-12">
           <textarea
@@ -53,12 +59,19 @@ const ChatBot = () => {
             type="submit"
             className="btn bg-arcon-light-green border-none text-slate-50 max-w-40 text-md"
           >
-            Los geht's!
+            {loading ? (
+              <span className="loading loading-spinner"></span>
+            ) : (
+              "Los geht's!"
+            )}
           </button>
         </form>
       </div>
       {messages.map((message, index) => (
-        <div key={index} className="whitespace-pre-wrap text-white text-xl bg-arcon-green">
+        <div
+          key={index}
+          className="whitespace-pre-wrap text-white text-xl bg-arcon-green"
+        >
           <strong>{`${message.role}: `}</strong>
           {message.content}
           <br />
