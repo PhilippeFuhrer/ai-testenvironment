@@ -72,7 +72,13 @@ const ChatBot = () => {
           key={index}
           className="whitespace-pre-wrap text-white text-xl bg-arcon-green"
         >
-          <strong>{`${message.role}: `}</strong>
+          <strong
+            className={
+              message.role === "Arcon GPT" ? "text-arcon-light-green" : ""
+            }
+          >
+            {`${message.role}: `}
+          </strong>
           {message.content}
           <br />
           <br />
