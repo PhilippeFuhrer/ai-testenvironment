@@ -26,8 +26,8 @@ async function initializeVectorStore() {
 
   // Split text into chunks for embedding
   const textSplitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 1000,
-    chunkOverlap: 200,
+    chunkSize: 1500,
+    chunkOverlap: 300,
   });
   const docs = await textSplitter.createDocuments([combined]);
 
@@ -73,7 +73,7 @@ async function initializeChain() {
   // Create the QA chain with model, retriever, and prompt
   chain = RetrievalQAChain.fromLLM(
     model,
-    vectorStore.asRetriever(3),
+    vectorStore.asRetriever(3), // retrieving 3 most relevant documents
     {
       prompt,
       returnSourceDocuments: true,
