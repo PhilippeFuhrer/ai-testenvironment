@@ -18,7 +18,7 @@ console.log("AI initialized");
 
 // Function to initialize the vector store
 async function initializeVectorStore() {
-  const text = fs.readFileSync('trainingData/drupal-combined-text-only.txt', 'utf8');
+  const text = fs.readFileSync('trainingData/drupal-combined-text-only-better-format.txt', 'utf8');
   const textSplitter = new RecursiveCharacterTextSplitter({
     chunkSize: 1000,
     chunkOverlap: 200,
