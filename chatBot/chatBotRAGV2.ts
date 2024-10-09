@@ -2,7 +2,7 @@ import { OpenAI } from "openai";
 import { config } from "dotenv";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "@langchain/openai";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { Chroma } from "@langchain/community/vectorstores/chroma";
 import { RetrievalQAChain } from "langchain/chains";
 import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
@@ -17,14 +17,12 @@ const openai = new OpenAI({
 
 console.log("AI initialized");
 
-// Function to initialize the vector store
-async function initializeVectorStore() {
-  // Ensure correct files are being read
+// Function to preprocess and split documents
+async function preprocessAndSplitDocuments() {
   const drupalWiki = fs.readFileSync('trainingData/drupal-combined-text-only-better-format.txt', 'utf8');
   const j_hr_pdfs = fs.readFileSync('trainingData/Export-J-patches-und-support-HR-cleaned.txt', 'utf8');
   const combined = drupalWiki + '\n' + j_hr_pdfs;
 
-  // Split text into chunks for embedding
   const textSplitter = new RecursiveCharacterTextSplitter({
     chunkSize: 1000,
     chunkOverlap: 300,
@@ -32,20 +30,35 @@ async function initializeVectorStore() {
   const docs = await textSplitter.createDocuments([combined]);
 
   console.log(`Number of chunks created: ${docs.length}`);
-
-  // Create embeddings and vector store
-  const embeddings = new OpenAIEmbeddings();
-  return await MemoryVectorStore.fromDocuments(docs, embeddings);
+  return docs;
 }
 
 // Initialize vector store and chain
-let vectorStore: MemoryVectorStore;
+let vectorStore: Chroma;
 let chain: RetrievalQAChain;
 
 async function initializeChain() {
-  vectorStore = await initializeVectorStore();
+  const embeddings = new OpenAIEmbeddings();
+
+  try {
+    console.log("Attempting to load or create vector store...");
+    vectorStore = await Chroma.fromExistingCollection(
+      new OpenAIEmbeddings(),
+      { collectionName: "abacus_knowledge_base" }
+    );
+    console.log("Vector store loaded successfully.");
+  } catch (error) {
+    console.log("Error loading vector store:", error);
+    console.log("Creating a new vector store...");
+    const docs = await preprocessAndSplitDocuments();
+    vectorStore = await Chroma.fromDocuments(docs, embeddings, {
+      collectionName: "abacus_knowledge_base",
+    });
+    console.log("New vector store created.");
+  }
+
   const model = new ChatOpenAI({
-    modelName: 'gpt-4',
+    modelName: 'gpt-3.5-turbo',
     temperature: 0.7,
     maxTokens: 500,
   });
@@ -79,15 +92,27 @@ async function initializeChain() {
       returnSourceDocuments: true,
     }
   );
+
+  console.log("Chain initialized successfully.");
 }
+
+// Implement caching
+const responseCache = new Map();
 
 // Function to handle incoming messages
 export default async function handleMessage(input: string) {
   if (!chain) {
+    console.log("Initializing chain...");
     await initializeChain();
   }
 
   console.log("Query:", input);
+
+  // Check cache first
+  if (responseCache.has(input)) {
+    console.log("Returning cached response");
+    return responseCache.get(input);
+  }
 
   // Use the chain to get a response
   const result = await chain.call({
@@ -102,6 +127,9 @@ export default async function handleMessage(input: string) {
   });
 
   console.log("Response from result.text:", result.text);
+
+  // Cache the response
+  responseCache.set(input, result.text);
 
   return result.text;
 }
