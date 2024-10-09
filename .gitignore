@@ -38,3 +38,7 @@ next-env.d.ts
 
 # env variables
 .env
+
+
+# training data
+/app/trainingData/*
