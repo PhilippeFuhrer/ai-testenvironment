@@ -54,7 +54,7 @@ const ChatBot = () => {
         {messages.map((message, index) => (
           <div
             key={index}
-            className="whitespace-pre-wrap text-arcon-green text-xl mb-6 p-4 rounded-lg bg-slate-50 border-2 shadow-sm"
+            className="whitespace-pre-wrap text-arcon-green text-xl mb-6 p-5 rounded-xl bg-slate-50 border-2 shadow-sm"
           >
             <strong
               className={
