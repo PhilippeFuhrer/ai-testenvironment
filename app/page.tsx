@@ -6,9 +6,9 @@ export default function Home() {
 
   return (
     <main className="">
-      <div>
+      <div className="">
         <NavBar></NavBar>
-        <div className="bg-gradient-to-r from-violet-200 to-pink-200 flex justify-center py-36">
+        <div className="flex justify-center py-36">
         <ChatBot></ChatBot>
         </div>
       </div>

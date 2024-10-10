@@ -50,7 +50,7 @@ const ChatBot = () => {
 
   return (
     <div className="flex flex-col h-screen max-w-4xl mx-auto">
-      <div className="flex-grow overflow-auto p-4 pb-24">
+      <div className="flex-grow p-4 pb-64">
         {messages.map((message, index) => (
           <div
             key={index}
@@ -76,7 +76,7 @@ const ChatBot = () => {
             onChange={handleInputChange}
             rows={3}
           />
-          <div className="flex justify-between">
+          <div className="flex space-x-4">
             <button
               type="submit"
               className="btn bg-black border-none text-slate-50 px-4 py-2 rounded-lg text-md hover:opacity-80"
