@@ -58,7 +58,7 @@ const ChatBot = () => {
           >
             <strong
               className={
-                message.role === "Arcon GPT" ? "text-violet-500" : ""
+                message.role === "Arcon GPT" ? "text-violet-500" : "text-pink-500"
               }
             >
               {`${message.role}: `}
@@ -79,7 +79,7 @@ const ChatBot = () => {
           <div className="flex space-x-4">
             <button
               type="submit"
-              className="btn bg-black border-none text-slate-50 px-4 py-2 rounded-lg text-md hover:opacity-80"
+              className="btn bg-violet-500 border-none text-slate-50 px-4 py-2 rounded-lg text-md hover:opacity-80"
             >
               {loading ? (
                 <span className="loading loading-spinner"></span>
@@ -88,7 +88,7 @@ const ChatBot = () => {
               )}
             </button>
             <button
-              className="btn border-2 border-black bg-transparent text-black hover:text-white py-2 rounded-lg text-md"
+              className="btn border-2 border-pink-400 bg-transparent text-pink-400 hover:text-white py-2 rounded-lg text-md"
               type="button"
               onClick={newConversation}
             >

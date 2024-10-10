@@ -8,7 +8,7 @@ export default function Home() {
     <main className="">
       <div className="">
         <NavBar></NavBar>
-        <div className="flex justify-center py-36">
+        <div className="flex justify-center py-24">
         <ChatBot></ChatBot>
         </div>
       </div>
