@@ -3,7 +3,7 @@ import React from "react";
 const navBar = () => {
   return (
     <div>
-      <div className="navbar bg-arcon-green text-white">
+      <div className="navbar text-arcon-dark-green">
         <div className="navbar-start">
           <div className="dropdown">
             <div

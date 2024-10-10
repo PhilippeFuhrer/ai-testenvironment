@@ -8,7 +8,7 @@ export default function Home() {
     <main className="">
       <div>
         <NavBar></NavBar>
-        <div className="bg-arcon-green flex justify-center py-36 h-screen">
+        <div className="bg-gradient-to-r from-violet-200 to-pink-200 flex justify-center py-36">
         <ChatBot></ChatBot>
         </div>
       </div>

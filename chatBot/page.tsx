@@ -49,58 +49,54 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="flex-row w-full max-w-4xl mx-auto">
-      <h1 className="text-4xl text-white mb-6">Arcon GPT</h1>
-      <h2 className="text-xl text-white mb-6">
-        Platziere deine Abacus oder ICT Anfrage und lasse dir vom Arcon GPT
-        helfen.
-      </h2>
-      <div className="flex-col w-full">
-        <form onSubmit={handleSubmit} className="mb-12">
+    <div className="flex flex-col h-screen max-w-4xl mx-auto">
+      <div className="flex-grow overflow-auto p-4 pb-24">
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className="whitespace-pre-wrap text-arcon-green text-xl mb-6 p-4 rounded-lg bg-slate-50 border-2 shadow-sm"
+          >
+            <strong
+              className={
+                message.role === "Arcon GPT" ? "text-violet-500" : ""
+              }
+            >
+              {`${message.role}: `}
+            </strong>
+            {message.content}
+          </div>
+        ))}
+      </div>
+      <div className="border-2 rounded-2xl bg-slate-100 p-4 fixed bottom-10 left-0 right-0 max-w-4xl mx-auto shadow-2xl">
+        <form onSubmit={handleSubmit} className="flex flex-col">
           <textarea
-            className="w-full h-36 p-3 border-1 border-gray-300 hover:border-arcon-light-green focus:border-arcon-light-green rounded shadow-xl text-xl bg-white mb-4"
+            className="w-full p-3 border-2 hover:shadow-sm rounded-xl text-xl bg-white mb-4"
             value={input}
             placeholder="Hi, hier ist Arcon GPT, wie kann ich dir helfen?"
             onChange={handleInputChange}
+            rows={3}
           />
-          <div className="space-x-4">
-          <button
-            type="submit"
-            className="btn bg-arcon-light-green border-none text-slate-50 max-w-40 text-md "
-          >
-            {loading ? (
-              <span className="loading loading-spinner"></span>
-            ) : (
-              "Los geht's!"
-            )}
-          </button>
-          <button
-            className="btn border-2 border-arcon-light-green bg-transparent text-slate-50 max-w-60 text-md h-2 absolute ml-4"
-            type="button"
-            onClick={newConversation}
-          >
-            Neues Thema
-          </button>
+          <div className="flex justify-between">
+            <button
+              type="submit"
+              className="btn bg-black border-none text-slate-50 px-4 py-2 rounded-lg text-md hover:opacity-80"
+            >
+              {loading ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                "Los geht's!"
+              )}
+            </button>
+            <button
+              className="btn border-2 border-black bg-transparent text-black hover:text-white py-2 rounded-lg text-md"
+              type="button"
+              onClick={newConversation}
+            >
+              Neues Thema
+            </button>
           </div>
         </form>
       </div>
-      {messages.map((message, index) => (
-        <div
-          key={index}
-          className="whitespace-pre-wrap text-white text-xl bg-arcon-green"
-        >
-          <strong
-            className={
-              message.role === "Arcon GPT" ? "text-arcon-light-green" : ""
-            }
-          >
-            {`${message.role}: `}
-          </strong>
-          {message.content}
-          <br />
-          <br />
-        </div>
-      ))}
     </div>
   );
 };
