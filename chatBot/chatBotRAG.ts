@@ -8,16 +8,22 @@ import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import * as fs from 'fs/promises';
 
+
+//configure environment variables
 config();
 
 // Initialize OpenAI with API key
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
 console.log("AI initialized");
 
-const BATCH_SIZE = 1000;  // Adjust based on OpenAI's rate limits and your needs
+// Adjust based on OpenAI's rate limits and your need
+const BATCH_SIZE = 2000;
+
+// Initialize vector store and chain
+let vectorStore: MemoryVectorStore;
+let chain: RetrievalQAChain;
 
 // Function to initialize the vector store with batch processing
 async function initializeVectorStore() {
@@ -49,10 +55,6 @@ async function initializeVectorStore() {
 
   return vectorStore;
 }
-
-// Initialize vector store and chain
-let vectorStore: MemoryVectorStore;
-let chain: RetrievalQAChain;
 
 async function initializeChain() {
   vectorStore = await initializeVectorStore();
@@ -94,12 +96,20 @@ async function initializeChain() {
   );
 }
 
+// Initialize everything when the module is imported, when server is started
+(async () => {
+  console.log("Initializing AI and vector store...");
+  try {
+    await initializeChain();
+    console.log("AI and vector store initialized successfully");
+  } catch (error) {
+    console.error("Error initializing AI and vector store:", error);
+    process.exit(1);  // Exit the process if initialization fails
+  }
+})();
+
 // Function to handle incoming messages
 export default async function handleMessage(input: string) {
-  if (!chain) {
-    await initializeChain();
-  }
-
   console.log("Query:", input);
 
   // Use the chain to get a response
