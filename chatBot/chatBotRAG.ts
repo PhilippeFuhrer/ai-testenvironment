@@ -6,7 +6,7 @@ import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { RetrievalQAChain } from "langchain/chains";
 import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 
 config();
 
@@ -17,14 +17,18 @@ const openai = new OpenAI({
 
 console.log("AI initialized");
 
-// Function to initialize the vector store
+const BATCH_SIZE = 1000;  // Adjust based on OpenAI's rate limits and your needs
+
+// Function to initialize the vector store with batch processing
 async function initializeVectorStore() {
-  // Ensure correct files are being read
-  const drupalWiki = fs.readFileSync('trainingData/drupal-combined-text-only-better-format.txt', 'utf8');
-  const j_hr_pdfs = fs.readFileSync('trainingData/Export-J-patches-und-support-HR-cleaned.txt', 'utf8');
+  // Read files asynchronously
+  const [drupalWiki, j_hr_pdfs] = await Promise.all([
+    fs.readFile('trainingData/drupal-combined-text-only-better-format.txt', 'utf8'),
+    fs.readFile('trainingData/Export-J-patches-und-support-HR-cleaned.txt', 'utf8')
+  ]); 
   const combined = drupalWiki + '\n' + j_hr_pdfs;
 
-  // Split text into chunks for embedding
+  // Split text into chunks
   const textSplitter = new RecursiveCharacterTextSplitter({
     chunkSize: 1000,
     chunkOverlap: 300,
@@ -33,9 +37,17 @@ async function initializeVectorStore() {
 
   console.log(`Number of chunks created: ${docs.length}`);
 
-  // Create embeddings and vector store
+  // Create embeddings in batches
   const embeddings = new OpenAIEmbeddings();
-  return await MemoryVectorStore.fromDocuments(docs, embeddings);
+  const vectorStore = new MemoryVectorStore(embeddings);
+
+  for (let i = 0; i < docs.length; i += BATCH_SIZE) {
+    const batch = docs.slice(i, i + BATCH_SIZE);
+    await vectorStore.addDocuments(batch);
+    console.log(`Processed batch ${Math.floor(i / BATCH_SIZE) + 1} of ${Math.ceil(docs.length / BATCH_SIZE)}`);
+  }
+
+  return vectorStore;
 }
 
 // Initialize vector store and chain
@@ -65,6 +77,7 @@ async function initializeChain() {
     - If you're unsure about any part of your answer, express that uncertainty.
     - If the user's question is unclear, ask for clarification.
     - Provide as much relevant information as possible.
+    - Also provide the sources of the informations.
     - End your response with a question to encourage further dialogue if appropriate.
 
     Response:
