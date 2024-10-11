@@ -8,25 +8,24 @@ import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import * as fs from 'fs/promises';
 
-
-//configure environment variables
 config();
 
 // Initialize OpenAI with API key
-const openai = new OpenAI({
+const openAI = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
 console.log("AI initialized");
 
-// Adjust based on OpenAI's rate limits and your need
-const BATCH_SIZE = 2000;
+const BATCH_SIZE = 2000;  // Adjust based on OpenAI's rate limits and your needs
 
 // Initialize vector store and chain
-let vectorStore: MemoryVectorStore;
-let chain: RetrievalQAChain;
+let vectorStore: MemoryVectorStore | null = null;
+let chain: RetrievalQAChain | null = null;
 
 // Function to initialize the vector store with batch processing
 async function initializeVectorStore() {
+  console.log("Initializing vector store...");
   // Read files asynchronously
   const [drupalWiki, j_hr_pdfs] = await Promise.all([
     fs.readFile('trainingData/drupal-combined-text-only-better-format.txt', 'utf8'),
@@ -45,19 +44,19 @@ async function initializeVectorStore() {
 
   // Create embeddings in batches
   const embeddings = new OpenAIEmbeddings();
-  const vectorStore = new MemoryVectorStore(embeddings);
+  const newVectorStore = new MemoryVectorStore(embeddings);
 
   for (let i = 0; i < docs.length; i += BATCH_SIZE) {
     const batch = docs.slice(i, i + BATCH_SIZE);
-    await vectorStore.addDocuments(batch);
+    await newVectorStore.addDocuments(batch);
     console.log(`Processed batch ${Math.floor(i / BATCH_SIZE) + 1} of ${Math.ceil(docs.length / BATCH_SIZE)}`);
   }
 
-  return vectorStore;
+  return newVectorStore;
 }
 
-async function initializeChain() {
-  vectorStore = await initializeVectorStore();
+async function initializeChain(vectorStore: MemoryVectorStore) {
+  console.log("Initializing chain...");
   const model = new ChatOpenAI({
     modelName: 'gpt-4',
     temperature: 0.7,
@@ -86,7 +85,7 @@ async function initializeChain() {
   `);
 
   // Create the QA chain with model, retriever, and prompt
-  chain = RetrievalQAChain.fromLLM(
+  return RetrievalQAChain.fromLLM(
     model,
     vectorStore.asRetriever(3), // retrieving 3 most relevant documents
     {
@@ -96,35 +95,38 @@ async function initializeChain() {
   );
 }
 
-// Initialize everything when the module is imported, when server is started
-(async () => {
-  console.log("Initializing AI and vector store...");
-  try {
-    await initializeChain();
+async function ensureInitialized() {
+  if (!vectorStore || !chain) {
+    vectorStore = await initializeVectorStore();
+    chain = await initializeChain(vectorStore);
     console.log("AI and vector store initialized successfully");
-  } catch (error) {
-    console.error("Error initializing AI and vector store:", error);
-    process.exit(1);  // Exit the process if initialization fails
   }
-})();
+}
 
 // Function to handle incoming messages
 export default async function handleMessage(input: string) {
+  await ensureInitialized();
+
   console.log("Query:", input);
 
-  // Use the chain to get a response
-  const result = await chain.call({
-    query: input,
-  });
+  try {
+    // Use the chain to get a response
+    const result = await chain!.call({
+      query: input,
+    });
 
-  console.log("Retrieved Documents:");
-  result.sourceDocuments.forEach((doc: { pageContent: any; }, index: number) => {
-    console.log(`Document ${index + 1}:`);
-    console.log(doc.pageContent);
-    console.log("---");
-  });
+    console.log("Retrieved Documents:");
+    result.sourceDocuments.forEach((doc: { pageContent: any; }, index: number) => {
+      console.log(`Document ${index + 1}:`);
+      console.log(doc.pageContent);
+      console.log("---");
+    });
 
-  console.log("Response from result.text:", result.text);
+    console.log("Response from result.text:", result.text);
 
-  return result.text;
+    return result.text;
+  } catch (error) {
+    console.error("Error processing query:", error);
+    throw error; // Re-throw the error to be handled by the caller
+  }
 }
