@@ -146,7 +146,7 @@ async function initializeChain(vectorStore: PineconeStore) {
   // Create the retriever
   const retriever = vectorStore.asRetriever({
     searchKwargs: {
-      fetchK: 5, //fetch 5 documents initially
+      fetchK: 3, //fetch 5 documents initially
       lambda: 0.5,
     },
     searchType: "mmr" // Use Maximum Marginal Relevance for diverse results
