@@ -4,7 +4,11 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { PineconeStore } from "@langchain/pinecone";
 import { Pinecone } from "@pinecone-database/pinecone";
-import { ConversationalRetrievalQAChain, LLMChain, loadQAChain } from "langchain/chains";
+import {
+  ConversationalRetrievalQAChain,
+  LLMChain,
+  loadQAChain,
+} from "langchain/chains";
 import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { BaseLanguageModel } from "@langchain/core/language_models/base";
@@ -19,9 +23,6 @@ const openAI = new OpenAI({
 });
 
 console.log("AI initialized");
-
-// Constants
-const BATCH_SIZE = 2000; // Number of documents to process in each batch
 
 // Global variables to store the vector store and chain
 let vectorStore: PineconeStore;
@@ -71,47 +72,95 @@ async function initializeVectorStore() {
 // Function to create a new vector store
 async function createNewVectorStore(index: any) {
   // Read multiple source files asynchronously
-  const [drupalWiki, j_hr_pdfs, test] = await Promise.all([
+  const [drupalWiki] = await Promise.all([
     fs.readFile(
-      "trainingData/drupal-combined-text-only-better-format.txt",
+      "trainingData/combined-text-article-chunks-cleaned.txt",
       "utf8"
     ),
-    fs.readFile(
-      "trainingData/Export-J-patches-und-support-HR-cleaned.txt",
-      "utf8"
-    ),
-    fs.readFile("trainingData/test.txt", "utf8"),
+    /*fs.readFile(
+        "trainingData/Export-J-patches-und-support-HR-cleaned.txt",
+        "utf8"
+      ),
+      fs.readFile("trainingData/test.txt", "utf8"),*/
   ]);
 
-  // Combine all source texts
-  const combined = drupalWiki + "\n" + j_hr_pdfs + "\n" + test;
+  // Function to split text into articles
+  function splitIntoArticles(text: string): string[] {
+    // Split the text on "article----------"
+    const articles = text.split(/article----------/);
+    // Remove any empty articles (which might occur if the delimiter is at the start or end)
+    return articles.filter((article) => article.trim().length > 0);
+  }
 
-  // Split the combined text into manageable chunks
-  const textSplitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 1000,
-    chunkOverlap: 300,
-  });
-  const docs = await textSplitter.createDocuments([combined]);
+  // Split each source into articles
+  const drupalWikiArticles = splitIntoArticles(drupalWiki);
+  //const jHrPdfsArticles = splitIntoArticles(j_hr_pdfs);
+  //const testArticles = splitIntoArticles(test);
 
-  console.log(`Number of chunks created: ${docs.length}`);
+  // Combine all articles
+  const allArticles = [
+    ...drupalWikiArticles,
+    //...jHrPdfsArticles,
+    //...testArticles,
+  ];
 
-  // Create embeddings and initialize the vector store
+  // Create documents from articles
+  const docs = allArticles.map((article, index) => ({
+    pageContent: article.trim(),
+    metadata: {
+      source: "wiki",
+      articleIndex: index,
+    },
+  }));
+
+  console.log(`Number of articles created: ${docs.length}`);
+
+  // Create embeddings
   const embeddings = new OpenAIEmbeddings({
     modelName: "text-embedding-ada-002",
   });
 
-  vectorStore = await PineconeStore.fromDocuments(docs, embeddings, {
-    pineconeIndex: index,
-    textKey: "text",
-  });
+  // Initialize vector store
+  let vectorStore: PineconeStore | null = null;
+
+  // Process documents in batches
+  const batchSize = 1; // Adjust this value based on your needs
+  for (let i = 0; i < docs.length; i += batchSize) {
+    const batch = docs.slice(i, i + batchSize);
+    console.log(`Processing article ${i + 1} of ${docs.length}`);
+    console.log(`Article length: ${batch[0].pageContent.length} characters`);
+
+    if (vectorStore === null) {
+      // Initialize the vector store with the first batch
+      vectorStore = await PineconeStore.fromDocuments(batch, embeddings, {
+        pineconeIndex: index,
+        textKey: "text",
+      });
+
+    } else {
+      // Add subsequent batches to the existing vector store
+      await vectorStore.addDocuments(batch);
+    }
+
+    console.log(
+      `Processed batch ${Math.floor(i / batchSize) + 1} of ${Math.ceil(
+        docs.length / batchSize
+      )}`
+    );
+  }
+
+  if (vectorStore === null) {
+    throw new Error("Failed to create vector store");
+  }
 
   console.log("New vector store created in Pinecone");
+  return vectorStore;
 }
 
 // Function to initialize the QA chain
 async function initializeChain(vectorStore: PineconeStore) {
   console.log("Initializing chain...");
-  
+
   // Initialize the language model
   const model = new ChatOpenAI({
     modelName: "gpt-4",
@@ -149,7 +198,7 @@ async function initializeChain(vectorStore: PineconeStore) {
       fetchK: 3, //fetch 5 documents initially
       lambda: 0.5,
     },
-    searchType: "mmr" // Use Maximum Marginal Relevance for diverse results
+    searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
   });
 
   // Create the question generator chain
@@ -158,13 +207,13 @@ async function initializeChain(vectorStore: PineconeStore) {
   );
   const questionGeneratorChain = new LLMChain({
     llm: model,
-    prompt: questionGeneratorTemplate
+    prompt: questionGeneratorTemplate,
   });
 
   // Create the combine documents chain
-  const qaChain = loadQAChain(model as BaseLanguageModel, { 
-    type: "stuff", 
-    prompt: promptTemplate 
+  const qaChain = loadQAChain(model as BaseLanguageModel, {
+    type: "stuff",
+    prompt: promptTemplate,
   });
 
   // Create and return the ConversationalRetrievalQAChain
@@ -221,7 +270,6 @@ export default async function handleMessage(input: string) {
 
     // Return the generated response
     return result.text;
-
   } catch (error) {
     console.error("Error processing query:", error);
     return "Es tut mir leid, aber es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie den Support.";
