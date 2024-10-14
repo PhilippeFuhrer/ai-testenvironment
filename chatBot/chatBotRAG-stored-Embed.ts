@@ -8,6 +8,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import * as fs from 'fs/promises';
 
+// Load environment variables
 config();
 
 // Initialize OpenAI with API key
@@ -17,24 +18,60 @@ const openAI = new OpenAI({
 
 console.log("AI initialized");
 
-const BATCH_SIZE = 2000;  // Adjust based on OpenAI's rate limits and your needs
+// Constants
+const BATCH_SIZE = 2000; // Number of documents to process in each batch
+const EMBEDDINGS_FILE = 'embeddings.json'; // File to store/load embeddings
 
-// Initialize vector store and chain
-let vectorStore: MemoryVectorStore | null = null;
-let chain: RetrievalQAChain | null = null;
+// Global variables to store the vector store and chain
+let vectorStore: MemoryVectorStore
+let chain: RetrievalQAChain
 
-// Function to initialize the vector store with batch processing
+// Function to initialize or load the vector store
 async function initializeVectorStore() {
   console.log("Initializing vector store...");
-  // Read files asynchronously
-  const [combined] = await Promise.all([
-    //fs.readFile('trainingData/drupal-combined-text-only-better-format.txt', 'utf8'),
-    //fs.readFile('trainingData/Export-J-patches-und-support-HR-cleaned.txt', 'utf8'),
+
+  try {
+    // Attempt to load existing embeddings from file
+    const data = await fs.readFile(EMBEDDINGS_FILE, 'utf8');
+    const loadedData = JSON.parse(data);
+    
+    // Recreate the vector store from the loaded data
+    const embeddings = new OpenAIEmbeddings();
+    vectorStore = new MemoryVectorStore(embeddings);
+    
+    // Add the loaded vectors and documents to the vector store
+    for (let i = 0; i < loadedData.vectors.length; i++) {
+      await vectorStore.addVectors([loadedData.vectors[i]], [loadedData.documents[i]]);
+    }
+    
+    console.log("Loaded existing vector store from file");
+  } catch (error) {
+    // Check if the error is because the file doesn't exist
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      console.log("No existing vector store found. Creating new vector store...");
+      await createNewVectorStore();
+    } else {
+      // If it's a different error, log it and rethrow
+      console.error("Error loading vector store:", error);
+      throw error;
+    }
+  }
+
+  return vectorStore;
+}
+
+// Function to create a new vector store
+async function createNewVectorStore() {
+  // Read multiple source files asynchronously
+  const [drupalWiki, j_hr_pdfs, test] = await Promise.all([
+    fs.readFile('trainingData/drupal-combined-text-only-better-format.txt', 'utf8'),
+    fs.readFile('trainingData/Export-J-patches-und-support-HR-cleaned.txt', 'utf8'),
     fs.readFile('trainingData/test.txt', 'utf8'),
   ]); 
-  //const combined = drupalWiki + '\n' + j_hr_pdfs;
+  // Combine all source texts
+  const combined = drupalWiki + '\n' + j_hr_pdfs + '\n' + test;
 
-  // Split text into chunks
+  // Split the combined text into manageable chunks
   const textSplitter = new RecursiveCharacterTextSplitter({
     chunkSize: 1000,
     chunkOverlap: 300,
@@ -43,28 +80,43 @@ async function initializeVectorStore() {
 
   console.log(`Number of chunks created: ${docs.length}`);
 
-  // Create embeddings in batches
+  // Create embeddings and initialize the vector store
   const embeddings = new OpenAIEmbeddings();
-  const newVectorStore = new MemoryVectorStore(embeddings);
+  vectorStore = new MemoryVectorStore(embeddings);
 
+  // Process documents in batches to manage memory and API usage
   for (let i = 0; i < docs.length; i += BATCH_SIZE) {
     const batch = docs.slice(i, i + BATCH_SIZE);
-    await newVectorStore.addDocuments(batch);
+    await vectorStore.addDocuments(batch);
     console.log(`Processed batch ${Math.floor(i / BATCH_SIZE) + 1} of ${Math.ceil(docs.length / BATCH_SIZE)}`);
   }
 
-  return newVectorStore;
+  // Save the new embeddings to file for future use
+  const saveData = await getSaveData(vectorStore);
+  await fs.writeFile(EMBEDDINGS_FILE, JSON.stringify(saveData));
+  console.log("Saved new vector store to file");
 }
 
+// Helper function to get save data from vector store
+async function getSaveData(store: MemoryVectorStore) {
+  const data = await store.asRetriever().getRelevantDocuments("");
+  return {
+    vectors: data.map(doc => doc.metadata.vector),
+    documents: data.map(doc => doc.pageContent)
+  };
+}
+
+// Function to initialize the QA chain
 async function initializeChain(vectorStore: MemoryVectorStore) {
   console.log("Initializing chain...");
+  // Initialize the language model
   const model = new ChatOpenAI({
     modelName: 'gpt-4',
     temperature: 0.7,
     maxTokens: 500,
   });
 
-  // Define the prompt template
+  // Define the prompt template for the AI
   const prompt = PromptTemplate.fromTemplate(`
     You are an expert IT Support Agent specializing in Abacus Business Software by Abacus Research AG. Your role is to provide accurate, helpful, and professional responses to questions about this software. Use the following guidelines:
     1. Context: {context}
@@ -85,10 +137,10 @@ async function initializeChain(vectorStore: MemoryVectorStore) {
     Response:
   `);
 
-  // Create the QA chain with model, retriever, and prompt
+  // Create and return the QA chain
   return RetrievalQAChain.fromLLM(
     model,
-    vectorStore.asRetriever(3), // retrieving 3 most relevant documents
+    vectorStore.asRetriever(3), // Retrieve the 3 most relevant documents
     {
       prompt,
       returnSourceDocuments: true,
@@ -96,6 +148,7 @@ async function initializeChain(vectorStore: MemoryVectorStore) {
   );
 }
 
+// Function to ensure the vector store and chain are initialized
 async function ensureInitialized() {
   if (!vectorStore || !chain) {
     vectorStore = await initializeVectorStore();
@@ -104,18 +157,20 @@ async function ensureInitialized() {
   }
 }
 
-// Function to handle incoming messages
+// Main function to handle incoming messages
 export default async function handleMessage(input: string) {
+  // Ensure the vector store and chain are initialized
   await ensureInitialized();
 
   console.log("Query:", input);
 
   try {
-    // Use the chain to get a response
+    // Use the chain to process the query and get a response
     const result = await chain!.call({
       query: input,
     });
 
+    // Log the retrieved documents for debugging
     console.log("Retrieved Documents:");
     result.sourceDocuments.forEach((doc: { pageContent: any; }, index: number) => {
       console.log(`Document ${index + 1}:`);
@@ -125,6 +180,7 @@ export default async function handleMessage(input: string) {
 
     console.log("Response from result.text:", result.text);
 
+    // Return the generated response
     return result.text;
 
   } catch (error) {
