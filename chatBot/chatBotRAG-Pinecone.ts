@@ -146,7 +146,7 @@ async function initializeChain(vectorStore: PineconeStore) {
   // Create the retriever
   const retriever = vectorStore.asRetriever({
     searchKwargs: {
-      fetchK: 5,
+      fetchK: 5, //fetch 5 documents initially
       lambda: 0.5,
     },
     searchType: "mmr" // Use Maximum Marginal Relevance for diverse results
@@ -221,7 +221,7 @@ export default async function handleMessage(input: string) {
 
     // Return the generated response
     return result.text;
-    
+
   } catch (error) {
     console.error("Error processing query:", error);
     return "Es tut mir leid, aber es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie den Support.";
