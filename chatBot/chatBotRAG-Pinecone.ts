@@ -63,6 +63,7 @@ async function initializeVectorStore() {
     });
 
     return vectorStore;
+    
   } catch (error) {
     console.error("Error initializing vector store:", error);
     throw error;
@@ -88,8 +89,27 @@ async function createNewVectorStore(index: any) {
   function splitIntoArticles(text: string): string[] {
     // Split the text on "article----------"
     const articles = text.split(/article----------/);
-    // Remove any empty articles (which might occur if the delimiter is at the start or end)
-    return articles.filter((article) => article.trim().length > 0);
+
+    // Process all articles
+    const processedArticles: string[] = articles.flatMap(
+      (article: string): string[] => {
+        const articleParts: string[] = [];
+        let remainingText: string = article;
+
+        while (remainingText.length > 10000) {
+          articleParts.push(remainingText.slice(0, 10000));
+          remainingText = remainingText.slice(10000);
+        }
+
+        if (remainingText.length > 0) {
+          articleParts.push(remainingText);
+        }
+
+        return articleParts;
+      }
+    );
+
+    return processedArticles;
   }
 
   // Split each source into articles
@@ -136,7 +156,6 @@ async function createNewVectorStore(index: any) {
         pineconeIndex: index,
         textKey: "text",
       });
-
     } else {
       // Add subsequent batches to the existing vector store
       await vectorStore.addDocuments(batch);
