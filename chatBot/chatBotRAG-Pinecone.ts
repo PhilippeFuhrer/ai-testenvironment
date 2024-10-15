@@ -1,6 +1,5 @@
 import { OpenAI } from "openai";
 import { config } from "dotenv";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { PineconeStore } from "@langchain/pinecone";
 import { Pinecone } from "@pinecone-database/pinecone";
@@ -63,7 +62,7 @@ async function initializeVectorStore() {
     });
 
     return vectorStore;
-    
+
   } catch (error) {
     console.error("Error initializing vector store:", error);
     throw error;
