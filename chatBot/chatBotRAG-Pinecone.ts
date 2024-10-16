@@ -59,7 +59,6 @@ async function initializeVectorStore() {
     });
 
     return vectorStore;
-
   } catch (error) {
     console.error("Error initializing vector store:", error);
     throw error;
@@ -174,17 +173,17 @@ async function createNewVectorStore(index: any) {
 
 // Function to initialize the QA chain
 async function initializeChain(vectorStore: PineconeStore) {
-    console.log("Initializing chain...");
-  
-    // Initialize the language model
-    const model = new ChatOpenAI({
-      modelName: "gpt-4",
-      temperature: 0.7,
-      maxTokens: 500,
-    });
-  
-    // Define the prompt template for the AI
-    const promptTemplate = PromptTemplate.fromTemplate(`
+  console.log("Initializing chain...");
+
+  // Initialize the language model
+  const model = new ChatOpenAI({
+    modelName: "gpt-4",
+    temperature: 0.7,
+    maxTokens: 500,
+  });
+
+  // Define the prompt template for the AI
+  const promptTemplate = PromptTemplate.fromTemplate(`
       You are an expert IT Support Agent specializing in Abacus Business Software by Abacus Research AG. Your role is to provide accurate, helpful, and professional responses to questions about this software. Use the following guidelines:
       1. Context: {context}
       2. Question: {input}
@@ -206,78 +205,80 @@ async function initializeChain(vectorStore: PineconeStore) {
   
       Response:
     `);
-  
-    const documentChain = await createStuffDocumentsChain({
-      llm: model,
-      prompt: promptTemplate,
-    });
-  
-    const retriever = vectorStore.asRetriever({
-      searchKwargs: {
-        fetchK: 3,
-        lambda: 0.5,
-      },
-      searchType: "mmr",
-    });
-  
-    const retrievalChain = await createRetrievalChain({
-      combineDocsChain: documentChain,
-      retriever,
-    });
-  
-    return retrievalChain;
-  }
-  
-  // Function to ensure the vector store and chain are initialized
-  async function ensureInitialized() {
-    if (!vectorStore || !chain) {
-      try {
-        vectorStore = await initializeVectorStore();
-        chain = await initializeChain(vectorStore);
-        console.log("AI and vector store initialized successfully");
-      } catch (error) {
-        console.error("Error during initialization:", error);
-        throw new Error("Failed to initialize AI and vector store");
-      }
-    }
-  }
-  
-  // Updated main function to handle incoming messages
-  export default async function handleMessage(input: string) {
-    try {
-      // Ensure the vector store and chain are initialized
-      await ensureInitialized();
-  
-      console.log("Query:", input);
-  
-      // Use the chain to process the query and get a response
-      const result = await chain.invoke({
-        input,
-        chat_history: conversationHistory,
-      });
-  
-      // Log the retrieved documents for debugging
-      console.log("Abgerufene Dokumente:");
-      if (result.context) {
-        result.context.forEach((doc: Document, index: number) => {
-          console.log(`Dokument ${index + 1}:`);
-          console.log(doc.pageContent);
-          console.log("---");
-        });
-      } else {
-        console.log("Keine Dokumente abgerufen oder Kontext nicht verfügbar.");
-      }
-  
-      console.log("Response:", result.answer);
-  
-      // Update conversation history
-      conversationHistory.push([input, result.answer]);
-  
-      // Return the generated response
-      return result.answer;
 
+  // This chain takes the retrieved documents and combines them with the prompt
+  const documentChain = await createStuffDocumentsChain({
+    llm: model, // Use the previously defined language model
+    prompt: promptTemplate, // Use the custom prompt template we defined earlier
+  });
+
+  // This determines how documents are retrieved from the vector store
+  const retriever = vectorStore.asRetriever({
+    searchKwargs: {
+      fetchK: 3, // Fetch 3 documents initially
+      lambda: 0.5, // Balance between relevance and diversity
+    },
+    searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
+  });
+
+  // This combines the document chain and the retriever
+  const retrievalChain = await createRetrievalChain({
+    combineDocsChain: documentChain, // Use the document chain we created above
+    retriever, // Use the retriever we set up
+  });
+
+  return retrievalChain;
+}
+
+// Function to ensure the vector store and chain are initialized
+async function ensureInitialized() {
+  if (!vectorStore || !chain) {
+    try {
+      vectorStore = await initializeVectorStore();
+      chain = await initializeChain(vectorStore);
+      console.log("AI and vector store initialized successfully");
     } catch (error) {
-      console.error("Error processing query:", error);
-      return "Es tut mir leid, aber es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie den Support.";
+      console.error("Error during initialization:", error);
+      throw new Error("Failed to initialize AI and vector store");
     }
   }
+}
+
+// Updated main function to handle incoming messages
+export default async function handleMessage(input: string) {
+  try {
+    // Ensure the vector store and chain are initialized
+    await ensureInitialized();
+
+    console.log("Query:", input);
+
+    // Use the chain to process the query and get a response
+    const result = await chain.invoke({
+      input,
+      chat_history: conversationHistory,
+    });
+
+    // Log the retrieved documents for debugging
+    console.log("Abgerufene Dokumente:");
+    if (result.context) {
+      result.context.forEach((doc: Document, index: number) => {
+        console.log(`Dokument ${index + 1}:`);
+        console.log(doc.pageContent);
+        console.log("---");
+      });
+    } else {
+      console.log("Keine Dokumente abgerufen oder Kontext nicht verfügbar.");
+    }
+
+    console.log("Response:", result.answer);
+
+    // Update conversation history
+    conversationHistory.push([input, result.answer]);
+
+    // Return the generated response
+    return result.answer;
+  } catch (error) {
+    console.error("Error processing query:", error);
+    return "Es tut mir leid, aber es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie den Support.";
+  }
+}
