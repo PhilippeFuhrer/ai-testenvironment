@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import handleMessage from "@/chatBot/chatBotRAG-Pinecone";
+import handleMessage from "@/chatBot/chatBotRAG-Pinecone-demo";
 
 export async function POST(request: { json: () => any; }) {
   const body = await request.json();
