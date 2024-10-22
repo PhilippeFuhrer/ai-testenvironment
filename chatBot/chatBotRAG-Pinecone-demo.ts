@@ -34,7 +34,7 @@ const pinecone = new Pinecone({
 async function initializeVectorStore() {
   console.log("Initializing vector store...");
 
-  const indexName = process.env.PINECONE_INDEX_NAME_DEMO!;
+  const indexName = process.env.PINECONE_INDEX_NAME_DEMO_DSG_ONLY!;
   const index = pinecone.Index(indexName);
 
   try {

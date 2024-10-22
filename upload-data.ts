@@ -63,7 +63,7 @@ async function createNewVectorStore() {
   // Check if index exists, if not create it
   console.log("Initializing vector store...");
 
-  const indexName = process.env.PINECONE_INDEX_NAME!;
+  const indexName = process.env.PINECONE_INDEX_NAME_DEMO!;
   const index = pinecone.Index(indexName);
 
   // Create embeddings
