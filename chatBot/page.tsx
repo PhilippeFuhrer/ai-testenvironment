@@ -79,7 +79,7 @@ const ChatBot = () => {
           <div className="flex space-x-4">
             <button
               type="submit"
-              className="btn bg-violet-500 border-none text-slate-50 px-4 py-2 rounded-lg text-md hover:opacity-80"
+              className="btn bg-violet-500 border-none text-slate-50 px-4 py-2 rounded-lg text-md"
             >
               {loading ? (
                 <span className="loading loading-spinner"></span>
