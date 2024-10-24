@@ -3,7 +3,7 @@ import React from "react";
 const navBar = () => {
   return (
     <div>
-      <div className="navbar text-arcon-dark-green">
+      <div className="navbar text-white">
         <div className="navbar-start">
           <div className="dropdown">
             <div
@@ -39,7 +39,7 @@ const navBar = () => {
           </div>
         </div>
         <div className="navbar-center">
-          <a className="btn btn-ghost text-xl">Arcon GPT</a>
+          <a className="btn btn-ghost text-xl">Arcon DSG Bot</a>
         </div>
         <div className="navbar-end">
           <a href="https://www.arcon.ch/downloads/" target="_blank">

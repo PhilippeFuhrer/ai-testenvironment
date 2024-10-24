@@ -58,7 +58,7 @@ const ChatBot = () => {
           >
             <strong
               className={
-                message.role === "Arcon GPT" ? "text-arcon-light-green" : "text-arcon-light-green"
+                message.role === "Arcon GPT" ? "text-violet-500" : "text-pink-500"
               }
             >
               {`${message.role}: `}
@@ -72,14 +72,14 @@ const ChatBot = () => {
           <textarea
             className="w-full p-3 border-2 hover:shadow-sm rounded-xl text-xl bg-white mb-4"
             value={input}
-            placeholder="Hi, hier ist der Arcon DSG Bot, wie kann ich dir helfen?"
+            placeholder="Hi, hier ist Arcon GPT, wie kann ich dir helfen?"
             onChange={handleInputChange}
             rows={3}
           />
           <div className="flex space-x-4">
             <button
               type="submit"
-              className="btn bg-arcon-light-green border-none text-slate-50 px-4 py-2 rounded-lg text-md"
+              className="btn bg-violet-500 border-none text-slate-50 px-4 py-2 rounded-lg text-md"
             >
               {loading ? (
                 <span className="loading loading-spinner"></span>
@@ -88,7 +88,7 @@ const ChatBot = () => {
               )}
             </button>
             <button
-              className="btn bg-arcon-green text-slate-50 hover:text-white py-2 rounded-lg text-md"
+              className="btn border-2 border-pink-400 bg-transparent text-pink-400 hover:text-white py-2 rounded-lg text-md"
               type="button"
               onClick={newConversation}
             >
