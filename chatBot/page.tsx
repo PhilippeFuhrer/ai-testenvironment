@@ -33,7 +33,7 @@ const ChatBot = () => {
     });
 
     const data = await response.json();
-    const aiMessage = { role: "Arcon GPT", content: data.response };
+    const aiMessage = { role: "Arcon DSG Bot", content: data.response };
 
     setMessages([...messages, newMessage, aiMessage]);
     setLoading(false);
