@@ -39,7 +39,7 @@ const navBar = () => {
           </div>
         </div>
         <div className="navbar-center">
-          <a className="btn btn-ghost text-xl">Arcon DSG Bot</a>
+          <a className="btn btn-ghost text-xl">Arcon GPT</a>
         </div>
         <div className="navbar-end">
           <a href="https://www.arcon.ch/downloads/" target="_blank">

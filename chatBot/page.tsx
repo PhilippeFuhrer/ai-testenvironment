@@ -33,7 +33,7 @@ const ChatBot = () => {
     });
 
     const data = await response.json();
-    const aiMessage = { role: "Arcon DSG Bot", content: data.response };
+    const aiMessage = { role: "Arcon GPT", content: data.response };
 
     setMessages([...messages, newMessage, aiMessage]);
     setLoading(false);
@@ -72,7 +72,7 @@ const ChatBot = () => {
           <textarea
             className="w-full p-3 border-2 hover:shadow-sm rounded-xl text-xl bg-white mb-4"
             value={input}
-            placeholder="Hi, hier ist der Arcon DSG Bot, wie kann ich dir helfen?"
+            placeholder="Hi, hier ist Arcon GPT, wie kann ich dir helfen?"
             onChange={handleInputChange}
             rows={3}
           />

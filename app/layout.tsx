@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Arcon DSG Bot",
+  title: "Arcon GPT",
   description: "AI ChatBot für IT-Supports",
 };
 
