@@ -6,15 +6,25 @@ type Message = {
   content: string;
 };
 
+type Bottype = "abacus" | "dsg";
+let botStatus = "abacus";
+
 const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [selectedBot, setSelectedBot] = useState("");
 
   const handleInputChange = (e: {
     target: { value: React.SetStateAction<string> };
   }) => {
     setInput(e.target.value);
+  };
+
+  const handleBotChange = async (botType: string) => {
+    botStatus = botType;
+    setSelectedBot(botType);
+    console.log(botStatus);
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
@@ -29,7 +39,7 @@ const ChatBot = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ messages: [...messages, newMessage] }),
+      body: JSON.stringify({ messages: [...messages, newMessage], botStatus: botStatus }),
     });
 
     const data = await response.json();
@@ -58,7 +68,9 @@ const ChatBot = () => {
           >
             <strong
               className={
-                message.role === "Arcon GPT" ? "text-arcon-light-green" : "text-arcon-light-green"
+                message.role === "Arcon GPT"
+                  ? "text-arcon-light-green"
+                  : "text-arcon-light-green"
               }
             >
               {`${message.role}: `}
@@ -88,12 +100,34 @@ const ChatBot = () => {
               )}
             </button>
             <button
-              className="btn bg-arcon-green text-slate-50 hover:text-white py-2 rounded-lg text-md"
+              className="btn bg-arcon-green text-slate-50 hover:text-white py-2 rounded-lg text-md border-none"
               type="button"
               onClick={newConversation}
             >
               Neues Thema
             </button>
+            <div className="ml-5 relative">
+              <select
+                className="appearance-none w-full bg-gray-600 font-medium text-slate-50 text-md py-3 px-4 hover:bg-black ease-in-out duration-200 rounded-lg pr-8 focus:outline-none"
+                onChange={(e) => handleBotChange(e.target.value)}
+                defaultValue=""
+              >
+                <option value="" disabled hidden>
+                  Change Bot
+                </option>
+                <option value="Abacus">Abacus</option>
+                <option value="DSG">DSG</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-50">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
           </div>
         </form>
       </div>
