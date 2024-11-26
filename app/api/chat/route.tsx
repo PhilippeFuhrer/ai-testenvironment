@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import handleMessageAbacus from "@/chatBot/chatBotRAG-Pinecone";
+import handleMessageAbacus from "@/chatBot/chatBotRAG-Pinecone-Abacus";
 import handleMessageDSG from "@/chatBot/chatBotRAG-Pinecone-DSG";
+import handleMessageICT from "@/chatBot/chatBot-ICT";
 
 export async function POST(request: { json: () => any; }) {
   const body = await request.json();
@@ -15,7 +16,11 @@ export async function POST(request: { json: () => any; }) {
   try {
     if (botStatus === "DSG") {
       aiResponse = await handleMessageDSG(content);
-    } else {
+    }
+    if (botStatus === "ICT") {
+      aiResponse = await handleMessageICT(content);
+    }
+    else {
       aiResponse = await handleMessageAbacus(content);
     }
     

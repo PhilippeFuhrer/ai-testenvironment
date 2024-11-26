@@ -6,7 +6,6 @@ type Message = {
   content: string;
 };
 
-type Bottype = "abacus" | "dsg";
 let botStatus = "abacus";
 
 const ChatBot = () => {
@@ -39,7 +38,10 @@ const ChatBot = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ messages: [...messages, newMessage], botStatus: botStatus }),
+      body: JSON.stringify({
+        messages: [...messages, newMessage],
+        botStatus: botStatus,
+      }),
     });
 
     const data = await response.json();
@@ -109,13 +111,17 @@ const ChatBot = () => {
             <div className="relative">
               <select
                 className="appearance-none w-full bg-gray-600 text-slate-50 text-sm font-semibold py-3.5 px-4 hover:bg-black ease-in-out duration-200 rounded-lg pr-8 focus:outline-none"
-                onChange={(e) => handleBotChange(e.target.value)}
+                onChange={(e) => {
+                  const selectedValue = e.target.value;
+                  handleBotChange(selectedValue);
+                }}
                 defaultValue=""
               >
                 <option value="" disabled hidden>
                   Change Bot
                 </option>
                 <option value="Abacus">Abacus Agent</option>
+                <option value="ICT">ICT Agent</option>
                 <option value="DSG">DSG Agent</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-50">
