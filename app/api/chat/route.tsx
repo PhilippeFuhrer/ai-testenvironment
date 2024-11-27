@@ -20,7 +20,7 @@ export async function POST(request: { json: () => any; }) {
     if (botStatus === "ICT") {
       aiResponse = await handleMessageICT(content);
     }
-    else {
+    else if (botStatus === "abacus") {
       aiResponse = await handleMessageAbacus(content);
     }
     

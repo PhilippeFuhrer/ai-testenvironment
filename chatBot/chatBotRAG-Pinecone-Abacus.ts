@@ -18,17 +18,17 @@ const openAI = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-console.log("AI initialized");
+// Initialize Pinecone client
+const pinecone = new Pinecone({
+  apiKey: process.env.PINECONE_API_KEY!,
+});
+
+console.log("AI initialized, APIs connected");
 
 // Global variables to store the vector store and chain
 let vectorStore: PineconeStore;
 let chain: any;
 let conversationHistory: [string, string][] = [];
-
-// Initialize Pinecone client
-const pinecone = new Pinecone({
-  apiKey: process.env.PINECONE_API_KEY!,
-});
 
 // Function to initialize or load the vector store
 async function initializeVectorStore() {
