@@ -40,7 +40,6 @@ async function initializeVectorStore() {
   try {
     // Check if the index already exists and has vectors
     const indexStats = await index.describeIndexStats();
-
     if (indexStats.totalRecordCount && indexStats.totalRecordCount > 0) {
       console.log(
         `Existing vectors found in Pinecone index. Total records: ${indexStats.totalRecordCount}`
@@ -49,126 +48,17 @@ async function initializeVectorStore() {
       console.log(
         "No existing vectors found or unable to determine count. Creating new vector store..."
       );
-      await createNewVectorStore(index);
     }
-
     // Initialize PineconeStore
     const embeddings = new OpenAIEmbeddings();
     vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
       pineconeIndex: index,
     });
-
     return vectorStore;
   } catch (error) {
     console.error("Error initializing vector store:", error);
     throw error;
   }
-}
-
-// Function to create a new vector store
-async function createNewVectorStore(index: any) {
-  // Read multiple source files asynchronously
-  const [drupalWiki] = await Promise.all([
-    fs.readFile(
-      "trainingData/combined-text-article-chunks-cleaned.txt",
-      "utf8"
-    ),
-    /*fs.readFile(
-        "trainingData/Export-J-patches-und-support-HR-cleaned.txt",
-        "utf8"
-      ),
-      fs.readFile("trainingData/test.txt", "utf8"),*/
-  ]);
-
-  // Function to split text into articles
-  function splitIntoArticles(text: string): string[] {
-    // Split the text on "article----------"
-    const articles = text.split(/article----------/);
-
-    // Process all articles
-    const processedArticles: string[] = articles.flatMap(
-      (article: string): string[] => {
-        const articleParts: string[] = [];
-        let remainingText: string = article;
-
-        while (remainingText.length > 10000) {
-          articleParts.push(remainingText.slice(0, 10000));
-          remainingText = remainingText.slice(10000);
-        }
-
-        if (remainingText.length > 0) {
-          articleParts.push(remainingText);
-        }
-
-        return articleParts;
-      }
-    );
-
-    return processedArticles;
-  }
-
-  // Split each source into articles
-  const drupalWikiArticles = splitIntoArticles(drupalWiki);
-  //const jHrPdfsArticles = splitIntoArticles(j_hr_pdfs);
-  //const testArticles = splitIntoArticles(test);
-
-  // Combine all articles
-  const allArticles = [
-    ...drupalWikiArticles,
-    //...jHrPdfsArticles,
-    //...testArticles,
-  ];
-
-  // Create documents from articles
-  const docs = allArticles.map((article, index) => ({
-    pageContent: article.trim(),
-    metadata: {
-      source: "wiki",
-      articleIndex: index,
-    },
-  }));
-
-  console.log(`Number of articles created: ${docs.length}`);
-
-  // Create embeddings
-  const embeddings = new OpenAIEmbeddings({
-    modelName: "text-embedding-ada-002",
-  });
-
-  // Initialize vector store
-  let vectorStore: PineconeStore | null = null;
-
-  // Process documents in batches
-  const batchSize = 1; // Adjust this value based on your needs
-  for (let i = 0; i < docs.length; i += batchSize) {
-    const batch = docs.slice(i, i + batchSize);
-    console.log(`Processing article ${i + 1} of ${docs.length}`);
-    console.log(`Article length: ${batch[0].pageContent.length} characters`);
-
-    if (vectorStore === null) {
-      // Initialize the vector store with the first batch
-      vectorStore = await PineconeStore.fromDocuments(batch, embeddings, {
-        pineconeIndex: index,
-        textKey: "text",
-      });
-    } else {
-      // Add subsequent batches to the existing vector store
-      await vectorStore.addDocuments(batch);
-    }
-
-    console.log(
-      `Processed batch ${Math.floor(i / batchSize) + 1} of ${Math.ceil(
-        docs.length / batchSize
-      )}`
-    );
-  }
-
-  if (vectorStore === null) {
-    throw new Error("Failed to create vector store");
-  }
-
-  console.log("New vector store created in Pinecone");
-  return vectorStore;
 }
 
 // Function to initialize the QA chain
