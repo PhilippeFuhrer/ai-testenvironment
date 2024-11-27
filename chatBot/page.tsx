@@ -117,9 +117,6 @@ const ChatBot = () => {
                 }}
                 defaultValue=""
               >
-                <option value="" disabled hidden>
-                  Change Bot
-                </option>
                 <option value="Abacus">Abacus Agent</option>
                 <option value="ICT">ICT Agent</option>
                 <option value="DSG">DSG Agent</option>
