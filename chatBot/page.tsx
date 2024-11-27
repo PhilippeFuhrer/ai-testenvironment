@@ -110,7 +110,7 @@ const ChatBot = () => {
             </button>
             <div className="relative">
               <select
-                className="appearance-none w-full bg-gray-600 text-slate-50 text-sm font-semibold py-3.5 px-4 hover:bg-black ease-in-out duration-200 rounded-lg pr-8 focus:outline-none"
+                className="appearance-none w-full bg-gray-500 text-slate-50 text-sm font-semibold py-3.5 px-4 hover:bg-black ease-in-out duration-200 rounded-lg mr-4 focus:outline-none"
                 onChange={(e) => {
                   const selectedValue = e.target.value;
                   handleBotChange(selectedValue);
@@ -124,7 +124,7 @@ const ChatBot = () => {
                 <option value="ICT">ICT Agent</option>
                 <option value="DSG">DSG Agent</option>
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-50">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-50">
                 <svg
                   className="fill-current h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
