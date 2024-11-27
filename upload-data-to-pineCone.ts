@@ -30,7 +30,6 @@ function splitIntoArticles(text: string): string[] {
       processedArticles.push(remainingText);
     }
   }
-
   return processedArticles;
 }
 
