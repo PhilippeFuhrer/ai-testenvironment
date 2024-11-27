@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import handleMessageAbacus from "@/chatBot/chatBotRAG-Pinecone-Abacus";
 import handleMessageDSG from "@/chatBot/chatBotRAG-Pinecone-DSG";
 import handleMessageICT from "@/chatBot/chatBot-ICT";
+import handleMessageBlog from "@/chatBot/chatBot-Blog-Generator"
 
 export async function POST(request: { json: () => any; }) {
   const body = await request.json();
@@ -20,8 +21,11 @@ export async function POST(request: { json: () => any; }) {
     if (botStatus === "ICT") {
       aiResponse = await handleMessageICT(content);
     }
-    else if (botStatus === "abacus") {
+    if (botStatus === "abacus") {
       aiResponse = await handleMessageAbacus(content);
+    }
+    if (botStatus === "Blog") {
+      aiResponse = await handleMessageBlog(content);
     }
     
     console.log(aiResponse);
