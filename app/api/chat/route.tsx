@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import handleMessageAbacus from "@/chatBot/chatBotRAG-Pinecone-Abacus";
 import handleMessageDSG from "@/chatBot/chatBotRAG-Pinecone-DSG";
 import handleMessageICT from "@/chatBot/chatBot-ICT";
 import handleMessageBlog from "@/chatBot/chatBot-Blog-Generator"
 
-export async function POST(request: { json: () => any; }) {
+export async function POST(request: NextRequest) {
   const body = await request.json();
   console.log("POST Request:", body);
 
