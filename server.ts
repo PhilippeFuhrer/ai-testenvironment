@@ -3,6 +3,8 @@ import next from 'next';
 import getConfig from 'next/config';
 import dotenv from 'dotenv';
 
+/*
+
 // Load environment variables
 dotenv.config();
 
@@ -25,3 +27,5 @@ app.prepare().then(() => {
     console.log(`> Ready on http://${vpnServerIP}:3000`);
   });
 });
+
+*/

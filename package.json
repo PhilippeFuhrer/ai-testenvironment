@@ -1,6 +1,7 @@
 {
   "name": "ai-generator-multi-purpose",
   "version": "0.1.0",
+  "bin": "index.js",
   "private": true,
   "scripts": {
     "dev": "next dev",
