@@ -34,7 +34,7 @@ let conversationHistory: [string, string][] = [];
 async function initializeVectorStore() {
   console.log("Initializing vector store...");
 
-  const indexName = process.env.PINECONE_INDEX_NAME_DRUPAL_AND_COURSES!;
+  const indexName = process.env.PINECONE_INDEX_NAME!;
   const index = pinecone.Index(indexName);
 
   try {
@@ -46,11 +46,14 @@ async function initializeVectorStore() {
       );
     } else {
       console.log(
-        "No existing vectors found or unable to determine count. Creating new vector store..."
+        "No existing vectors found or unable to determine count."
       );
     }
     // Initialize PineconeStore
-    const embeddings = new OpenAIEmbeddings();
+    const embeddings = new OpenAIEmbeddings({
+      modelName: 'text-embedding-ada-002',
+    });
+    
     vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
       pineconeIndex: index,
     });
@@ -67,7 +70,7 @@ async function initializeChain(vectorStore: PineconeStore) {
 
   // Initialize the language model
   const model = new ChatOpenAI({
-    modelName: "gpt-4",
+    modelName: "gpt-4o",
     temperature: 0.5,
     maxTokens: 750,
   });
