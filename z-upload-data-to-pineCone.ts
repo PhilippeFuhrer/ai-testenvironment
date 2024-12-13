@@ -36,7 +36,7 @@ function splitIntoArticles(text: string): string[] {
 async function createNewVectorStore() {
   // Read the source file
   const newDoc = await fs.readFile(
-    'trainingData/DSG-Verordnung-Demo-cleaned.txt',
+    'trainingData/combined-text-article-chunks-cleaned.txt',
     'utf8'
   );
 
@@ -62,12 +62,12 @@ async function createNewVectorStore() {
   // Check if index exists, if not create it
   console.log("Initializing vector store...");
 
-  const indexName = process.env.PINECONE_INDEX_NAME_DEMO!;
+  const indexName = process.env.PINECONE_INDEX_NAME_DRUPAL_AND_COURSES!;
   const index = pinecone.Index(indexName);
 
   // Create embeddings
   const embeddings = new OpenAIEmbeddings({
-    modelName: 'text-embedding-ada-002',
+    modelName: 'text-embedding-3-small',
   });
 
   // Initialize PineconeStore

@@ -34,7 +34,7 @@ let conversationHistory: [string, string][] = [];
 async function initializeVectorStore() {
   console.log("Initializing vector store...");
 
-  const indexName = process.env.PINECONE_INDEX_NAME!;
+  const indexName = process.env.PINECONE_INDEX_NAME_DRUPAL_AND_COURSES!;
   const index = pinecone.Index(indexName);
 
   try {
