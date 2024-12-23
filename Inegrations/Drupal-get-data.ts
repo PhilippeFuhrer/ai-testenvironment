@@ -1,3 +1,8 @@
+
+
+//not in use, because API of drupal does not work
+
+
 const axios = require('axios');
 const cheerio = require('cheerio');
 require("dotenv").config();
