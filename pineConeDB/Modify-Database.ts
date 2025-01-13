@@ -5,9 +5,6 @@ import path from "path";
 // Load env variables
 config({ path: path.resolve(__dirname, "../.env") });
 
-// Debug: Check if env variables are loaded
-console.log("API Key loaded:", !!process.env.PINECONE_API_KEY);
-console.log("Index Name loaded:", !!process.env.PINECONE_INDEX_NAME);
 
 // Initialize Pinecone with error handling
 let pinecone: Pinecone;
@@ -35,7 +32,7 @@ async function loadAllIndex() {
 
 async function loadIndex() {
     try {
-        const indexName = process.env.PINECONE_INDEX_NAME;
+        const indexName = process.env.PINECONE_INDEX_NAME_DRUPAL_AND_COURSES;
         if (!indexName) {
             throw new Error("PINECONE_INDEX_NAME is not defined in environment variables");
         }
@@ -47,6 +44,26 @@ async function loadIndex() {
     }
 }
 
+async function deleteRecordsById(targetId: string) {
+    try {
+        const indexName = process.env.PINECONE_INDEX_NAME_DRUPAL_AND_COURSES;
+        if (!indexName) {
+            throw new Error("PINECONE_INDEX_NAME is not defined in environment variables");
+        }
+        
+        const index = pinecone.index(indexName);
+        
+        // Delete all vectors with the matching ID
+        await index.deleteOne(targetId);
+        
+        console.log(`Successfully deleted all records with ID: ${targetId}`);
+    } catch (error) {
+        console.error("Error deleting records:", error);
+        throw error; // Re-throw the error for handling by the caller if needed
+    }
+}
+
 // Execute functions
 loadAllIndex();
 loadIndex();
+deleteRecordsById("3aff65ce-463b-4760-a223-7bfefcab1ae2");
