@@ -3,8 +3,6 @@ import * as lancedb from "@lancedb/lancedb";
 //initializing DataBase
 async function initialize() {
   const db = await lancedb.connect("./lanceDB");
-  const tableNames = await db.tableNames();
-  console.log("Existing tables: " + tableNames);
 }
 
 // add data to table
@@ -17,8 +15,22 @@ async function addData() {
     { vector: [9.5, 56.2], item: "buzz", price: 200.0 },
   ];
   await table.add(data);
-
 }
+
+//checking the dataBase for data
+async function logData() {
+  const db = await lancedb.connect("./lanceDB");
+  const table = await db.openTable("myTable");
+  const count = await table.countRows();
+  const tableNames = await db.tableNames();
+  const schema = await table.schema();
+
+  console.log("Existing tables: " + tableNames);
+  console.log("Number of rows: " + count);
+  console.log("Schema: " + schema)
+  console.log("Info: ");
+}
+
 
 //creating a new table
 async function createTable() {
@@ -33,5 +45,5 @@ async function createTable() {
   );
 }
 
-initialize();
-addData();
+
+logData();
