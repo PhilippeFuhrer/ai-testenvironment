@@ -21,6 +21,7 @@ try {
   process.exit(1);
 }
 
+//load all Indexes
 async function loadAllIndex() {
   try {
     const indexes = await pinecone.listIndexes();
@@ -30,6 +31,7 @@ async function loadAllIndex() {
   }
 }
 
+//load an Index
 async function loadIndex() {
   try {
     const indexName = process.env.PINECONE_INDEX_NAME_DRUPAL_AND_COURSES;
