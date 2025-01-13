@@ -68,6 +68,7 @@ async function deleteRecordsById(targetId: string) {
   }
 }
 
+//delete records by metadata
 async function queryAndDeleteBySource(targetSource: string) {
     try {
       const indexName = process.env.PINECONE_INDEX_NAME_DRUPAL_AND_COURSES;
@@ -106,7 +107,6 @@ async function queryAndDeleteBySource(targetSource: string) {
       console.error("Error querying and deleting vectors:", error);
     }
   }
-  
 
 //fetch specific data
 async function fetchData(targetFetch: string) {
