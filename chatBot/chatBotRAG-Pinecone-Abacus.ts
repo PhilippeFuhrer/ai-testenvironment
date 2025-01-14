@@ -84,7 +84,7 @@ async function initializeChain(vectorStore: PineconeStore) {
   
     Instructions:
     - Always base your answers on the provided context, the retrieved articles, and your knowledge about Abacus software.
-    - **Respond in the German language.**
+    - Respond in the German language.
     - If you've already provided information on this topic, focus on new aspects or details not covered before.
     - If there's no new information to provide, clearly state that and suggest related topics the user might be interested in.
     - If the context or retrieved articles don't contain relevant information, use your general knowledge about Abacus software, but clearly state when you're doing so.
