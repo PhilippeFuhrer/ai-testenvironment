@@ -53,11 +53,26 @@ const ChatBot = () => {
   };
 
   //function to start a new conversation
-
   const newConversation = () => {
     setLoading(false);
     setMessages([]);
     setInput("");
+  };
+
+  // Helper function to parse text with bold markers
+  const formatText = (text: string) => {
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        // Remove ** and make bold
+        return (
+          <span key={index} className="font-bold">
+            {part.slice(2, -2)}
+          </span>
+        );
+      }
+      return <span key={index}>{part}</span>;
+    });
   };
 
   return (
@@ -77,7 +92,7 @@ const ChatBot = () => {
             >
               {`${message.role}: `}
             </strong>
-            {message.content}
+            {formatText(message.content)}
           </div>
         ))}
       </div>
