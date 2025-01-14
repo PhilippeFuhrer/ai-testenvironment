@@ -4,9 +4,10 @@
   import * as fs from "fs/promises";
   import { config } from "dotenv";
   import { Document } from "langchain/document";
+import path from "path";
 
-  // Load environmental variables
-  const result = config();
+// Load env variables
+config({ path: path.resolve(__dirname, "../.env") });
 
   interface Article {
     text: string;
@@ -36,7 +37,7 @@
   async function createNewVectorStore() {
     // Read the source file
     const newDoc = await fs.readFile(
-      'trainingData/combined-text-article-chunks-cleaned.txt',
+      '../data/Data-for-RAG/Kursunterlagen_Lohn_Anwender_2024.txt',
       'utf8'
     );
 
@@ -47,7 +48,7 @@
     const docs: Article[] = newDocCollection.map((article, index) => ({
       text: article.trim(),
       metadata: {
-        source: 'wiki',
+        source: 'Lohn-Anwender-14-01-2025',
         articleIndex: index,
       },
     }));
@@ -62,7 +63,7 @@
     // Check if index exists, if not create it
     console.log("Initializing vector store...");
 
-    const indexName = process.env.PINECONE_INDEX_NAME_DRUPAL_AND_COURSES!;
+    const indexName = process.env.PINECONE_INDEX_NAME!;
     const index = pinecone.Index(indexName);
 
     // Create embeddings
