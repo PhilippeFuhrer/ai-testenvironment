@@ -11,7 +11,11 @@ Making and running the build:
 1. npm run build -> build app
 2. npm run start -> start app
 
-## cmd command for building the .exe file (binary file) for execution on windows server with pkg package: 
+## cmd command for building the .exe file (binary file) for execution on windows server with pkg package: ---> als Admin ausführen
 Buildfile: index.js
 npx pkg index.js -o arcon-agent.exe -t node16-win-x64
+
+## Registrieren und Starten des Dienstes via NSSM auf Windows Server
+nssm install arcon-agent
+nssm start arcon-agent
 
