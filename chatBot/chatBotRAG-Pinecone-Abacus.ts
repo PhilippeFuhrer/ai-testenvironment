@@ -71,8 +71,8 @@ async function initializeChain(vectorStore: PineconeStore) {
   // Initialize the language model
   const model = new ChatOpenAI({
     modelName: "gpt-4o",
-    temperature: 0.5,
-    maxTokens: 750,
+    temperature: 0.8,
+    maxTokens: 1500,
   });
 
   // Define the prompt template for the AI
@@ -108,8 +108,8 @@ async function initializeChain(vectorStore: PineconeStore) {
   // This determines how documents are retrieved from the vector store
   const retriever = vectorStore.asRetriever({
     searchKwargs: {
-      fetchK: 3, // Fetch 3 documents initially
-      lambda: 0.5, // Balance between relevance and diversity
+      fetchK: 2, // Fetch 2 documents initially
+      lambda: 0.8, // Balance between relevance and diversity
     },
     searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
   });
