@@ -106,7 +106,7 @@ async function initializeChain(vectorStore: PineconeStore) {
   // This determines how documents are retrieved from the vector store, only fetch documents the first time of a topic
   const retriever = vectorStore.asRetriever({
     searchKwargs: {
-      fetchK: conversationHistory.length === 0 ? 2 : 1, // Adjust fetch count based on conversation history
+      fetchK: conversationHistory.length === 0 ? 2 : 0, // Adjust fetch count based on conversation history
       lambda: 0.8, // Balance between relevance and diversity
     },
     searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
@@ -148,7 +148,7 @@ export default async function handleMessage(input: string) {
     });
 
     // Log the retrieved documents for debugging
-    console.log("--------------------------------------------------------------------------------------------------------------------------\n\n\n");
+    console.log("\n\n\n--------------------------------------------------------------------------------------------------------------------------");
     console.log("Abgerufene Dokumente:");
 
     if (result.context) {
@@ -161,13 +161,13 @@ export default async function handleMessage(input: string) {
       console.log("Keine Dokumente abgerufen oder Kontext nicht verfügbar.");
     }
 
-    console.log("--------------------------------------------------------------------------------------------------------------------------\n\n\n");
+    console.log("\n\n\n--------------------------------------------------------------------------------------------------------------------------");
     console.log("Response:", result.answer);
 
     // Update conversation history
     conversationHistory.push([input, result.answer]);
 
-    console.log("--------------------------------------------------------------------------------------------------------------------------\n\n\n");
+    console.log("\n\n\n--------------------------------------------------------------------------------------------------------------------------");
     console.log("Conversation History:", conversationHistory);
 
     // Return the generated response
