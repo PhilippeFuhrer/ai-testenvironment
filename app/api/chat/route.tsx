@@ -28,8 +28,6 @@ export async function POST(request: NextRequest) {
       aiResponse = await handleMessageBlog(content);
     }
     
-    console.log(aiResponse);
-    
     return NextResponse.json({ response: aiResponse }, { status: 200 });
   } catch (error) {
     console.error("Error processing message:", error);

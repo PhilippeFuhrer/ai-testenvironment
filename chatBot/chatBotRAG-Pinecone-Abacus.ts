@@ -1,6 +1,6 @@
 import { OpenAI } from "openai";
 import { config } from "dotenv";
-import { OpenAIEmbeddings } from "@langchain/openai";
+import { convertPromptToOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { PineconeStore } from "@langchain/pinecone";
 import { Pinecone } from "@pinecone-database/pinecone";
 import { ChatOpenAI } from "@langchain/openai";
@@ -45,15 +45,13 @@ async function initializeVectorStore() {
         `Existing vectors found in Pinecone index. Total records: ${indexStats.totalRecordCount}`
       );
     } else {
-      console.log(
-        "No existing vectors found or unable to determine count."
-      );
+      console.log("No existing vectors found or unable to determine count.");
     }
     // Initialize PineconeStore
     const embeddings = new OpenAIEmbeddings({
-      modelName: 'text-embedding-ada-002',
+      modelName: "text-embedding-ada-002",
     });
-    
+
     vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
       pineconeIndex: index,
     });
@@ -97,7 +95,7 @@ async function initializeChain(vectorStore: PineconeStore) {
     - End your response with a question to encourage further dialogue if appropriate.
   
     Response:
-  `);  
+  `);
 
   // This chain takes the retrieved documents and combines them with the prompt
   const documentChain = await createStuffDocumentsChain({
@@ -105,10 +103,10 @@ async function initializeChain(vectorStore: PineconeStore) {
     prompt: promptTemplate, // Use the custom prompt template we defined earlier
   });
 
-  // This determines how documents are retrieved from the vector store
+  // This determines how documents are retrieved from the vector store, only fetch documents the first time of a topic
   const retriever = vectorStore.asRetriever({
     searchKwargs: {
-      fetchK: 2, // Fetch 2 documents initially
+      fetchK: conversationHistory.length === 0 ? 2 : 1, // Adjust fetch count based on conversation history
       lambda: 0.8, // Balance between relevance and diversity
     },
     searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
@@ -143,8 +141,6 @@ export default async function handleMessage(input: string) {
     // Ensure the vector store and chain are initialized
     await ensureInitialized();
 
-    console.log("Query:", input);
-
     // Use the chain to process the query and get a response
     const result = await chain.invoke({
       input,
@@ -152,7 +148,9 @@ export default async function handleMessage(input: string) {
     });
 
     // Log the retrieved documents for debugging
+    console.log("--------------------------------------------------------------------------------------------------------------------------\n\n\n");
     console.log("Abgerufene Dokumente:");
+
     if (result.context) {
       result.context.forEach((doc: Document, index: number) => {
         console.log(`Dokument ${index + 1}:`);
@@ -163,10 +161,14 @@ export default async function handleMessage(input: string) {
       console.log("Keine Dokumente abgerufen oder Kontext nicht verfügbar.");
     }
 
+    console.log("--------------------------------------------------------------------------------------------------------------------------\n\n\n");
     console.log("Response:", result.answer);
 
     // Update conversation history
     conversationHistory.push([input, result.answer]);
+
+    console.log("--------------------------------------------------------------------------------------------------------------------------\n\n\n");
+    console.log("Conversation History:", conversationHistory);
 
     // Return the generated response
     return result.answer;
