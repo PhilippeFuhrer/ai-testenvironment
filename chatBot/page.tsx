@@ -63,7 +63,7 @@ const ChatBot = () => {
   const formatText = (text: string) => {
     const parts = text.split(/(\*\*.*?\*\*)/g);
     return parts.map((part, index) => {
-      if (part.startsWith("**") && part.endsWith("**")) {
+      if (part.startsWith("**") && part.endsWith("**") || part.startsWith("###") && part.endsWith("###")) {
         // Remove ** and make bold
         return (
           <span key={index} className="font-bold">

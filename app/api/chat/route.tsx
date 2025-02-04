@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   console.log("POST Request:", body);
 
   const botStatus = body.botStatus;
-  console.log("Bottype: " + body.botStatus)
+  console.log("Timestamp: " + new Date().toISOString())
 
   const content = body.messages.map((message: { content: any; }) => message.content).join(" ");
   let aiResponse = ""; 
