@@ -23,7 +23,7 @@ const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY!,
 });
 
-console.log("AI initialized, APIs connected");
+console.log("Abacus Agent Initzialized");
 
 // Global variables to store the vector store and chain
 let vectorStore: PineconeStore;

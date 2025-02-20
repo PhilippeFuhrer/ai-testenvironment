@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import handleMessageAbacus from "@/chatBot/chatBotRAG-Pinecone-Abacus";
 import handleMessageDSG from "@/chatBot/chatBotRAG-Pinecone-DSG";
 import handleMessageICT from "@/chatBot/chatBot-ICT";
-import handleMessageBlog from "@/chatBot/chatBot-Blog-Generator"
+import handleMessageBlog from "@/chatBot/chatBot-Blog-Generator";
+import handleMessageEss from "@/chatBot/chatBot-ESS";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -13,7 +14,7 @@ export async function POST(request: NextRequest) {
 
   const content = body.messages.map((message: { content: any; }) => message.content).join(" ");
   let aiResponse = ""; 
-  
+
   try {
     if (botStatus === "DSG") {
       aiResponse = await handleMessageDSG(content);
@@ -26,6 +27,9 @@ export async function POST(request: NextRequest) {
     }
     if (botStatus === "Blog") {
       aiResponse = await handleMessageBlog(content);
+    }
+    if (botStatus === "ESS") {
+      aiResponse = await handleMessageEss(content);
     }
     
     return NextResponse.json({ response: aiResponse }, { status: 200 });

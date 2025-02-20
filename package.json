@@ -26,6 +26,7 @@
     "langchain": "^0.3.2",
     "next": "14.2.6",
     "openai": "^4.67.1",
+    "pdf-parse": "^1.1.1",
     "pinecone": "^0.1.0",
     "react": "^18",
     "react-dom": "^18"
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^20.16.14",
+    "@types/pdf-parse": "^1.1.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",

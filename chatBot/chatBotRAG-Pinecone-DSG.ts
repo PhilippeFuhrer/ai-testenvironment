@@ -18,7 +18,7 @@ const openAI = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-console.log("AI initialized");
+console.log("DSG Agent initialized");
 
 // Global variables to store the vector store and chain
 let vectorStore: PineconeStore;

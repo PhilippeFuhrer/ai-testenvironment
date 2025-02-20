@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-console.log("AI IT Support initialized");
+console.log("Blog Agent initialized");
 
 // Define an interface for message structure
 interface ChatMessage {
