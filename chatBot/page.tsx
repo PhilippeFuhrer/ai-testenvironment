@@ -62,7 +62,7 @@ const ChatBot = () => {
   };
 
   function cleanResponse(textToFormat: string) {
-    const formattedText = textToFormat.replace(/\\n/g, "\n");
+    const formattedText = textToFormat.replace(/\\n/g, "");
     console.log(formattedText);
     return formattedText;
   }
@@ -129,10 +129,8 @@ const ChatBot = () => {
                   <li
                     style={{
                       margin: "0px",
-                      padding: "0px",
                       lineHeight: "1.5",
-                      height: "auto",
-                      display: "list-item",
+                      height: "auto"
                     }}
                     {...props}
                   />
