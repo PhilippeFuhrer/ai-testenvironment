@@ -155,13 +155,11 @@ export default async function handleMessage(input: string) {
       result.context.forEach((doc: Document, index: number) => {
         console.log(`Dokument ${index + 1}:`);
         console.log(doc.pageContent);
-        console.log("---");
+        console.log("\n\n\n--------------------------------------------------------------------------------------------------------------------------");
       });
     } else {
       console.log("Keine Dokumente abgerufen oder Kontext nicht verfügbar.");
     }
-
-    console.log("\n\n\n--------------------------------------------------------------------------------------------------------------------------");
     console.log("Response:", result.answer);
 
     // Update conversation history

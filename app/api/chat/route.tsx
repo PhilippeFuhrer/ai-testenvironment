@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     if (botStatus === "ICT") {
       aiResponse = await handleMessageICT(content);
     }
-    if (botStatus === "abacus") {
+    if (botStatus === "Abacus") {
       aiResponse = await handleMessageAbacus(content);
     }
     if (botStatus === "Blog") {
