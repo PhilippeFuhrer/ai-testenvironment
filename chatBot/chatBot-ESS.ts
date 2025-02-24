@@ -34,7 +34,7 @@ let conversationHistory: [string, string][] = [];
 async function initializeVectorStore() {
   console.log("Initializing vector store...");
 
-  const indexName = process.env.PINECONE_INDEX_NAME!;
+  const indexName = process.env.PINECONE_INDEX_NAME_ESS_AGENT!;
   const index = pinecone.Index(indexName);
 
   try {
@@ -75,26 +75,40 @@ async function initializeChain(vectorStore: PineconeStore) {
 
   // Define the prompt template for the AI
   const promptTemplate = PromptTemplate.fromTemplate(`
-    You are an expert IT Support Agent specializing in Abacus Business Software by Abacus Research AG. Your role is to provide accurate, helpful, and professional responses to questions about this software. Use the following guidelines:
-    1. Context: {context}
-    2. Question: {input}
-    3. Chat History: {chat_history}
-  
-    Instructions:
-    - Always base your answers on the provided context, the retrieved articles, and your knowledge about Abacus software.
-    - Respond in the German language.
-    - If you've already provided information on this topic, focus on new aspects or details not covered before.
-    - If there's no new information to provide, clearly state that and suggest related topics the user might be interested in.
-    - If the context or retrieved articles don't contain relevant information, use your general knowledge about Abacus software, but clearly state when you're doing so.
-    - Provide step-by-step instructions when explaining processes.
-    - Use technical terms related to Abacus software, but explain them if they're complex.
-    - If you're unsure about any part of your answer, express that uncertainty in a professional manner (e.g., "Based on the information available, it seems...").
-    - If the user's question is unclear, ask for clarification.
-    - Provide as much relevant information as possible.
-    - Cite the sources of the information clearly.
-    - End your response with a question to encourage further dialogue if appropriate.
-  
-    Response:
+    Du bist ein erfahrener IT-Support-Spezialist für die Abacus Business Software von Abacus Research AG. 
+    Deine Aufgabe ist es, präzise, hilfreiche und professionelle Antworten auf Fragen zu dieser Software zu geben. 
+    Beachte dabei folgende Richtlinien:
+
+    Kontext: {context}
+    Frage: {input}
+    Chat-Verlauf: {chat_history}
+
+    Allgemeine Anweisungen:
+    Basiere deine Antworten stets auf dem gegebenen Kontext, den bereitgestellten Artikeln und deinem Wissen über die Abacus-Software.
+    Antworte auf Deutsch.
+    Wenn du bereits Informationen zu diesem Thema gegeben hast, konzentriere dich auf neue Aspekte oder Details, die noch nicht behandelt wurden.
+    Falls es keine neuen Informationen gibt, sage das deutlich und schlage verwandte Themen vor, die den Benutzer interessieren könnten.
+    Wenn der Kontext oder die bereitgestellten Artikel keine relevanten Informationen enthalten, nutze dein allgemeines Wissen über Abacus-Software, aber mache klar, wenn du dies tust.
+    Gib Schritt-für-Schritt-Anleitungen, wenn du Prozesse erklärst.
+    Verwende technische Begriffe im Zusammenhang mit Abacus-Software, erkläre sie aber, wenn sie komplex sind.
+    Wenn du dir bei einem Teil deiner Antwort unsicher bist, drücke diese Unsicherheit professionell aus (z.B. "Basierend auf den verfügbaren Informationen scheint es...").
+    Wenn die Frage des Benutzers unklar ist, bitte um Klärung.
+    Gib so viele relevante Informationen wie möglich.
+    Zitiere die Informationsquellen deutlich.
+    Beende deine Antwort mit einer Frage, um den Dialog fortzuführen, wenn es angemessen ist.
+
+    Deine Aufgabe:
+    Du bist ein Beratungsagent für Kunden, die ESS-Abos lösen möchten. 
+    ESS-Abos werden im Zusammenhang mit der Abacus Business Software verwendet und sind für den Zugriff auf das Webportal MyAbacus erforderlich. 
+    Im Kontext findest du alle Abos, Regelungen und die dazugehörigen Kosten. Du beantwortest Kundenanfragen und berätst Kunden zum Thema ESS-Abos. 
+    Bei Anfragen zu Kosten gibst du gemäß den Preisen der ESS-Abos in der Datei Auskunft.
+
+    Output:
+    Stelle die Lizenzkosten übersichtlich in einem Tabellenformat dar.
+    Stell den gesamten Inhalt als Markdown dar.
+
+
+    Antwort:
   `);
 
   // This chain takes the retrieved documents and combines them with the prompt
@@ -106,7 +120,7 @@ async function initializeChain(vectorStore: PineconeStore) {
   // This determines how documents are retrieved from the vector store, only fetch documents the first time of a topic
   const retriever = vectorStore.asRetriever({
     searchKwargs: {
-      fetchK: conversationHistory.length === 0 ? 2 : 0, // Adjust fetch count based on conversation history
+      fetchK: conversationHistory.length === 0 ? 3 : 0, // Adjust fetch count based on conversation history
       lambda: 0.8, // Balance between relevance and diversity
     },
     searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
@@ -148,7 +162,9 @@ export default async function handleMessage(input: string) {
     });
 
     // Log the retrieved documents for debugging
-    console.log("\n\n\n--------------------------------------------------------------------------------------------------------------------------");
+    console.log(
+      "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
+    );
     console.log("Abgerufene Dokumente:");
 
     if (result.context) {
@@ -161,13 +177,17 @@ export default async function handleMessage(input: string) {
       console.log("Keine Dokumente abgerufen oder Kontext nicht verfügbar.");
     }
 
-    console.log("\n\n\n--------------------------------------------------------------------------------------------------------------------------");
+    console.log(
+      "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
+    );
     console.log("Response:", result.answer);
 
     // Update conversation history
     conversationHistory.push([input, result.answer]);
 
-    console.log("\n\n\n--------------------------------------------------------------------------------------------------------------------------");
+    console.log(
+      "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
+    );
     console.log("Conversation History:", conversationHistory);
 
     // Return the generated response
