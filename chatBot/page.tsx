@@ -63,6 +63,7 @@ const ChatBot = () => {
 
   function cleanResponse(textToFormat: string) {
     const formattedText = textToFormat.replace(/\\n/g, "");
+
     return formattedText;
   }
 
