@@ -31,8 +31,13 @@ const navBar = () => {
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
-                <a href="https://www.arcon.ch/" target="_blank">
-                  Zur Webseite
+                <a href="https://arcon-ess-calculator.onrender.com/" target="_blank">
+                  ESS Calculator
+                </a>
+              </li>
+              <li>
+                <a href="https://arcon-cloud-configurator.onrender.com/" target="_blank">
+                  Cloud Configurator
                 </a>
               </li>
             </ul>
