@@ -19,3 +19,6 @@ npx pkg index.js -o arcon-agent.exe -t node16-win-x64
 nssm install arcon-agent
 nssm start arcon-agent
 
+## Upload data 
+npx tsx Upload-data-to-pineCone.ts
+

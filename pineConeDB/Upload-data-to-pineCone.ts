@@ -37,7 +37,7 @@ config({ path: path.resolve(__dirname, "../.env") });
   async function createNewVectorStore() {
     // Read the source file
     const newDoc = await fs.readFile(
-      '../data/Data-for-RAG/Kursunterlagen_Lohn_Anwender_2024.txt',
+      '../data/Data-for-RAG/Preisliste-Abacus-ESS.txt',
       'utf8'
     );
 
@@ -48,7 +48,7 @@ config({ path: path.resolve(__dirname, "../.env") });
     const docs: Article[] = newDocCollection.map((article, index) => ({
       text: article.trim(),
       metadata: {
-        source: 'Lohn-Anwender-14-01-2025',
+        source: 'Preisliste-Abacus-ESS.txt',
         articleIndex: index,
       },
     }));
@@ -63,13 +63,12 @@ config({ path: path.resolve(__dirname, "../.env") });
     // Check if index exists, if not create it
     console.log("Initializing vector store...");
 
-    const indexName = process.env.PINECONE_INDEX_NAME!;
+    const indexName = process.env.PINECONE_INDEX_NAME_ESS_AGENT!;
     const index = pinecone.Index(indexName);
 
     // Create embeddings
     const embeddings = new OpenAIEmbeddings({
-      modelName: 'text-embedding-3-small',
-      dimensions: 1536,
+      modelName: 'text-embedding-ada-002',
     });
 
     // Initialize PineconeStore

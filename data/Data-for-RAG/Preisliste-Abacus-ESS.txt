@@ -1,0 +1,608 @@
+Einzelabo
+1.1
+Standard ESS-Abos
+92101.200 Abacus ESS Small
+Monatliche Kosten pro User und pro Mandant
+Mobiler Zugriff via MyAbacus oder AbaClik auf die eigenen Personalstammdaten, Dokumente
+(Lohnabrechnung, Lohnausweis etc.)
+Versand und Empfang von Nachrichten über das Messaging-System
+Starten von Prozessen für die Erfassung und Änderung von eigenen Daten im Personalstamm
+(Adresse ändern, Lohnkonto ändern etc.)
+
+CHF
+
+1.00
+
+92101.201 Abacus ESS Medium
+Monatliche Kosten pro User und pro Mandant
+Enthält alle Funktionen von «ESS Small»
+Erfassen der Arbeitszeiten (Kommen-/Gehen-Zeiten)
+Absenzen-Prozess (Ferien, Krankheit, Unfall etc.)
+Einweg Synchronisation: Termine Outlook (Exchange Integration)
+Erfassung von Leistungen ohne Projekt
+Versand von Aufgaben über das Messaging-System
+
+CHF
+
+3.00
+
+92101.202 Abacus ESS Large
+Monatliche Kosten pro User und pro Mandant CHF 5.00
+Enthält alle Funktionalitäten von «ESS Medium»
+Eigene Spesen erfassen
+Eigene Leistungen mit Projekt erfassen
+Kachel «Reisespesen» via AbaClik erfassen, bewilligen und Belege dazu erfassen
+Freigabe/Ablehnung von Buchungen in der Kachel «Freigaben»
+View «Projektaktivitäten»
+Projektdossier
+
+CHF
+
+5.00
+
+Detaillierte Informationen zur Spesenerfassung, Zeiterfassung, AbaClock, AbaPoint, AbaUnit, AbaPlan etc. sind im
+Partnerportal unter Mobile Apps & Cloud zu finden:
+https://partner.abacus.ch/administration/preislisten
+
+
+Preisliste Abacus
+Sicher clever gelöst.
+Seite 4 von 13
+
+1.2
+Zusatz-Abos
+92101.210 Zusatz-Abo AbaReport
+Monatliche Kosten pro User und pro Mandant
+Voraussetzung Lizenz: Grundversion AbaReport (mind. 1 User)
+Voraussetzung ESS-Benutzer: Abo ESS Medium oder Large
+Es sind folgende Programmtabellen auswertbar: LOHN / LHND / PUBL / PROJ / ZENT
+Automatischer Zugriffsschutz gemäss Organisationsstruktur
+
+CHF
+
+0.50
+
+92101.211 Zusatz-Abo Data Analyzer
+Monatliche Kosten pro User und pro Mandant
+Voraussetzung Lizenz: Grundversion AbaReport + Option Data Science Edition (mind. 1 User)
+Voraussetzung ESS-Benutzer: Abo ESS Medium oder Large + Zusatz-Abo AbaReport
+Es sind folgende Programmtabellen auswertbar: LOHN / LHND / PUBL / PROJ / ZENT
+
+CHF
+
+0.50
+
+92101.212 Zusatz-Abo AbaPlan
+Monatliche Kosten pro zu verplanenden Mitarbeitenden und Mandant
+Voraussetzung für den Einsatz des Zusatz-Abos AbaPlan ist ein Abo ESS Medium oder Large.
+
+CHF
+
+4.00
+
+92101.213 Zusatz-Abo Baurapporte für AbaBau
+Monatliche Kosten pro User und pro Mandant
+Das ESS Abo Baurapporte schaltet den Tagesrapport im MyAbacus AbaBau und den
+Regieauftrag im MyAbacus Servicemanagement frei.
+Voraussetzung für den Einsatz des ESS Abo Baurapporte ist mindestens ein Abo ESS Medium.
+Die Applikation AbaBau muss lizenziert und auf dem Mandant eröffnet sein, damit das Abo
+angezeigt wird.
+
+CHF
+
+9.00
+
+92101.214 Zusatz-Abo Ticketing
+Monatliche Kosten pro User und pro Mandant
+Voraussetzung für den Einsatz des Ticketing ist mindestens ein Abo ESS Medium.
+
+CHF
+
+8.00
+
+
+Preisliste Abacus
+Sicher clever gelöst.
+Seite 5 von 13
+
+1.3
+Portal – Optionen
+Die Aufschaltung der Portal-Optionen erfolgt durch Abacus Research. Bestellung über bestellungen@abacus.ch
+
+92101.215 Option Auftragsbearbeitung Bestellanfragen Pay-per-Use
+pro Bestellanfrage CHF 1.00
+(Wenn keine Bestellanforderung erfasst wird, entstehen keine Kosten)
+Voraussetzung: ESS-Abo-Medium oder Large, Standard oder Firmenabo
+Für Applikationsuser ABEA ist die Benutzung der Bestellanforderung kostenlos
+
+CHF
+
+1.00
+
+Hinweise
+
+Abrechnung der Kosten
+Die Kosten werden quartalsweise in Rechnung gestellt.
+
+Zusatz-Abos
+Zusatz-Abos können auch in Verbindung mit dem Firmenabo eingesetzt werden. Dies ist empfehlenswert, wenn das Zusatz-
+Abo nicht für alle Mitarbeitende benötigt wird.
+Siehe Berechnungsbeispiel AbaPlan
+
+
+Preisliste Abacus
+Sicher clever gelöst.
+Seite 6 von 13
+
+2
+Firmenabo
+2.1
+Firmenabo aktive Mitarbeiter
+
+92102.201 Firmenabo Medium
+Monatliche Kosten für jeden Mitarbeitenden pro Mandant
+Enthält alle Funktionen von «ESS Medium»
+Ermöglicht den Zugriff der Vorgesetzten auf ihre Mitarbeitenden (MSS)
+
+CHF
+
+2.00
+
+92102.203 Zusatz-Abo Large
+Monatliche Zusatzkosten für «ESS Large» pro User
+
+CHF
+
+2.00
+2.2
+Firmenabo Einzelauswahl-User
+92102.210 Firmenabo Medium Einzelauswahl-User
+92102.211 Firmenabo Large Einzelauswahl-User
+Diese Abo-Variante eignet sich z.B. für die Testphase, während der nur eine beschränkte Anzahl
+Benutzer das ESS-Abo nutzen. Es lässt sich für eine beliebige Anzahl Mitarbeitende aktivieren,
+wird jedoch für mindestens 25 Mitarbeitende verrechnet. Der Leistungsumfang des Firmenabos
+ist aktiv, jedoch muss es nicht für alle aktiven Mitarbeitende bezahlt werden, sondern nur für
+diejenigen mit einem gelösten Abo. Aktivierte Portal-Optionen sind nur für die zugewiesenen
+Abos kostenpflichtig. Firmenabo Optionen 92103.210 AbaReport und 92103.211 Data Analyzer
+können nicht in Kombination mit Einzelauswahl User aktiviert werden.
+
+Im MyAbacus Lohn/HR Views sind für Vorgesetzte nur Mitarbeitende ersichtlich, welche ebenfalls
+über ein entsprechendes Abo verfügen. D.h. Mitarbeitende ohne Abo werden unter «Meine
+Mitarbeiter» im Mitarbeiterverzeichnis sowie in Auswertungen (Phoenix-Reports, AbaReports,
+Data Analyzer Dashboards) nicht aufgeführt.
+
+In den Views der Zeiterfassung/Projektverwaltung werden Mitarbeiter auch ohne Abo angezeigt,
+solange sie aktiv in der Projektverwaltung sind und der Zugriffschutz entsprechend eingerichtet
+ist.
+CHF
+CHF
+3.00
+5.00
+
+
+Preisliste Abacus
+Sicher clever gelöst.
+Seite 7 von 13
+
+2.3
+Firmenabo-Optionen
+92103.214 Firmenabo-Option Spesen Pay-per-Use
+(Nur im Rahmen eines Firmenabos verfügbar.)
+Monatliche Kosten bei Benutzung pro Mitarbeitenden pro Mandant
+
+Es entstehen keine Kosten, wenn keine Spesen eingereicht werden oder der Mitarbeitende
+bereits ein ESS Large-Abo besitzt.
+Werden Spesen via AbaClik 3 oder MyAbacus (bei automatischer Belegerkennung) eingereicht,
+wird CHF 2.00 pro Mitarbeitenden und Monat verrechnet.
+
+Ab der Abacus Version 2023 SP Mai 23 können auch Spesen via AbaClik auf Projekte rapportiert
+werden. Auf MyAbacus wird dies zu einem späteren Zeitpunkt möglich sein.
+
+92103.212 Firmenabo-Option AbaPlan
+(Nur im Rahmen eines Firmenabos verfügbar.)
+Monatliche Kosten für jeden Mitarbeitenden pro Mandant
+
+92103.210 Firmenabo-Option AbaReport
+(Nur im Rahmen eines Firmenabos verfügbar.)
+Monatliche Kosten für jeden Mitarbeitenden pro Mandant
+Ist nicht in Kombination mit Einzelauswahl-User erhältlich.
+
+92103.211 Firmenabo-Option Data Analyzer
+(Nur im Rahmen eines Firmenabos verfügbar.)
+Monatliche Kosten für jeden Mitarbeitenden pro Mandant
+Voraussetzung: Firmenabo-Option AbaReport
+Ist nicht in Kombination mit Einzelauswahl-User erhältlich.
+
+Aufschaltung und Kündigung Firmenabo-Optionen Die Aufschaltung und die Kündigung einer
+Firmenabo-Option erfolgt durch Abacus Research. Bestellung/Kündigung über
+bestellungen@abacus.ch
+
+CHF
+
+CHF
+
+CHF
+
+CHF
+
+2.00
+
+2.00
+
+0.10
+
+0.10
+
+
+Preisliste Abacus
+Sicher clever gelöst.
+Seite 8 von 13
+
+2.4
+Portal-Optionen
+Die Aufschaltung der Portal-Optionen erfolgt durch Abacus Research. Bestellung über
+bestellungen@abacus.ch
+
+92103.100 Portal-Option Bewerber
+(nur im Rahmen eines Firmenabos verfügbar)
+Monatliche Kosten für jeden Mitarbeitenden pro Mandant
+
+92103.101 Portal-Option Zeugnis
+(nur im Rahmen eines Firmenabos verfügbar)
+Monatliche Kosten für jeden Mitarbeitenden pro Mandant
+
+92103.102 Portal-Option Mitarbeitergespräch
+(nur im Rahmen eines Firmenabos verfügbar)
+Monatliche Kosten für jeden Mitarbeitenden pro Mandant
+
+92103.104 Portal-Option Vergütungsmanagement
+(nur im Rahmen eines Firmenabos verfügbar)
+Monatliche Kosten für jeden Mitarbeitenden pro Mandant
+
+92103.103 Portal-Option Budget
+(nur im Rahmen eines Firmenabos verfügbar)
+Monatliche Kosten für jeden Mitarbeitenden pro Mandant
+
+92103.105 Portal-Option Company Communication Company News / Company Feed
+(nur im Rahmen eines Firmenabos verfügbar)
+Monatliche Kosten für jeden Mitarbeitenden pro Mandant
+
+92103.107 Portal-Option On-/Offboarding & HR Prozesse
+(nur im Rahmen eines Firmenabos verfügbar)
+Voraussetzung: Lohn Option On-/Offboarding & HR-Prozesse + Lohn Option Stellen
+Monatliche Kosten für jeden Mitarbeitenden pro Mandant
+
+92103.106 Portal-Option Mitarbeiterentwicklung (ehem. Kompetenzmanagement)
+(nur im Rahmen eines Firmenabos verfügbar)
+Monatliche Kosten für jeden Mitarbeitenden pro Mandant
+
+Aufschaltung und Kündigung Portal-Optionen Die Aufschaltung und die Kündigung einer Portal-
+Option erfolgt durch Abacus Research. Bestellung/Kündigung über bestellungen@abacus.ch
+
+CHF
+
+CHF
+
+CHF
+
+CHF
+
+CHF
+
+CHF
+
+CHF
+
+CHF
+
+0.50
+
+0.50
+
+0.50
+
+0.70
+
+0.50
+
+1.00
+
+1.00
+
+1.00
+
+
+Preisliste Abacus
+Sicher clever gelöst.
+Seite 9 von 13
+
+Hinweise
+
+Firmenabo aktive Mitarbeiter
+Berechnung Anzahl aktiver Mitarbeitenden für Firmenabos
+
+Das Firmenabo und die Portal-Optionen werden immer für sämtliche aktiven Mitarbeitenden in Rechnung gestellt. Aktiv ist
+ein Mitar-beitender für die Berechnung, sobald er im System als «eingetreten» erfasst ist, also einen «lohnwirksamen»
+Eintritt oder einen «dienstalterswirksamen» Eintritt aufweist. Aktive Switches wie z.B. «Aktiv für Projektverwaltung» oder
+«Aktiv für Lohnabrechnung» sind für die Berechnung dieser Zahl irrelevant. AbaSky ermittelt die Anzahl der aktiven
+Mitarbeitenden täglich. Für die Verrechnung ist der höchste Wert des Vormonats relevant.
+
+Die Mindestanzahl der Mitarbeitenden für Firmenabos und deren Portal-Optionen ist 25. Zusätzliche Abos für externe
+Berater, Auf-tragnehmer usw. können gelöst werden.
+
+Firmenabo nach Anzahl Lohnabrechnungen
+Sonderregelung für Gemeinden, Kantone, Schulen und Heime
+
+Bei dieser Sonderregelung des Firmenabos werden anstelle der Mitarbeitenden die Anzahl abgerechneter Mitarbeiter des
+Vormo-nats als Basis für die Fakturierung verwendet, mindestens aber die Hälfte der aktiven Mitarbeitenden.
+Voraussetzung ist, dass die Löhne mit der Abacus-Software abgerechnet werden.
+Jeder Mitarbeitende wird pro Monat und Mitarbeiternummer nur einmal gezählt, auch wenn mehrere Lohnabrechnungen
+in einem Monat erstellt wurden.
+
+Wenn die Verrechnung mit der Sonderregelung für Gemeinden, Kantone, Schulen und Heime (Anzahl Lohnabrechnun-
+gen des Vormonats) gewünscht wird, muss dies bei der Bestellung explizit erwähnt werden.
+
+ESS Medium Einzelauswahl-User
+Wird das Firmenabo mit ESS Medium Einzelauswahl-User aktiviert, werden für ESS Small und ESS Medium CHF 3.- und für
+das ESS Large CHF 5.- pro User verrechnet.
+
+Zusatz-Abos siehe Standard ESS-Abos
+Die Zusatz-Abos werden bei aktiviertem Firmenabo standardmässig nicht für alle Mitarbeitenden verrechnet, sondern pro
+aufge-schaltetes Zusatz-Abo. Für «AbaPlan», «AbaReport» und «Data Analyzer» gibt es jedoch die Möglichkeit einer
+Firmenabo-Option. Damit erfolgt eine vergünstigte Verrechnung pro Abonnement, jedoch für alle Mitarbeitende.
+
+Firmenabo-Optionen, Portal-Optionen
+Alle Firmenabo-Optionen und Portal-Optionen sind nur mit dem Firmenabo Medium erhältlich.
+
+Abrechnung der Kosten
+Die Kosten werden quartalsweise in Rechnung gestellt.
+ESS Small-, ESS Medium- oder ESS Large- Einzelabos sowie die Zusatz-Abos ohne die Option Firmenabo sind im
+Aufschaltmo-nat kostenlos. Wird direkt ein Firmenabo bestellt, ohne vorab Einzelabos gelöst zu haben, ist der
+Aufschaltmonat des Firmenabos kostenlos.
+Werden ESS Small-, ESS Medium- oder ESS Large-Abos und Firmenabo im gleichen Monat aufgeschaltet, ist das Firmenabo
+im Aufschaltmonat kostenlos.
+
+
+Preisliste Abacus
+Sicher clever gelöst.
+Seite 10 von 13
+
+Wenn ESS Small-, ESS Medium- oder ESS Large-Abos z.B. im September aufgeschaltet werden und das Firmenabo einen Mo-
+nat später (Oktober), sind die ESS Small, ESS Medium oder ESS Large Abos im September kostenlos, der Oktober (Firmenabo
+aktiv) ist nicht mehr kostenlos und wird verrechnet.
+
+Für Firmenabo-Optionen und Portal-Optionen gibt es keinen kostenlosen Aufschaltmonat. Ausnahme:
+Wenn Firmenabo und Firmenabo-Optionen / Portal-Optionen im gleichen Monat zusammen aufgeschaltet werden.
+
+Bestimmungen
+Mitarbeiter- und Bewerberprozesse der BPE sind im Portalpreis enthalten. Voraussetzung ist, dass mindestens 20 BPE-User
+lizenziert sind.
+
+Testlizenzen
+Firmenabos auf Testlizenzen sind kostenlos, sofern auf der effektiven Lizenz die gleiche Anzahl Firmenabos sowie Optionen
+gelöst sind.
+
+AGB
+Es gelten die «Allgemeinen Bestimmungen für die Nutzung der Administrationsumgebung zur Verwaltung der Benutzer von
+Abacus Apps», die auf AbaSky hinterlegt sind.
+
+
+Preisliste Abacus
+Sicher clever gelöst.
+Seite 11 von 13
+
+Funktionsübersicht der verschiedenen Abos
+https://support.abacus.ch/kb/display/KB/KB-5632
+
+Berechnungsbeispiele:
+
+ESS Large mit Firmenabo:
+Das Abo «ESS Large» in Kombination mit dem Firmenabo wird mit einem Zuschlag von CHF 2.- pro User verrechnet, für den
+diese Funktionalität gelöst wurde.
+
+Verrechnung pro Monat
+92101.200 Firmenabo Medium
+92102.203 Zusatz-Abo Large
+
+150 x CHF 2.00
+36 x CHF 2.00
+
+CHF
+CHF
+
+300.00
+72.00
+
+AbaPlan 1 mit Firmenabo + Firmenabo Option AbaPlan:
+Firma beschäftigt total 150 Mitarbeitende, davon werden 100 Mitarbeitende in AbaPlan geplant. Der Kunde hat sich für das
+Firmenabo und Firmenabo Option AbaPlan entschieden.
+
+Verrechnung pro Monat
+92101.200 Firmenabo Medium
+92103.212 Firmenabo-Option AbaPlan
+Total pro Monat
+
+150 x CHF 2.00
+150 x CHF 2.00
+
+CHF
+CHF
+CHF
+
+300.00
+300.00
+600.00
+
+AbaPlan 2 mit Firmenabo + Zusatzabo AbaPlan:
+Firma beschäftigt total 150 Mitarbeitende, davon werden 70 Mitarbeitende in AbaPlan geplant. Der Kunde hat sich für das
+Zusatz-Abo AbaPlan entschieden.
+
+Verrechnung pro Monat
+92101.200 Firmenabo Medium
+92101.212 Zusatz-Abo AbaPlan
+Total pro Monat
+
+150 x CHF 2.00
+70 x CHF 2.00
+
+CHF
+CHF
+CHF
+
+300.00
+280.00
+580.00
+
+Spesen Option Pay-per-Use
+Firma beschäftigt total 1000 Mitarbeitende, alle Mitarbeitende müssen die Möglichkeit haben, ihre Spesen mit AbaClik 3
+einzu-reichen. 200 Mitarbeitende reichen monatlich Spesen ein, 300 reichen dreimal pro Jahr Spesen ein, 500
+Mitarbeitende reichen nie Spesen ein. (Das Firmenabo Medium wird vorausgesetzt.)
+
+Verrechnung pro Jahr
+92102.201 Firmenabo Medium
+92103.214 Zusatz-Abo Spesen Option Pay-per-Use
+200 Mitarbeitende reichen monatlich Spesen ein
+300 Mitarbeitende reichen dreimal pro Jahr Spesen ein
+500 Mitarbeitende reichen nie Spesen ein
+Total Abokosten pro Jahr
+
+1000 x CHF 2.00 x 12
+
+200 x CHF 2.00 x 12
+300 x CHF 2.00 x 03
+
+CHF
+
+CHF
+CHF
+CHF
+CHF
+
+24’000.00
+
+4’800.00
+1'800.00
+0.00
+30’600.00
+
+
+Preisliste Abacus
+Sicher clever gelöst.
+Seite 12 von 13
+
+3
+Self Service (Offline Variante)
+3.1
+Standard ESS – im Firmenabo
+10199.100 Firmenabo Medium
+Monatliche Kosten für jeden Mitarbeitenden pro Mandant
+Enthält alle Funktionen von «ESS Medium»
+Ermöglicht den Zugriff der Vorgesetzten auf ihre Mitarbeitenden (MSS)
+
+10199.201 Firmenabo Large
+Monatliche Kosten für «ESS Large»
+
+Aufschaltung Firmenabo
+Offline Die Aufschaltung eines Firmenabos Offline erfolgt durch Abacus Research. Bestellung über
+bestellungen@abacus.ch
+10199.206 Firmenabo-Option AbaPlan (Mtl. Kosten/Mitarbeitenden/Mandant)
+10199.204 Firmenabo-Option AbaReport (Mtl. Kosten/Mitarbeitenden/Mandant)
+10199.205 Firmenabo-Option Data Analyzer (Mtl. Kosten/Mitarbeitenden/Mandant)
+10199.207 Firmenabo-Option Bewerber (Mtl. Kosten/Mitarbeitenden/Mandant)
+10199.208 Portal-Option Zeugnis (Mtl. Kosten/Mitarbeitenden/Mandant)
+10199.210 Portal-Option Mitarbeitergespräch (Mtl. Kosten/Mitarbeitenden/Mandant)
+10199.209 Portal-Option Vergütungsmanagement (Mtl. Kosten/Mitarbeit./Mandant)
+10199.211 Portal-Option Budget (Mtl. Kosten/Mitarbeitenden/Mandant)
+10199.213 Portal-Option Company Communication (Mtl. Kosten/Mitarbeit./Mandant)
+10199.212 Portal-Option Mitarbeiterentwicklung (Mtl. Kosten/Mitarbeit./Mand.)
+10199.214 Portal-Option On-/Offboarding&HR-Prozesse (Mtl. Kosten/Mitarbeit./Mand.)
+
+CHF
+
+CHF
+
+CHF
+CHF
+CHF
+CHF
+CHF
+CHF
+CHF
+CHF
+CHF
+CHF
+CHF
+
+2.00
+
+4.00
+
+2.00
+0.10
+0.10
+0.50
+0.50
+0.50
+0.70
+0.50
+1.00
+1.00
+1.00
+
+
+Preisliste Abacus
+Sicher clever gelöst.
+Seite 13 von 13
+
+Hinweise
+
+Mindestanzahl Mitarbeitende 30 pro Mandant
+
+User Erhöhung in 10er Schritten möglich
+
+Firmenabo Self Service Offline muss für alle aktiven Mitarbeitenden registriert werden.
+(Einzelauswahl-User sind nicht verfügbar)
+
+Im Self Service Offline kann nur entweder Firmenabo Medium oder Firmenabo Large registriert werden.
+
+Die Optionen können nur mit der gleichen Anzahl Mitarbeitenden wie das Firmenabo gelöst werden.
+Bei Erhöhung der Anzahl Mitarbeitenden wird die Anzahl User der Optionen auch erhöht.
+
+Mit Self Service (Offline Variante) ist AbaClik nicht verfügbar.
+
+Berechnungsbeispiele:
+
+Self Service Medium 60 aktive Mitarbeitende:
+Verrechnung pro Monat
+Firmenabo Medium
+Firmenabo Option Bewerber
+Total pro Monat
+
+Self Service Large 70 aktive Mitarbeitende:
+Verrechnung pro Monat
+Firmenabo Large
+Firmenabo Option Zeugnis
+Total pro Monat
+
+60 x CHF 2.00
+60 x CHF 0.50
+
+70 x CHF 4.00
+70 x CHF 0.50
+
+CHF
+CHF
+CHF
+
+CHF
+CHF
+CHF
+
+120.-
+30.-
+150.-
+
+280.-
+35.-
+315.-
+
