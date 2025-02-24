@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type Message = {
   role: string;
@@ -59,21 +61,11 @@ const ChatBot = () => {
     setInput("");
   };
 
-  // Helper function to parse text with bold markers
-  const formatText = (text: string) => {
-    const parts = text.split(/(\*\*.*?\*\*)/g);
-    return parts.map((part, index) => {
-      if (part.startsWith("**") && part.endsWith("**") || part.startsWith("###") && part.endsWith("###")) {
-        // Remove ** and make bold
-        return (
-          <span key={index} className="font-bold">
-            {part.slice(2, -2)}
-          </span>
-        );
-      }
-      return <span key={index}>{part}</span>;
-    });
-  };
+  function cleanResponse (textToFormat: string) {
+    const formattedText = textToFormat.replace(/\\n/g, "\n")
+    console.log(formattedText)
+    return formattedText;
+  }
 
   return (
     <div className="flex flex-col h-screen max-w-4xl mx-auto">
@@ -92,7 +84,47 @@ const ChatBot = () => {
             >
               {`${message.role}: `}
             </strong>
-            {formatText(message.content)}
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                table: ({ node, ...props }) => (
+                  <table
+                    style={{ width: "100%", borderCollapse: "collapse" }}
+                    {...props}
+                  />
+                ),
+                th: ({ node, ...props }) => (
+                  <th
+                    style={{
+                      border: "1px solid black",
+                      padding: "8px",
+                      textAlign: "left",
+                    }}
+                    {...props}
+                  />
+                ),
+                td: ({ node, ...props }) => (
+                  <td
+                    style={{ border: "1px solid black", padding: "8px" }}
+                    {...props}
+                  />
+                ),
+                ol: ({ node, ...props }) => (
+                  <ol
+                    style={{ padding: "8px", margin: "8px"}}
+                    {...props}
+                  />
+                ),
+                ul: ({ node, ...props }) => (
+                  <ul
+                    style={{padding: "8px", margin: "8px"}}
+                    {...props}
+                  />
+                ),
+              }}
+            >
+              {cleanResponse(message.content)}
+            </ReactMarkdown>
           </div>
         ))}
       </div>
