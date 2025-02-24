@@ -128,7 +128,7 @@ const ChatBot = () => {
                 li: ({ node, ...props }) => (
                   <li
                     style={{
-                      margin: "0px",
+                      margin: "8px 0px",
                       lineHeight: "1.5",
                       height: "auto"
                     }}
