@@ -61,9 +61,9 @@ const ChatBot = () => {
     setInput("");
   };
 
-  function cleanResponse (textToFormat: string) {
-    const formattedText = textToFormat.replace(/\\n/g, "\n")
-    console.log(formattedText)
+  function cleanResponse(textToFormat: string) {
+    const formattedText = textToFormat.replace(/\\n/g, "\n");
+    console.log(formattedText);
     return formattedText;
   }
 
@@ -75,15 +75,11 @@ const ChatBot = () => {
             key={index}
             className="whitespace-pre-wrap text-arcon-green text-xl mb-6 p-5 rounded-xl bg-slate-50 border-2 shadow-sm"
           >
-            <strong
-              className={
-                message.role === "Arcon GPT"
-                  ? "text-arcon-light-green"
-                  : "text-arcon-light-green"
-              }
+            <p
+              className="text-arcon-light-green mb-2 font-semibold"
             >
               {`${message.role}: `}
-            </strong>
+            </p>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
@@ -111,13 +107,33 @@ const ChatBot = () => {
                 ),
                 ol: ({ node, ...props }) => (
                   <ol
-                    style={{ padding: "8px", margin: "8px"}}
+                    style={{
+                      margin: "0px",
+                      lineHeight: "0",
+                      height: "auto",
+                    }}
                     {...props}
                   />
                 ),
                 ul: ({ node, ...props }) => (
                   <ul
-                    style={{padding: "8px", margin: "8px"}}
+                    style={{
+                      margin: "0px",
+                      lineHeight: "0",
+                      height: "auto"
+                    }}
+                    {...props}
+                  />
+                ),
+                li: ({ node, ...props }) => (
+                  <li
+                    style={{
+                      margin: "0px",
+                      padding: "0px",
+                      lineHeight: "1.5",
+                      height: "auto",
+                      display: "list-item",
+                    }}
                     {...props}
                   />
                 ),

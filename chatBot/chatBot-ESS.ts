@@ -70,7 +70,7 @@ async function initializeChain(vectorStore: PineconeStore) {
   const model = new ChatOpenAI({
     modelName: "gpt-4o",
     temperature: 0.8,
-    maxTokens: 1500,
+    maxTokens: 2000,
   });
 
   // Define the prompt template for the AI
@@ -86,14 +86,6 @@ async function initializeChain(vectorStore: PineconeStore) {
     Allgemeine Anweisungen:
     Basiere deine Antworten stets auf dem gegebenen Kontext, den bereitgestellten Artikeln und deinem Wissen über die Abacus-Software.
     Antworte auf Deutsch.
-    Wenn du bereits Informationen zu diesem Thema gegeben hast, konzentriere dich auf neue Aspekte oder Details, die noch nicht behandelt wurden.
-    Falls es keine neuen Informationen gibt, sage das deutlich und schlage verwandte Themen vor, die den Benutzer interessieren könnten.
-    Wenn der Kontext oder die bereitgestellten Artikel keine relevanten Informationen enthalten, nutze dein allgemeines Wissen über Abacus-Software, aber mache klar, wenn du dies tust.
-    Gib Schritt-für-Schritt-Anleitungen, wenn du Prozesse erklärst.
-    Verwende technische Begriffe im Zusammenhang mit Abacus-Software, erkläre sie aber, wenn sie komplex sind.
-    Wenn du dir bei einem Teil deiner Antwort unsicher bist, drücke diese Unsicherheit professionell aus (z.B. "Basierend auf den verfügbaren Informationen scheint es...").
-    Wenn die Frage des Benutzers unklar ist, bitte um Klärung.
-    Gib so viele relevante Informationen wie möglich.
     Zitiere die Informationsquellen deutlich.
     Beende deine Antwort mit einer Frage, um den Dialog fortzuführen, wenn es angemessen ist.
 
@@ -102,11 +94,12 @@ async function initializeChain(vectorStore: PineconeStore) {
     ESS-Abos werden im Zusammenhang mit der Abacus Business Software verwendet und sind für den Zugriff auf das Webportal MyAbacus erforderlich. 
     Im Kontext findest du alle Abos, Regelungen und die dazugehörigen Kosten. Du beantwortest Kundenanfragen und berätst Kunden zum Thema ESS-Abos. 
     Bei Anfragen zu Kosten gibst du gemäß den Preisen der ESS-Abos in der Datei Auskunft.
+    Grundsätzlich wird unterschieden zwischen Einzelabo und Firmenabo.
+    Ab der Bestellung von 25 Abonnements total, empfehle dem Kunden die Firmenabos.
 
     Output:
     Stelle die Lizenzkosten übersichtlich in einem Tabellenformat dar.
     Stell den gesamten Inhalt als Markdown dar.
-
 
     Antwort:
   `);
@@ -121,7 +114,7 @@ async function initializeChain(vectorStore: PineconeStore) {
   const retriever = vectorStore.asRetriever({
     searchKwargs: {
       fetchK: 2,
-      lambda: 0.8,
+      lambda: 0.5,
     },
     searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
   });
@@ -171,15 +164,15 @@ export default async function handleMessage(input: string) {
       result.context.forEach((doc: Document, index: number) => {
         console.log(`Dokument ${index + 1}:`);
         console.log(doc.pageContent);
-        console.log("---");
+        console.log(
+          "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
+        );
       });
     } else {
       console.log("Keine Dokumente abgerufen oder Kontext nicht verfügbar.");
     }
 
-    console.log(
-      "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
-    );
+
     console.log("Response:", result.answer);
 
     // Update conversation history
