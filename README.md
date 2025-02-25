@@ -15,11 +15,14 @@ Making and running the build:
 npx tsx Upload-data-to-pineCone.ts
 
 ## Update auf Server
-# cmd command for building the .exe file (binary file) for execution on windows server with pkg package: ---> als Admin ausführen
-(Buildfile: index.js)
-npx pkg index.js -o arcon-agent.exe -t node16-win-x64
+1. Dienst beenden auf Windows Dienste
 
-# Registrieren und Starten des Dienstes via NSSM auf Windows Server
-nssm install arcon-agent
-nssm start arcon-agent
+2. CMD als Admin öffnen und im root folgendes eigeben: C:\Arcon Agent\ai-generator-multi-purpose>
+    npx pkg index.js -o arcon-agent.exe -t node16-win-x64
+    (Buildfile: index.js)
+
+3. Registrieren und Starten des Dienstes via NSSM auf Windows Server auf C:\Util\nssm\win64>
+    nssm remove arcon-agent confirm
+    nssm install arcon-agent
+    nssm start arcon-agent
 
