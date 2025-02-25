@@ -88,11 +88,13 @@ async function initializeChain(vectorStore: PineconeStore) {
     - If the context or retrieved articles don't contain relevant information, use your general knowledge about Abacus software, but clearly state when you're doing so.
     - Provide step-by-step instructions when explaining processes.
     - Use technical terms related to Abacus software, but explain them if they're complex.
-    - If you're unsure about any part of your answer, express that uncertainty in a professional manner (e.g., "Based on the information available, it seems...").
     - If the user's question is unclear, ask for clarification.
     - Provide as much relevant information as possible.
     - Cite the sources of the information clearly.
     - End your response with a question to encourage further dialogue if appropriate.
+
+    Output:
+    - Format the text for React Markdown.
   
     Response:
   `);
@@ -148,14 +150,18 @@ export default async function handleMessage(input: string) {
     });
 
     // Log the retrieved documents for debugging
-    console.log("\n\n\n--------------------------------------------------------------------------------------------------------------------------");
+    console.log(
+      "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
+    );
     console.log("Abgerufene Dokumente:");
 
     if (result.context) {
       result.context.forEach((doc: Document, index: number) => {
         console.log(`Dokument ${index + 1}:`);
         console.log(doc.pageContent);
-        console.log("\n\n\n--------------------------------------------------------------------------------------------------------------------------");
+        console.log(
+          "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
+        );
       });
     } else {
       console.log("Keine Dokumente abgerufen oder Kontext nicht verfügbar.");
@@ -165,7 +171,9 @@ export default async function handleMessage(input: string) {
     // Update conversation history
     conversationHistory.push([input, result.answer]);
 
-    console.log("\n\n\n--------------------------------------------------------------------------------------------------------------------------");
+    console.log(
+      "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
+    );
     console.log("Conversation History:", conversationHistory);
 
     // Return the generated response

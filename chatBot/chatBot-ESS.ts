@@ -99,7 +99,7 @@ async function initializeChain(vectorStore: PineconeStore) {
 
     Output:
     Stelle die Lizenzkosten übersichtlich in einem Tabellenformat dar.
-    Stell den gesamten Inhalt als Markdown dar.
+    Formattiere den Text für React Markdown.
 
     Antwort:
   `);

@@ -62,16 +62,9 @@ const ChatBot = () => {
     setInput("");
   };
 
-  //cleaningup response
-  function cleanResponse(textToFormat: string) {
-    const formattedText = textToFormat.replace(/\\n/g, "");
-
-    return formattedText;
-  }
-
 
   return (
-    <div className="flex flex-col h-screen max-w-4xl mx-auto">
+    <div className="flex flex-col h-screen max-w-4xl min-w-96 mx-auto">
       <div className="flex-grow p-4 pb-64">
         {messages.map((message, index) => (
           <div
@@ -138,7 +131,7 @@ const ChatBot = () => {
                 ),
               }}
             >
-              {cleanResponse(message.content)}
+              {message.content}
             </ReactMarkdown>
             <CopyButton text={message.content}></CopyButton>
           </div>
