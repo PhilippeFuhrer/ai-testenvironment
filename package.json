@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@lancedb/lancedb": "^0.14.1",
     "@langchain/community": "^0.3.4",
     "@langchain/core": "^0.3.7",

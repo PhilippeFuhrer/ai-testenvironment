@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import CopyButton from "@/components/copyButton";
 
 type Message = {
   role: string;
@@ -61,11 +62,13 @@ const ChatBot = () => {
     setInput("");
   };
 
+  //cleaningup response
   function cleanResponse(textToFormat: string) {
     const formattedText = textToFormat.replace(/\\n/g, "");
 
     return formattedText;
   }
+
 
   return (
     <div className="flex flex-col h-screen max-w-4xl mx-auto">
@@ -73,11 +76,9 @@ const ChatBot = () => {
         {messages.map((message, index) => (
           <div
             key={index}
-            className="whitespace-pre-wrap text-arcon-green text-xl mb-6 p-5 rounded-xl bg-slate-50 border-2 shadow-sm"
+            className="relative block whitespace-pre-wrap text-arcon-green text-xl mb-6 p-5 rounded-xl bg-slate-50 border-2 shadow-sm"
           >
-            <p
-              className="text-arcon-light-green mb-2 font-semibold"
-            >
+            <p className="text-arcon-light-green mb-2 font-semibold">
               {`${message.role}: `}
             </p>
             <ReactMarkdown
@@ -120,7 +121,7 @@ const ChatBot = () => {
                     style={{
                       margin: "0px",
                       lineHeight: "0",
-                      height: "auto"
+                      height: "auto",
                     }}
                     {...props}
                   />
@@ -130,7 +131,7 @@ const ChatBot = () => {
                     style={{
                       margin: "8px 0px",
                       lineHeight: "1.5",
-                      height: "auto"
+                      height: "auto",
                     }}
                     {...props}
                   />
@@ -139,7 +140,9 @@ const ChatBot = () => {
             >
               {cleanResponse(message.content)}
             </ReactMarkdown>
+            <CopyButton text={message.content}></CopyButton>
           </div>
+          
         ))}
       </div>
       <div className="border-2 rounded-2xl bg-slate-100 p-4 fixed bottom-10 left-0 right-0 max-w-4xl mx-auto shadow-2xl">
