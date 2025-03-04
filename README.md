@@ -22,9 +22,11 @@ Making and running the build (production):
 1. CMD im root (C:\Arcon Agent\ai-generator-multi-purpose>): 
     npm install (alle neuen Libraries installieren)
 
-2. Prüfen ob .env variablen verändert wurden, falls ja updaten.
+2. Prüfen ob .env variablen verändert wurden, falls ja updaten. (Bspw. beim hinzufügen einer neuen Datenbank auf PineCone).
 
 3. Dienst beenden auf Windows Dienste.
+
+4. VS Code öffnen und einen Pull-Request machen, um den aktuellen Code zu fetchen.
 
 4. CMD als Admin öffnen: Im root folgendes eigeben: C:\Arcon Agent\ai-generator-multi-purpose>
     npx pkg index.js -o arcon-agent.exe -t node16-win-x64
