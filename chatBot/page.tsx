@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CopyButton from "@/components/copyButton";
@@ -9,13 +9,28 @@ type Message = {
   content: string;
 };
 
-let botStatus = "abacus";
+let botStatus = "Abacus";
+
+// Agent greeting messages
+const agentGreetings = {
+  Abacus: "Hi, ich bin der Abacus Agent. Ich verfüge über spezifisches Abacus Wissen.",
+  ICT: "Hi, ich bin der ICT Agent. Ich stehe bereit, um dir bei IT- und Technologiefragen zu assistieren.",
+  DSG: "Hi, ich bin der DSG Agent. Ich beantworte gerne deine Fragen zu Datenschutz und Compliance.",
+  Blog: "Hi, ich bin der Blog Agent. Ich erstelle dir SEO optimierte Blogs in der gewünschten Tonalität.",
+  ESS: "Hi, ich bin der ESS Agent. Ich helfe dir, dich im ESS-Abo-Jungle zurecht zu finden und kalkuliere die Abo Kosten für dich."
+};
 
 const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedBot, setSelectedBot] = useState("");
+  const [selectedBot, setSelectedBot] = useState("Abacus");
+  const [placeholder, setPlaceholder] = useState(agentGreetings.Abacus);
+
+  useEffect(() => {
+    // Set initial greeting message
+    setPlaceholder(agentGreetings[selectedBot as keyof typeof agentGreetings]);
+  }, []);
 
   const handleInputChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -26,6 +41,20 @@ const ChatBot = () => {
   const handleBotChange = async (botType: string) => {
     botStatus = botType;
     setSelectedBot(botType);
+    setPlaceholder(agentGreetings[botType as keyof typeof agentGreetings]);
+    
+    // Clear previous messages
+    setMessages([]);
+    
+    // Add greeting message from the newly selected bot with a slight delay
+    setTimeout(() => {
+      const botGreeting = { 
+        role: "Arcon GPT", 
+        content: agentGreetings[botType as keyof typeof agentGreetings] 
+      };
+      setMessages([botGreeting]);
+    }, 300); // 300ms delay
+    
     console.log(botStatus);
   };
 
@@ -60,7 +89,25 @@ const ChatBot = () => {
     setLoading(false);
     setMessages([]);
     setInput("");
+    
+    // Display greeting message for the currently selected bot
+    const botGreeting = { 
+      role: "Arcon GPT", 
+      content: agentGreetings[selectedBot as keyof typeof agentGreetings] 
+    };
+    setMessages([botGreeting]);
   };
+
+  // Display initial greeting when the component mounts
+  useEffect(() => {
+    if (messages.length === 0) {
+      const initialGreeting = { 
+        role: "Arcon GPT", 
+        content: agentGreetings[selectedBot as keyof typeof agentGreetings]
+      };
+      setMessages([initialGreeting]);
+    }
+  }, []);
 
 
   return (
@@ -69,7 +116,7 @@ const ChatBot = () => {
         {messages.map((message, index) => (
           <div
             key={index}
-            className="relative block whitespace-pre-wrap text-arcon-green text-xl mb-6 p-5 rounded-xl bg-slate-50 border-2 shadow-sm"
+            className="relative block whitespace-pre-wrap text-arcon-green text-xl mb-6 p-5 rounded-xl bg-slate-50 border-2 shadow-sm message-fade-in"
           >
             <p className="text-arcon-light-green mb-2 font-semibold">
               {`${message.role}: `}
@@ -143,7 +190,6 @@ const ChatBot = () => {
           <textarea
             className="w-full p-3 border-2 hover:shadow-sm rounded-xl text-xl bg-white text-gray-900 mb-4"
             value={input}
-            placeholder="Hi, hier ist Arcon GPT, wie kann ich dir helfen?"
             onChange={handleInputChange}
             rows={3}
           />
@@ -172,7 +218,7 @@ const ChatBot = () => {
                   const selectedValue = e.target.value;
                   handleBotChange(selectedValue);
                 }}
-                defaultValue=""
+                value={selectedBot}
               >
                 <option value="Abacus">Abacus Agent</option>
                 <option value="ICT">ICT Agent</option>
