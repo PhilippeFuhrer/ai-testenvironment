@@ -63,7 +63,7 @@ config({ path: path.resolve(__dirname, "../.env") });
     // Check if index exists, if not create it
     console.log("Initializing vector store...");
 
-    const indexName = process.env.PINECONE_INDEX_NAME_ESS_AGENT!;
+    const indexName = process.env.PINECONE_INDEX_NAME_ESS_AGENT_NEU!;
     const index = pinecone.Index(indexName);
 
     // Create embeddings

@@ -34,7 +34,7 @@ let conversationHistory: [string, string][] = [];
 async function initializeVectorStore() {
   console.log("Initializing vector store...");
 
-  const indexName = process.env.PINECONE_INDEX_NAME_ESS_AGENT!;
+  const indexName = process.env.PINECONE_INDEX_NAME_ESS_AGENT_NEU!;
   const index = pinecone.Index(indexName);
 
   try {
@@ -95,6 +95,8 @@ async function initializeChain(vectorStore: PineconeStore) {
     Bei Anfragen zu Kosten gibst du gemäss den Preisen der ESS-Abos in der Datei Auskunft.
     Entscheide dich für die günstigere Variante des Abo-Modelles, also entweder für Einzelabos oder Firmenabos.
     Wichtig: Das Firmenabo ist im Preis pro Abo grundsätzlich günstiger, wird jedoch immer für 25 User verrechnet, weshalb die Firmenabos teilweise auch teurer sein können.
+    Abos vom Typ Einzelabo können nicht mit dem Typ Firmenabo oder mit Firmenabo-Optionen kombiniert werden.
+    Abos vom Typ Fimrmenabo können nicht mit dem Typ Einzelabo oder mit Zusatz Optionen kombiniert werden.
     Empfehle jeweils die insgesamt günstigere Variante.
 
     Output:

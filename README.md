@@ -11,12 +11,25 @@ Making and running the build (production):
 1. npm run build -> build app
 2. npm run start -> start app
 
+## OpenAI API Schnittstelle
+Als Grundlegendes LLM Modell wird GPT-4.o verwendet. Guthaben für die API Abfragen müssen auf https://platform.openai.com/ (Login via Google Konto philippe.fuhrer@arcon.ch) aufgeladen werden.
+
 ## Neue Daten für RAG hochladen
-1. Sind die Daten für eine vorhandene oder neue Vektordatenbank? Falls für eine neue auf PineCone (Login via Google Konto: philippe.fuhrer@arcon.ch) eine eröffnen.
-2. Daten als txt im Ordner data ablegen.
-3. Im File "Upload-data-to-pineCone.ts" Pfad zur Datei einfügen, Metainformationen einfügen und Datenbank (bspw. ess-agent) auswählen.
-4. Falls neue Datenbank im .env File die neue Datenbank-Variabel definieren.
-4. Im root directory: npx tsx Upload-data-to-pineCone.ts -> Start upload
+1. Sind die Daten für eine vorhandene oder neue Vektordatenbank? Falls für eine neue auf PineCone (Login auf https://login.pinecone.io/login? via Google Konto: philippe.fuhrer@arcon.ch) eine eröffnen.
+    Dimension: 1536
+    Embedding Modell:
+        text-embedding-3-large → Wenn höchste Genauigkeit & semantische Tiefe benötigt wird (z. B. bei Suchalgorithmen oder komplexen NLP-Aufgaben).
+        text-embedding-3-small → Wenn Geschwindigkeit und Effizienz wichtiger sind (z. B. für Echtzeitanwendungen oder ressourcenbeschränkte Umgebungen).
+
+2. Daten bereinigen (Vgl. PythonScripts,) aufbereiten und als txt im Ordner data ablegen.
+
+3. Im File "Upload-data-to-pineCone.ts" Pfad zur Datei einfügen, Metainformationen einfügen.
+
+4. Falls neue Datenbank im .env File die neue Datenbank-Variabel definieren, diese dann auch im File "Upload-data-to-pineCone.ts" einpflegen.
+
+5. Im directory, wo das File "Upload" abgelegt ist: npx tsx Upload-data-to-pineCone.ts -> Start upload
+    ("C:\Programming\ai-generator-multi-purpose\pineConeDB>npx tsx Upload-data-to-pineCone.ts")
+
 
 ## Update auf Arcon Server (PW im PWS: ARCONKI01)
 1. CMD im root (C:\Arcon Agent\ai-generator-multi-purpose>): 
