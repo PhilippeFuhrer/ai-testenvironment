@@ -96,7 +96,7 @@ async function initializeChain(vectorStore: PineconeStore) {
     Entscheide dich für die günstigere Variante des Abo-Modelles, also entweder für Einzelabos oder Firmenabos.
     Wichtig: Das Firmenabo ist im Preis pro Abo grundsätzlich günstiger, wird jedoch immer für 25 User verrechnet, weshalb die Firmenabos teilweise auch teurer sein können.
     Abos vom Typ Einzelabo können nicht mit dem Typ Firmenabo oder mit Firmenabo-Optionen kombiniert werden.
-    Abos vom Typ Fimrmenabo können nicht mit dem Typ Einzelabo oder mit Zusatz Optionen kombiniert werden.
+    Abos vom Typ Fimrmenabo können nicht mit dem Typ Einzelabo oder mit Zusatz Optionen kombiniert werden, ausser mit der Zusatz-Option AbaPlan.
     Empfehle jeweils die insgesamt günstigere Variante.
 
     Output:
@@ -115,7 +115,7 @@ async function initializeChain(vectorStore: PineconeStore) {
   // This determines how documents are retrieved from the vector store, only fetch documents the first time of a topic
   const retriever = vectorStore.asRetriever({
     searchKwargs: {
-      fetchK: 2,
+      fetchK: 3,
       lambda: 0.5,
     },
     searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
