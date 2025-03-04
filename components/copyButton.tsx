@@ -1,42 +1,75 @@
 import React from 'react';
 import { ClipboardIcon, ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 
-
 const CopyButton = ({ text }: { text: string }) => {
   const [copied, setCopied] = React.useState(false);
 
   // Convert markdown to a format better suited for Word
   const convertMarkdownForWord = (text: string): string => {
-    // Handle tables - convert markdown tables to tab-separated values
-    // Word can interpret tab-separated values as tables
-    let converted = text.replace(/\|(.+?)\|/g, (match, content) => {
-      return content.split('|').join('\t');
-    });
+    let lines = text.split('\n');
+    let converted = [];
+    let inTable = false;
     
-    // Remove markdown table separators (rows with dashes and pipes)
-    converted = converted.replace(/\|(\s*[-:]+[-:|\s]*)+\|\n/g, '');
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i].trim();
+      
+      // Check if this is a table row
+      if (line.startsWith('|') && line.endsWith('|')) {
+        // Skip separator rows (those with dashes and pipes)
+        if (line.match(/^\|[\s-:|]+\|$/)) {
+          continue;
+        }
+        
+        // Process table row - remove outer pipes and replace inner pipes with tabs
+        const cells = line
+          .substring(1, line.length - 1) // Remove outer pipes
+          .split('|')
+          .map(cell => cell.trim());
+        
+        converted.push(cells.join('\t'));
+        inTable = true;
+      } else {
+        if (inTable) {
+          // Add an empty line after a table
+          converted.push('');
+          inTable = false;
+        }
+        
+        // Process non-table content
+        if (line.length > 0) {
+          let processedLine = line
+            // Handle headings
+            .replace(/^### (.*?)$/, '$1')
+            .replace(/^## (.*?)$/, '$1')
+            .replace(/^# (.*?)$/, '$1')
+            
+            // Handle bold and italic - preserve Word formatting
+            .replace(/\*\*(.*?)\*\*/g, '$1')
+            .replace(/\*(.*?)\*/g, '$1')
+            
+            // Handle lists
+            .replace(/^- (.*?)$/, '• $1')
+            .replace(/^\d+\. (.*?)$/, '$1')
+            
+            // Handle links
+            .replace(/\[(.*?)\]\((.*?)\)/g, '$1 ($2)');
+          
+          converted.push(processedLine);
+        } else {
+          // Preserve empty lines
+          converted.push('');
+        }
+      }
+    }
     
-    // Handle headings
-    converted = converted.replace(/^### (.*?)$/gm, '$1');
-    converted = converted.replace(/^## (.*?)$/gm, '$1');
-    converted = converted.replace(/^# (.*?)$/gm, '$1');
-    
-    // Handle bold and italic
-    converted = converted.replace(/\*\*(.*?)\*\*/g, '$1'); // Bold to plain text
-    converted = converted.replace(/\*(.*?)\*/g, '$1'); // Italic to plain text
-    
-    // Handle lists
-    converted = converted.replace(/^- (.*?)$/gm, '• $1');
-    converted = converted.replace(/^\d+\. (.*?)$/gm, '$1');
+    // Join all processed lines back together
+    let result = converted.join('\n');
     
     // Handle code blocks
-    converted = converted.replace(/```.*?\n([\s\S]*?)```/g, '$1');
-    converted = converted.replace(/`(.*?)`/g, '$1');
+    result = result.replace(/```.*?\n([\s\S]*?)```/g, '$1')
+                   .replace(/`(.*?)`/g, '$1');
     
-    // Handle links
-    converted = converted.replace(/\[(.*?)\]\((.*?)\)/g, '$1 ($2)');
-    
-    return converted;
+    return result;
   };
 
   const handleCopy = () => {
