@@ -22,11 +22,11 @@ Making and running the build (production):
 1. CMD im root (C:\Arcon Agent\ai-generator-multi-purpose>): 
     npm install (alle neuen Libraries installieren)
 
-2. Prüfen ob .env variablen verändert wurden, falls ja updaten. (Bspw. beim hinzufügen einer neuen Datenbank auf PineCone).
+2. Dienst beenden auf Windows Dienste.
 
-3. Dienst beenden auf Windows Dienste.
+3. VS Code öffnen und einen Pull-Request machen, um den aktuellen Code zu fetchen.
 
-4. VS Code öffnen und einen Pull-Request machen, um den aktuellen Code zu fetchen.
+4. Prüfen ob .env variablen verändert wurden, falls ja updaten. (Bspw. beim hinzufügen einer neuen Datenbank auf PineCone).
 
 4. CMD als Admin öffnen: Im root folgendes eigeben: C:\Arcon Agent\ai-generator-multi-purpose>
     npx pkg index.js -o arcon-agent.exe -t node16-win-x64
@@ -37,5 +37,5 @@ Making and running the build (production):
     nssm install arcon-agent (Path -> exe file, directory -> root directory of app)
     nssm start arcon-agent
 
-6. Testing auf eigenem Laptop im VPN, nicht direkt hier auf Server!
+6. Testing auf eigenem Laptop im VPN, nicht direkt hier auf Server! Dauert ca. 30 sec bis live.
 
