@@ -41,14 +41,16 @@ Als Grundlegendes LLM Modell wird GPT-4.o verwendet. Guthaben für die API Abfra
 
 4. Prüfen ob .env variablen verändert wurden, falls ja updaten. (Bspw. beim hinzufügen einer neuen Datenbank auf PineCone).
 
-4. CMD als Admin öffnen: Im root folgendes eigeben: C:\Arcon Agent\ai-generator-multi-purpose>
+5. Altes .exe File löschen (um sicher zu gehen, das der build 100% neu gemacht wird).
+
+6. CMD als Admin öffnen: Im root folgendes eigeben: C:\Arcon Agent\ai-generator-multi-purpose>
     npx pkg index.js -o arcon-agent.exe -t node16-win-x64
     (Buildfile: index.js)
 
-5. CMD als Admin öffnen: Registrieren und Starten des Dienstes via NSSM auf Windows Server auf C:\Util\nssm\win64>
+7. CMD als Admin öffnen: Registrieren und Starten des Dienstes via NSSM auf Windows Server auf C:\Util\nssm\win64>
     nssm remove arcon-agent confirm
     nssm install arcon-agent (Path -> exe file, directory -> root directory of app)
     nssm start arcon-agent
 
-6. Testing auf eigenem Laptop im VPN, nicht direkt hier auf Server! Dauert ca. 30 sec bis live.
+8. Testing auf eigenem Laptop im VPN, nicht direkt hier auf Server! Dauert ca. 30 sec bis live.
 
