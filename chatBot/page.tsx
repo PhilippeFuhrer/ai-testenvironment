@@ -9,7 +9,7 @@ type Message = {
   content: string;
 };
 
-let botStatus = "Abacus";
+let botStatus = "ESS";
 
 // Agent greeting messages
 const agentGreetings = {
@@ -24,7 +24,7 @@ const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedBot, setSelectedBot] = useState("Abacus");
+  const [selectedBot, setSelectedBot] = useState("ESS");
   const [placeholder, setPlaceholder] = useState(agentGreetings.Abacus);
 
   useEffect(() => {
@@ -220,11 +220,11 @@ const ChatBot = () => {
                 }}
                 value={selectedBot}
               >
+                <option value="ESS">ESS Agent</option>
                 <option value="Abacus">Abacus Agent</option>
                 <option value="ICT">ICT Agent</option>
                 <option value="DSG">DSG Agent</option>
                 <option value="Blog">Blog Agent</option>
-                <option value="ESS">ESS Agent</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-50">
                 <svg
