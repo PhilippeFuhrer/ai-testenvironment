@@ -69,7 +69,7 @@ async function initializeChain(vectorStore: PineconeStore) {
   // Initialize the language model
   const model = new ChatOpenAI({
     modelName: "gpt-4o",
-    temperature: 0.8,
+    temperature: 0.4,
     maxTokens: 2000,
   });
 
