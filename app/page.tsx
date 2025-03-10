@@ -1,9 +1,10 @@
 "use client";
-import ChatBot from "@/chatBot/page";
+import ChatBot from "@/components/chatBot";
 import ChatHistorySidebar from "@/components/chatHistorySidebar";
 import { SetStateAction, useEffect, useState } from "react";
 
-// Agent greeting messages - moved to the parent component
+
+// Agent greeting messages
 const agentGreetings = {
   Abacus: "Hi, ich bin der Abacus Agent. Ich verfüge über spezifisches Abacus Wissen und helfe dir gerne bei Abacus Supportanfragen.",
   ICT: "Hi, ich bin der ICT Agent. Ich stehe bereit, um dir bei IT- und Technologiefragen zu assistieren.",
@@ -15,6 +16,7 @@ const agentGreetings = {
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedBot, setSelectedBot] = useState("ESS");
+  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   
   // Toggle sidebar visibility
   const toggleSidebar = () => {
@@ -23,9 +25,19 @@ export default function Home() {
   
   // Handle bot change function to pass to both components
   const handleBotChange = (botType: SetStateAction<string>) => {
+    // Clear the selected conversation when changing bots
+    setSelectedConversationId(null);
     setSelectedBot(botType);
-    // Close sidebar when bot is changed if needed
-    setSidebarOpen(false);
+  };
+
+  // Handle conversation selection
+  const handleConversationSelect = (conversationId: string) => {
+    setSelectedConversationId(conversationId);
+  };
+
+  // Handle new conversation creation
+  const handleConversationCreated = (conversationId: string) => {
+    setSelectedConversationId(conversationId);
   };
   
   // Close sidebar when escape key is pressed
@@ -44,8 +56,8 @@ export default function Home() {
   }, [sidebarOpen]);
 
   return (
-    <main className="bg-arcon-green">
-      <div className="navbar bg-arcon-green text-white overflow-hidden">
+    <main className="min-h-screen bg-arcon-green">
+      <div className="navbar bg-arcon-green text-white">
         <div className="navbar-start w-1/3">
           <button
             onClick={toggleSidebar}
@@ -70,7 +82,6 @@ export default function Home() {
         <div className="navbar-center w-1/3 flex justify-center">
           <a className="btn btn-ghost text-xl">Arcon GPT</a>
         </div>
-        <div className="navbar-end w-1/3"></div>
       </div>
       
       <ChatHistorySidebar 
@@ -79,13 +90,17 @@ export default function Home() {
         selectedBot={selectedBot}
         handleBotChange={handleBotChange}
         agentGreetings={agentGreetings}
+        selectedConversationId={selectedConversationId}
+        onConversationSelect={handleConversationSelect}
       />
       
-      <div className="flex justify-center py-24 overflow-auto">
+      <div className="flex justify-center py-24">
         <ChatBot 
           selectedBot={selectedBot}
           handleBotChange={handleBotChange}
           agentGreetings={agentGreetings}
+          selectedConversationId={selectedConversationId}
+          onConversationCreated={handleConversationCreated}
         />
       </div>
     </main>

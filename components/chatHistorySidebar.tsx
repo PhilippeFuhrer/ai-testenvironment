@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Conversation, getConversations, formatChatDate } from "@/supabase";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -7,6 +8,8 @@ type SidebarProps = {
   selectedBot: string;
   handleBotChange: (botType: string) => void;
   agentGreetings: Record<string, string>;
+  selectedConversationId: string | null;
+  onConversationSelect: (conversationId: string) => void;
 };
 
 const ChatHistorySidebar: React.FC<SidebarProps> = ({
@@ -15,7 +18,31 @@ const ChatHistorySidebar: React.FC<SidebarProps> = ({
   selectedBot,
   handleBotChange,
   agentGreetings,
+  selectedConversationId,
+  onConversationSelect,
 }) => {
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch conversations when the sidebar opens
+  useEffect(() => {
+    if (isOpen) {
+      fetchConversations();
+    }
+  }, [isOpen]);
+
+  const fetchConversations = async () => {
+    setLoading(true);
+    try {
+      const data = await getConversations();
+      setConversations(data);
+    } catch (error) {
+      console.error("Error fetching conversations:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       {/* Backdrop overlay when sidebar is open */}
@@ -34,7 +61,7 @@ const ChatHistorySidebar: React.FC<SidebarProps> = ({
       >
         <div className="p-5">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-arcon-green">Chat Verlauf (Demo)</h2>
+            <h2 className="text-xl font-semibold text-arcon-green">Chat Verlauf</h2>
             <button
               onClick={toggleSidebar}
               className="btn btn-ghost btn-circle text-gray-500"
@@ -57,36 +84,46 @@ const ChatHistorySidebar: React.FC<SidebarProps> = ({
           </div>
 
           <div className="mt-6">
-            {/* Chat History UI - Design only for now */}
-            <div className="space-y-4">
-              <div className="border-l-4 border-arcon-green pl-3 py-2 hover:bg-gray-50 cursor-pointer">
-                <p className="text-sm text-gray-500">Heute, 10:45</p>
-                <h4 className="font-medium text-arcon-green truncate">
-                  ESS Konfiguration
-                </h4>
+            {/* Chat History - Real data from Supabase */}
+            {loading ? (
+              <div className="space-y-4">
+                <div className="border-l-4 border-gray-300 pl-3 py-2">
+                  <p className="text-sm text-gray-500">Lade Gespräche...</p>
+                </div>
               </div>
-
-              <div className="border-l-4 border-arcon-light-green pl-3 py-2 hover:bg-gray-50 cursor-pointer">
-                <p className="text-sm text-gray-500">Heute, 09:12</p>
-                <h4 className="font-medium text-arcon-green truncate">
-                  Abacus Fragen
-                </h4>
+            ) : conversations.length === 0 ? (
+              <div className="space-y-4">
+                <div className="border-l-4 border-gray-300 pl-3 py-2">
+                  <p className="text-sm text-gray-500">Keine Gespräche gefunden</p>
+                </div>
               </div>
-
-              <div className="border-l-4 border-gray-300 pl-3 py-2 hover:bg-gray-50 cursor-pointer">
-                <p className="text-sm text-gray-500">Gestern, 15:30</p>
-                <h4 className="font-medium text-arcon-green truncate">
-                  DSG Vorschriften
-                </h4>
+            ) : (
+              <div className="space-y-4">
+                {conversations.slice(0, 6).map((conversation) => (
+                  <div
+                    key={conversation.id}
+                    onClick={() => { onConversationSelect(conversation.id); toggleSidebar(); }}
+                    className={`border-l-4 ${
+                      selectedConversationId === conversation.id
+                        ? "border-arcon-green"
+                        : new Date(conversation.updated_at) > new Date(Date.now() - 24 * 60 * 60 * 1000)
+                        ? "border-arcon-light-green"
+                        : "border-gray-300"
+                    } pl-3 py-2 hover:bg-gray-50 cursor-pointer`}
+                  >
+                    <p className="text-sm text-gray-500">
+                      {formatChatDate(conversation.updated_at)}
+                    </p>
+                    <h4 className="font-medium text-arcon-green truncate">
+                      {conversation.title}
+                    </h4>
+                    <p className="text-xs text-gray-400">
+                      {conversation.bot_type} Agent
+                    </p>
+                  </div>
+                ))}
               </div>
-
-              <div className="border-l-4 border-gray-300 pl-3 py-2 hover:bg-gray-50 cursor-pointer">
-                <p className="text-sm text-gray-500">10.03.2025</p>
-                <h4 className="font-medium text-arcon-green truncate">
-                  Cloud Migration
-                </h4>
-              </div>
-            </div>
+            )}
 
             <div className="mt-8 pt-4 border-t">
               <h3 className="font-medium text-gray-800 mb-3">Assistenten</h3>
