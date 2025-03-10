@@ -46,59 +46,72 @@ const ChatBot: React.FC<ChatBotProps> = ({
     e.preventDefault();
     setLoading(true);
 
-    const userContent = input; // Store input value before clearing it
+    const userContent = input;
     const newMessage = { role: "User", content: userContent };
     setMessages([...messages, newMessage]);
 
-    // Save user message to Supabase
-    await saveMessage(userContent, "user");
-
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        messages: [...messages, newMessage],
-        botStatus: botStatus,
-      }),
-    });
-
-    const data = await response.json();
-    const aiMessage = { role: "Arcon GPT", content: data.response };
-
-    // Save AI response to Supabase
-    await saveMessage(data.response, "assistant");
-
-    setMessages([...messages, newMessage, aiMessage]);
-    setLoading(false);
-    setInput("");
-  };
-
-  // Function to save a message to the database
-  const saveMessage = async (content: string, role: string) => {
-    // Create/save conversation if it doesn't exist
-    if (!currentConversationId) {
+    // Create/get conversation ID and save user message
+    let conversationId = currentConversationId;
+    if (!conversationId) {
+      // Create a new conversation
+      const title = userContent.length > 30 ? `${userContent.substring(0, 27)}...` : userContent;
       try {
-        // Create a conversation with the message as the title (truncated)
-        const title =
-          content.length > 30 ? `${content.substring(0, 27)}...` : content;
-
         const conversation = await createConversation(title, botStatus);
-        console.log("Created conversation:", conversation);
-
+        
         if (conversation && conversation.id) {
-          setCurrentConversationId(conversation.id);
-
-          // Add the message to this conversation
-          await addMessage(conversation.id, role, content);
+          conversationId = conversation.id;
+          setCurrentConversationId(conversationId);
+          console.log("New conversation created:", conversationId);
         }
       } catch (error) {
         console.error("Error creating conversation:", error);
       }
-    } else {
-      // Save message to existing conversation
-      await addMessage(currentConversationId, role, content);
+    }
+    
+    // Now save the user message with the confirmed conversation ID
+    if (conversationId) {
+      try {
+        await addMessage(conversationId, "user", userContent);
+        console.log("User message saved to conversation:", conversationId);
+      } catch (error) {
+        console.error("Error saving user message:", error);
+      }
+    }
+
+    // Get AI response
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: [...messages, newMessage],
+          botStatus: botStatus,
+        }),
+      });
+
+      const data = await response.json();
+      const aiMessage = { role: "Arcon GPT", content: data.response };
+
+      // Save AI response using the same conversation ID
+      if (conversationId) {
+        await addMessage(conversationId, "assistant", data.response);
+        console.log("AI message saved to conversation:", conversationId);
+      }
+
+      setMessages([...messages, newMessage, aiMessage]);
+    } catch (error) {
+      console.error("Error getting AI response:", error);
+      // Add a failure message to the UI
+      setMessages([
+        ...messages, 
+        newMessage, 
+        { role: "Arcon GPT", content: "Es tut mir leid, es gab einen Fehler bei der Verarbeitung Ihrer Anfrage. Bitte versuchen Sie es später noch einmal." }
+      ]);
+    } finally {
+      setLoading(false);
+      setInput("");
     }
   };
 
@@ -109,20 +122,21 @@ const ChatBot: React.FC<ChatBotProps> = ({
     setInput("");
     setCurrentConversationId(null);
     
-    // Directly set the greeting for the current bot type7
+    // Directly set the greeting for the current bot type
     setTimeout(() => {
-    const botGreeting = {
-      role: "Arcon GPT",
-      content: agentGreetings[selectedBot as keyof typeof agentGreetings],
-    };
-    
-    setMessages([botGreeting]);
-  }, 300);
+      const botGreeting = {
+        role: "Arcon GPT",
+        content: agentGreetings[selectedBot as keyof typeof agentGreetings],
+      };
+      
+      setMessages([botGreeting]);
+    }, 300);
   };
 
   // Display initial greeting when the component mounts or selectedBot changes
   useEffect(() => {
     setMessages([]);
+    setCurrentConversationId(null);
 
     setTimeout(() => {
       const initialGreeting = {
@@ -130,9 +144,8 @@ const ChatBot: React.FC<ChatBotProps> = ({
         content: agentGreetings[selectedBot as keyof typeof agentGreetings],
       };
       setMessages([initialGreeting]);
-      setCurrentConversationId(null); 
     }, 300);
-  }, [selectedBot, agentGreetings]);
+  }, [selectedBot]);
 
   return (
     <div className="flex flex-col max-w-4xl min-w-96 mx-auto">
