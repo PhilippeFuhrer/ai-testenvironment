@@ -9,53 +9,33 @@ type Message = {
   content: string;
 };
 
-let botStatus = "ESS";
-
-// Agent greeting messages
-const agentGreetings = {
-  Abacus: "Hi, ich bin der Abacus Agent. Ich verfüge über spezifisches Abacus Wissen und helfe dir gerne bei Abacus Supportanfragen.",
-  ICT: "Hi, ich bin der ICT Agent. Ich stehe bereit, um dir bei IT- und Technologiefragen zu assistieren.",
-  DSG: "Hi, ich bin der DSG Agent. Ich beantworte gerne deine Fragen zum neuen DSG.",
-  Blog: "Hi, ich bin der Blog Agent. Ich erstelle dir SEO optimierte Blogs in der gewünschten Tonalität.",
-  ESS: "Hi, ich bin der ESS Agent. Ich helfe dir, dich im ESS-Abo-Jungle zurecht zu finden und kalkuliere die Abo Kosten für dich."
+type ChatBotProps = {
+  selectedBot: string;
+  handleBotChange: (botType: string) => void;
+  agentGreetings: Record<string, string>;
 };
 
-const ChatBot = () => {
+// We need access to botStatus for the API calls, so we keep it outside the component
+let botStatus = "ESS";
+
+const ChatBot: React.FC<ChatBotProps> = ({
+  selectedBot,
+  handleBotChange,
+  agentGreetings,
+}) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedBot, setSelectedBot] = useState("ESS");
-  const [placeholder, setPlaceholder] = useState(agentGreetings.Abacus);
 
   useEffect(() => {
-    // Set initial greeting message
-    setPlaceholder(agentGreetings[selectedBot as keyof typeof agentGreetings]);
-  }, []);
+    // Update botStatus when selectedBot changes
+    botStatus = selectedBot;
+  }, [selectedBot]);
 
   const handleInputChange = (e: {
     target: { value: React.SetStateAction<string> };
   }) => {
     setInput(e.target.value);
-  };
-
-  const handleBotChange = async (botType: string) => {
-    botStatus = botType;
-    setSelectedBot(botType);
-    setPlaceholder(agentGreetings[botType as keyof typeof agentGreetings]);
-    
-    // Clear previous messages
-    setMessages([]);
-    
-    // Add greeting message from the newly selected bot with a slight delay
-    setTimeout(() => {
-      const botGreeting = { 
-        role: "Arcon GPT", 
-        content: agentGreetings[botType as keyof typeof agentGreetings] 
-      };
-      setMessages([botGreeting]);
-    }, 300); // 300ms delay
-    
-    console.log(botStatus);
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
@@ -84,31 +64,36 @@ const ChatBot = () => {
     setInput("");
   };
 
-  //function to start a new conversation
+  // Function to start a new conversation
   const newConversation = () => {
     setLoading(false);
     setMessages([]);
     setInput("");
-    
+
     // Display greeting message for the currently selected bot
-    const botGreeting = { 
-      role: "Arcon GPT", 
-      content: agentGreetings[selectedBot as keyof typeof agentGreetings] 
-    };
-    setMessages([botGreeting]);
+    setTimeout(() => {
+      const botGreeting = {
+        role: "Arcon GPT",
+        content: agentGreetings[selectedBot as keyof typeof agentGreetings],
+      };
+
+      setMessages([botGreeting]);
+    }, 300);
   };
 
-  // Display initial greeting when the component mounts
+  // Display initial greeting when the component mounts or selectedBot changes
   useEffect(() => {
-    if (messages.length === 0) {
-      const initialGreeting = { 
-        role: "Arcon GPT", 
-        content: agentGreetings[selectedBot as keyof typeof agentGreetings]
+
+    setMessages([]);
+
+    setTimeout(() => {
+      const initialGreeting = {
+        role: "Arcon GPT",
+        content: agentGreetings[selectedBot as keyof typeof agentGreetings],
       };
       setMessages([initialGreeting]);
-    }
-  }, []);
-
+    }, 300);
+  }, [selectedBot, agentGreetings]);
 
   return (
     <div className="flex flex-col h-screen max-w-4xl min-w-96 mx-auto">
@@ -182,9 +167,10 @@ const ChatBot = () => {
             </ReactMarkdown>
             <CopyButton text={message.content}></CopyButton>
           </div>
-          
         ))}
       </div>
+
+      {/* Chat input */}
       <div className="border-2 rounded-2xl bg-slate-100 p-4 fixed bottom-10 left-0 right-0 max-w-4xl mx-auto shadow-2xl">
         <form onSubmit={handleSubmit} className="flex flex-col">
           <textarea
