@@ -81,7 +81,7 @@ export default function Home() {
         agentGreetings={agentGreetings}
       />
       
-      <div className="flex justify-center py-32">
+      <div className="flex justify-center py-24">
         <ChatBot 
           selectedBot={selectedBot}
           handleBotChange={handleBotChange}
