@@ -44,8 +44,8 @@ export default function Home() {
   }, [sidebarOpen]);
 
   return (
-    <main className="min-h-screen bg-arcon-green">
-      <div className="navbar bg-arcon-green text-white">
+    <main className="bg-arcon-green">
+      <div className="navbar bg-arcon-green text-white overflow-hidden">
         <div className="navbar-start w-1/3">
           <button
             onClick={toggleSidebar}
@@ -81,7 +81,7 @@ export default function Home() {
         agentGreetings={agentGreetings}
       />
       
-      <div className="flex justify-center py-24">
+      <div className="flex justify-center py-24 overflow-auto">
         <ChatBot 
           selectedBot={selectedBot}
           handleBotChange={handleBotChange}

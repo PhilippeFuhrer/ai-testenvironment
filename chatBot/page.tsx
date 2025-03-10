@@ -32,6 +32,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
     botStatus = selectedBot;
   }, [selectedBot]);
 
+
   const handleInputChange = (e: {
     target: { value: React.SetStateAction<string> };
   }) => {
@@ -83,7 +84,6 @@ const ChatBot: React.FC<ChatBotProps> = ({
 
   // Display initial greeting when the component mounts or selectedBot changes
   useEffect(() => {
-
     setMessages([]);
 
     setTimeout(() => {
@@ -96,7 +96,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
   }, [selectedBot, agentGreetings]);
 
   return (
-    <div className="flex flex-col h-screen max-w-4xl min-w-96 mx-auto">
+    <div className="flex flex-col max-w-4xl min-w-96 mx-auto">
       <div className="flex-grow p-4 pb-64">
         {messages.map((message, index) => (
           <div
