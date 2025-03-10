@@ -70,7 +70,7 @@ export async function createConversation(title: string, botType: string) {
     console.error('Error creating conversation:', error);
     return null;
   }
-
+  console.log('Conversation created:', data);
   return data;
 }
 
@@ -134,7 +134,7 @@ export async function addMessage(
     console.error('Error adding message:', error);
     return null;
   }
-
+  console.log('Message added:', data);
   return data;
 }
 
