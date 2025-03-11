@@ -32,12 +32,13 @@ Als Grundlegendes LLM Modell wird GPT-4.o verwendet. Guthaben für die API Abfra
 
 
 ## Update auf Arcon Server (PW im PWS: ARCONKI01)
-1. CMD im root (C:\Arcon Agent\ai-generator-multi-purpose>): 
+
+1. Dienst beenden auf Windows Dienste.
+
+2. VS Code öffnen und einen Pull-Request machen, um den aktuellen Code zu fetchen.
+
+3. CMD im root (C:\Arcon Agent\ai-generator-multi-purpose>): 
     npm install (alle neuen Libraries installieren)
-
-2. Dienst beenden auf Windows Dienste.
-
-3. VS Code öffnen und einen Pull-Request machen, um den aktuellen Code zu fetchen.
 
 4. Prüfen ob .env variablen verändert wurden, falls ja updaten. (Bspw. beim hinzufügen einer neuen Datenbank auf PineCone).
 
