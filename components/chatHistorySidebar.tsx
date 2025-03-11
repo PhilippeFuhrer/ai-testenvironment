@@ -144,24 +144,6 @@ const ChatHistorySidebar: React.FC<SidebarProps> = ({
                 </button>
               ))}
             </div>
-
-            <div className="mt-6 pt-4 border-t">
-            <h3 className="font-medium text-gray-800 mb-3">Weitere Tools</h3>
-              <a
-                href="https://arcon-ess-calculator.onrender.com/"
-                target="_blank"
-                className="block p-2 rounded-lg hover:bg-arcon-green hover:bg-opacity-10 text-arcon-green transition-colors"
-              >
-                ESS Calculator
-              </a>
-              <a
-                href="https://arcon-cloud-configurator.onrender.com/"
-                target="_blank"
-                className="block p-2 rounded-lg hover:bg-arcon-green hover:bg-opacity-10 text-arcon-green transition-colors mt-2"
-              >
-                Cloud Configurator
-              </a>
-            </div>
           </div>
         </div>
       </div>
