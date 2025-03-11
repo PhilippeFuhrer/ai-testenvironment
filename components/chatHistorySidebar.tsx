@@ -99,7 +99,7 @@ const ChatHistorySidebar: React.FC<SidebarProps> = ({
               </div>
             ) : (
               <div className="space-y-4">
-                {conversations.slice(0, 6).map((conversation) => (
+                {conversations.slice(0, 5).map((conversation) => (
                   <div
                     key={conversation.id}
                     onClick={() => { onConversationSelect(conversation.id); toggleSidebar(); }}

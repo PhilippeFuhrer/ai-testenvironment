@@ -176,3 +176,18 @@ export function formatChatDate(dateString: string): string {
   // Other days
   return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
 }
+
+export const getConversationById = async (conversationId: string) => {
+  const { data, error } = await supabase
+    .from('conversations')
+    .select('*')
+    .eq('id', conversationId)
+    .single();
+
+  if (error) {
+    console.error('Error fetching conversation:', error);
+    return null;
+  }
+
+  return data;
+};

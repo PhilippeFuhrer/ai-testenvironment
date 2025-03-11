@@ -3,7 +3,12 @@ import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CopyButton from "@/components/copyButton";
-import { addMessage, createConversation, getConversationMessages } from "@/supabase";
+import {
+  addMessage,
+  createConversation,
+  getConversationById,
+  getConversationMessages,
+} from "@/supabase";
 
 type Message = {
   role: string;
@@ -16,7 +21,6 @@ type ChatBotProps = {
   agentGreetings: Record<string, string>;
   selectedConversationId: string | null;
   onConversationCreated: (conversationId: string) => void;
-
 };
 
 // We need access to botStatus for the API calls, so we keep it outside the component
@@ -41,16 +45,31 @@ const ChatBot: React.FC<ChatBotProps> = ({
     botStatus = selectedBot;
   }, [selectedBot]);
 
-   // Load conversation when selectedConversationId changes
-   useEffect(() => {
+  // Load conversation when selectedConversationId changes
+  useEffect(() => {
     const loadConversation = async () => {
       // Only attempt to load if we have a conversation ID and it's different from current
-      if (selectedConversationId && selectedConversationId !== currentConversationId) {
+      if (
+        selectedConversationId &&
+        selectedConversationId !== currentConversationId
+      ) {
         setLoading(true);
         try {
           console.log("Loading conversation:", selectedConversationId);
-          const conversationMessages = await getConversationMessages(selectedConversationId);
-          
+
+          // First get the conversation details to update the bot type
+          const conversation = await getConversationById(
+            selectedConversationId
+          );
+          if (conversation && conversation.bot_type) {
+            // Update the selected bot in the parent component
+            handleBotChange(conversation.bot_type);
+          }
+
+          const conversationMessages = await getConversationMessages(
+            selectedConversationId
+          );
+
           if (conversationMessages && conversationMessages.length > 0) {
             setMessages(conversationMessages);
             setCurrentConversationId(selectedConversationId);
@@ -84,10 +103,13 @@ const ChatBot: React.FC<ChatBotProps> = ({
     let conversationId = currentConversationId;
     if (!conversationId) {
       // Create a new conversation
-      const title = userContent.length > 30 ? `${userContent.substring(0, 27)}...` : userContent;
+      const title =
+        userContent.length > 30
+          ? `${userContent.substring(0, 27)}...`
+          : userContent;
       try {
         const conversation = await createConversation(title, botStatus);
-        
+
         if (conversation && conversation.id) {
           conversationId = conversation.id;
           setCurrentConversationId(conversationId);
@@ -97,7 +119,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
         console.error("Error creating conversation:", error);
       }
     }
-    
+
     // Now save the user message with the confirmed conversation ID
     if (conversationId) {
       try {
@@ -135,9 +157,13 @@ const ChatBot: React.FC<ChatBotProps> = ({
       console.error("Error getting AI response:", error);
       // Add a failure message to the UI
       setMessages([
-        ...messages, 
-        newMessage, 
-        { role: "Arcon GPT", content: "Es tut mir leid, es gab einen Fehler bei der Verarbeitung Ihrer Anfrage. Bitte versuchen Sie es später noch einmal." }
+        ...messages,
+        newMessage,
+        {
+          role: "Arcon GPT",
+          content:
+            "Es tut mir leid, es gab einen Fehler bei der Verarbeitung Ihrer Anfrage. Bitte versuchen Sie es später noch einmal.",
+        },
       ]);
     } finally {
       setLoading(false);
@@ -151,14 +177,14 @@ const ChatBot: React.FC<ChatBotProps> = ({
     setMessages([]);
     setInput("");
     setCurrentConversationId(null);
-    
+
     // Directly set the greeting for the current bot type
     setTimeout(() => {
       const botGreeting = {
         role: "Arcon GPT",
         content: agentGreetings[selectedBot as keyof typeof agentGreetings],
       };
-      
+
       setMessages([botGreeting]);
     }, 300);
   };
