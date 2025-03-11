@@ -29,8 +29,25 @@ export async function getUserIp(): Promise<string> {
   try {
     const response = await fetch('/api/get-user-ip');
     const data = await response.json();
-    userIpCache = data.ip;
-    return data.ip;
+    
+    // Get the actual IP, not the loopback address
+    const ip = data.ip;
+    console.log('User IP:', ip);
+    
+    // If we're getting a loopback address, generate a random identifier instead
+    if (ip === '::1' || ip === '127.0.0.1' || ip === '::ffff:127.0.0.1') {
+      // Generate a random ID and store it in localStorage to keep it consistent for this browser
+      let randomId = localStorage.getItem('user_random_id');
+      if (!randomId) {
+        randomId = 'user_' + Math.random().toString(36).substring(2, 15);
+        localStorage.setItem('user_random_id', randomId);
+      }
+      userIpCache = randomId;
+      return randomId;
+    }
+    
+    userIpCache = ip;
+    return ip;
   } catch (error) {
     console.error('Error getting user IP:', error);
     return 'unknown';
