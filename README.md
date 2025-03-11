@@ -14,6 +14,9 @@ Making and running the build (production):
 ## OpenAI API Schnittstelle
 Als Grundlegendes LLM Modell wird GPT-4.o verwendet. Guthaben für die API Abfragen müssen auf https://platform.openai.com/ (Login via Google Konto philippe.fuhrer@hotmail.com) aufgeladen werden.
 
+## Datenbank
+Als grundlegende Datenbank wird https://supabase.com/dashboard/project SupaBase verwendet. (Login via Github Konto von philippe.fuhrer@hotmail.com)-
+
 ## Neue Daten für RAG hochladen
 1. Sind die Daten für eine vorhandene oder neue Vektordatenbank? Falls für eine neue auf PineCone (Login auf https://login.pinecone.io/login? via Google Konto: philippe.fuhrer@arcon.ch) eine eröffnen.
     Dimension: 1536
