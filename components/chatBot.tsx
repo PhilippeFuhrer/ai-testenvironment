@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CopyButton from "@/components/copyButton";
-import { addMessage, createConversation } from "@/supabase";
+import { addMessage, createConversation, getConversationMessages } from "@/supabase";
 
 type Message = {
   role: string;
@@ -14,6 +14,9 @@ type ChatBotProps = {
   selectedBot: string;
   handleBotChange: (botType: string) => void;
   agentGreetings: Record<string, string>;
+  selectedConversationId: string | null;
+  onConversationCreated: (conversationId: string) => void;
+
 };
 
 // We need access to botStatus for the API calls, so we keep it outside the component
@@ -23,6 +26,8 @@ const ChatBot: React.FC<ChatBotProps> = ({
   selectedBot,
   handleBotChange,
   agentGreetings,
+  selectedConversationId,
+  onConversationCreated,
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -35,6 +40,31 @@ const ChatBot: React.FC<ChatBotProps> = ({
     // Update botStatus when selectedBot changes
     botStatus = selectedBot;
   }, [selectedBot]);
+
+   // Load conversation when selectedConversationId changes
+   useEffect(() => {
+    const loadConversation = async () => {
+      // Only attempt to load if we have a conversation ID and it's different from current
+      if (selectedConversationId && selectedConversationId !== currentConversationId) {
+        setLoading(true);
+        try {
+          console.log("Loading conversation:", selectedConversationId);
+          const conversationMessages = await getConversationMessages(selectedConversationId);
+          
+          if (conversationMessages && conversationMessages.length > 0) {
+            setMessages(conversationMessages);
+            setCurrentConversationId(selectedConversationId);
+          }
+        } catch (error) {
+          console.error("Error loading conversation:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadConversation();
+  }, [selectedConversationId]);
 
   const handleInputChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -134,18 +164,21 @@ const ChatBot: React.FC<ChatBotProps> = ({
   };
 
   // Display initial greeting when the component mounts or selectedBot changes
+  // Only show greeting if no conversation is selected
   useEffect(() => {
-    setMessages([]);
-    setCurrentConversationId(null);
+    if (!selectedConversationId) {
+      setMessages([]);
+      setCurrentConversationId(null);
 
-    setTimeout(() => {
-      const initialGreeting = {
-        role: "Arcon GPT",
-        content: agentGreetings[selectedBot as keyof typeof agentGreetings],
-      };
-      setMessages([initialGreeting]);
-    }, 300);
-  }, [selectedBot]);
+      setTimeout(() => {
+        const initialGreeting = {
+          role: "Arcon GPT",
+          content: agentGreetings[selectedBot as keyof typeof agentGreetings],
+        };
+        setMessages([initialGreeting]);
+      }, 300);
+    }
+  }, [selectedBot, selectedConversationId]);
 
   return (
     <div className="flex flex-col max-w-4xl min-w-96 mx-auto">
