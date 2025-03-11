@@ -194,7 +194,6 @@ const ChatBot: React.FC<ChatBotProps> = ({
   useEffect(() => {
     if (!selectedConversationId && !currentConversationId) {
       setMessages([]);
-      setCurrentConversationId(null);
 
       setTimeout(() => {
         const initialGreeting = {
