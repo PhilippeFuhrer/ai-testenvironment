@@ -83,7 +83,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
     };
 
     loadConversation();
-  }, [selectedConversationId]);
+  }, [selectedConversationId, handleBotChange]);
 
   const handleInputChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -192,7 +192,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
   // Display initial greeting when the component mounts or selectedBot changes
   // Only show greeting if no conversation is selected
   useEffect(() => {
-    if (!selectedConversationId) {
+    if (!selectedConversationId && !currentConversationId) {
       setMessages([]);
       setCurrentConversationId(null);
 
