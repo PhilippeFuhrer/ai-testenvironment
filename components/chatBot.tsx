@@ -211,7 +211,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
         {messages.map((message, index) => (
           <div
             key={index}
-            className="relative block whitespace-pre-wrap text-arcon-green text-xl mb-6 p-5 rounded-xl bg-slate-50 border-2 shadow-sm message-fade-in"
+            className="relative block text-arcon-green text-xl mb-6 p-5 rounded-xl bg-slate-50 border-2 shadow-sm message-fade-in"
           >
             <p className="text-arcon-light-green mb-2 font-semibold">
               {`${message.role}: `}
@@ -219,9 +219,59 @@ const ChatBot: React.FC<ChatBotProps> = ({
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
+                h1: ({ node, ...props }) => (
+                  <h1
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: "bold",
+                      marginTop: "40px",
+                      marginBottom: "16px",
+                      borderBottom: "1px solid #eaecef",
+                      paddingBottom: "8px",
+                    }}
+                    {...props}
+                  />
+                ),
+                h2: ({ node, ...props }) => (
+                  <h2
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: "bold",
+                      marginTop: "40px",
+                      marginBottom: "14px",
+                      borderBottom: "1px solid #eaecef",
+                      paddingBottom: "6px",
+                    }}
+                    {...props}
+                  />
+                ),
+                h3: ({ node, ...props }) => (
+                  <h3
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: "bold",
+                      marginTop: "40px",
+                      marginBottom: "12px",
+                    }}
+                    {...props}
+                  />
+                ),
+                p: ({ node, ...props }) => (
+                  <h3
+                    style={{
+                      marginTop: "20px",
+                      marginBottom: "20px",
+                    }}
+                    {...props}
+                  />
+                ),
                 table: ({ node, ...props }) => (
                   <table
-                    style={{ width: "100%", borderCollapse: "collapse" }}
+                    style={{ width: "100%", 
+                      borderCollapse: "collapse",
+                      marginTop: "16px",
+                      marginBottom: "16px", }}
+
                     {...props}
                   />
                 ),
@@ -254,7 +304,8 @@ const ChatBot: React.FC<ChatBotProps> = ({
                 ul: ({ node, ...props }) => (
                   <ul
                     style={{
-                      margin: "0px",
+                      marginTop: "12px",
+                      marginBottom: "12px",
                       lineHeight: "0",
                       height: "auto",
                     }}
