@@ -106,7 +106,6 @@ async function initializeChain(vectorStore: PineconeStore) {
 
     Output:
     Stelle die Lizenzkosten der günstigeren Variante (meistens Fimrenabo) übersichtlich in einem Tabellenformat dar.
-    Formattiere den Text für als Markdown.
 
     Antwort:
   `);

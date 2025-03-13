@@ -213,7 +213,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
             key={index}
             className="relative block text-arcon-green text-xl mb-6 p-5 rounded-xl bg-slate-50 border-2 shadow-sm message-fade-in"
           >
-            <p className="text-arcon-light-green mb-2 font-semibold">
+            <p className="text-arcon-light-green font-semibold">
               {`${message.role}: `}
             </p>
             <ReactMarkdown
@@ -259,8 +259,8 @@ const ChatBot: React.FC<ChatBotProps> = ({
                 p: ({ node, ...props }) => (
                   <h3
                     style={{
-                      marginTop: "20px",
-                      marginBottom: "20px",
+                      marginTop: "10px",
+                      marginBottom: "10px",
                     }}
                     {...props}
                   />
