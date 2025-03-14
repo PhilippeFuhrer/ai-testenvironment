@@ -213,19 +213,29 @@ const ChatBot: React.FC<ChatBotProps> = ({
             key={index}
             className="relative block text-arcon-green text-xl mb-6 p-5 rounded-xl bg-slate-50 border-2 shadow-sm message-fade-in"
           >
-            <p className="text-arcon-light-green mb-2 font-semibold">
+            <p className="text-arcon-light-green font-semibold">
               {`${message.role}: `}
             </p>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
+                p: ({ node, ...props }) => (
+                  <p
+                    style={{
+
+                      marginTop: "10px",
+
+                    }}
+                    {...props}
+                  />
+                ),
                 h1: ({ node, ...props }) => (
                   <h1
                     style={{
                       fontSize: "24px",
                       fontWeight: "bold",
                       marginTop: "40px",
-                      marginBottom: "16px",
+                      marginBottom: "20px",
                       borderBottom: "1px solid #eaecef",
                       paddingBottom: "8px",
                     }}
@@ -238,7 +248,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
                       fontSize: "24px",
                       fontWeight: "bold",
                       marginTop: "40px",
-                      marginBottom: "14px",
+                      marginBottom: "20x",
                       borderBottom: "1px solid #eaecef",
                       paddingBottom: "6px",
                     }}
@@ -251,7 +261,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
                       fontSize: "24px",
                       fontWeight: "bold",
                       marginTop: "40px",
-                      marginBottom: "12px",
+                      marginBottom: "20px",
                     }}
                     {...props}
                   />

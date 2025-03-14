@@ -96,13 +96,13 @@ async function initializeChain(vectorStore: PineconeStore) {
     Entscheide dich für die günstigere Variante des Abo-Modelles, also entweder für Einzelabos oder Firmenabos.
     Empfehle jeweils die insgesamt günstigere Variante.
 
-    Informationen zu den Firmenabos:
+    Firmenabos:
     Das Firmenabo wird immer mindestens für 25 User verrechnet.
     Firmenabo-Optionen werden immer für die Gesamtanzahl der User verrechnet.
+    Die Firmenabos können auch mit Zusatz-Abos kombiniert werden, wobei diese nur für die effektive Anzahl der User berechnet werden, welche die Option tatsächlich nutzen.
 
-    Informationen zu den Einzelabos:
-    Einzelabos werden pro User verrechnet.
-    Einzelabo-Optionen werden auch pro User verrechnet, welche die Option nutzen.
+    Einzelabos:
+    Einzelabos und Einzelabo-Optionen werden pro User verrechnet, welche die Option tatsächlich nutzen.
 
     Output:
     Stelle die Lizenzkosten der günstigeren Variante (meistens Fimrenabo) übersichtlich in einem Tabellenformat dar.

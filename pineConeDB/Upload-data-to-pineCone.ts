@@ -37,7 +37,7 @@ config({ path: path.resolve(__dirname, "../.env") });
   async function createNewVectorStore() {
     // Read the source file
     const newDoc = await fs.readFile(
-      '../data/Data-for-RAG/Preisliste-Abacus-ESS.txt',
+      '../data/Data-for-RAG/Berechnungsbeispiele-ESS-Abos.txt',
       'utf8'
     );
 
@@ -48,7 +48,7 @@ config({ path: path.resolve(__dirname, "../.env") });
     const docs: Article[] = newDocCollection.map((article, index) => ({
       text: article.trim(),
       metadata: {
-        source: 'Preisliste-Abacus-ESS.txt',
+        source: 'Berechnungsbeispiele ESS-Abos.txt',
         articleIndex: index,
       },
     }));
