@@ -108,7 +108,7 @@ async function initializeChain(vectorStore: PineconeStore) {
   // This determines how documents are retrieved from the vector store, only fetch documents the first time of a topic
   const retriever = vectorStore.asRetriever({
     searchKwargs: {
-      fetchK: conversationHistory.length === 0 ? 2 : 0, // Adjust fetch count based on conversation history
+      fetchK: conversationHistory.length === 0 ? 3 : 0, // Adjust fetch count based on conversation history
       lambda: 0.8, // Balance between relevance and diversity
     },
     searchType: "mmr", // Use Maximum Marginal Relevance for diverse results

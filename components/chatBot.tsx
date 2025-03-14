@@ -295,8 +295,8 @@ const ChatBot: React.FC<ChatBotProps> = ({
                 ol: ({ node, ...props }) => (
                   <ol
                     style={{
-                      margin: "0px",
-                      lineHeight: "0",
+                      marginTop: "30px",
+                      marginBottom: "30px",
                       height: "auto",
                     }}
                     {...props}
@@ -305,8 +305,8 @@ const ChatBot: React.FC<ChatBotProps> = ({
                 ul: ({ node, ...props }) => (
                   <ul
                     style={{
-                      marginTop: "12px",
-                      marginBottom: "12px",
+                      marginTop: "30px",
+                      marginBottom: "30px",
                       lineHeight: "0",
                       height: "auto",
                     }}
