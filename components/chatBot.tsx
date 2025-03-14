@@ -192,7 +192,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
   // Display initial greeting when the component mounts or selectedBot changes
   // Only show greeting if no conversation is selected
   useEffect(() => {
-    if (!selectedConversationId && !currentConversationId) {
+    if (!currentConversationId) {
       setMessages([]);
 
       setTimeout(() => {
@@ -203,7 +203,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
         setMessages([initialGreeting]);
       }, 300);
     }
-  }, [selectedBot, selectedConversationId]);
+  }, [selectedBot]);
 
   return (
     <div className="flex flex-col max-w-4xl min-w-96 mx-auto">
