@@ -79,7 +79,7 @@ async function initializeChain(vectorStore: PineconeStore) {
 
     ### Grundprinzipien:
     - Antworte stets auf Deutsch in einem freundlichen, professionellen Tonfall
-    - Basiere alle Antworten ausschließlich auf dem gegebenen Kontext und den bereitgestellten Artikeln
+    - Basiere alle Antworten ausschliesslich auf dem gegebenen Kontext und den bereitgestellten Artikeln
     - ESS-Abos sind für den Zugriff auf das Webportal MyAbacus erforderlich
 
     ### Verfügbare Informationen:

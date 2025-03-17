@@ -234,7 +234,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
                     style={{
                       fontSize: "24px",
                       fontWeight: "bold",
-                      marginTop: "40px",
+                      marginTop: "30px",
                       marginBottom: "20px",
                       borderBottom: "1px solid #eaecef",
                       paddingBottom: "8px",
@@ -247,7 +247,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
                     style={{
                       fontSize: "24px",
                       fontWeight: "bold",
-                      marginTop: "40px",
+                      marginTop: "30px",
                       marginBottom: "20x",
                       borderBottom: "1px solid #eaecef",
                       paddingBottom: "6px",
@@ -260,7 +260,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
                     style={{
                       fontSize: "24px",
                       fontWeight: "bold",
-                      marginTop: "40px",
+                      marginTop: "30px",
                       marginBottom: "20px",
                     }}
                     {...props}
@@ -271,7 +271,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
                     style={{
                       fontSize: "22px",
                       fontWeight: "bold",
-                      marginTop: "40px",
+                      marginTop: "30px",
                       marginBottom: "20px",
                     }}
                     {...props}
@@ -330,6 +330,30 @@ const ChatBot: React.FC<ChatBotProps> = ({
                       margin: "8px 0px",
                       lineHeight: "1.5",
                       height: "auto",
+                    }}
+                    {...props}
+                  />
+                ),
+                code: ({ node, ...props }) => (
+                  <code
+                    style={{
+                      margin: "12px 0",
+                      padding: "16px",
+                      height: "auto",
+                      wordBreak: "break-all",
+                      overflowWrap: "break-word",
+                      whiteSpace: "pre-wrap",
+                      maxWidth: "100%",
+                      display: "block",
+                      backgroundColor: "#1e1e2e", // Dark background
+                      borderRadius: "12px",
+                      fontFamily: "monospace",
+                      fontSize: "14px",
+                      color: "#e2e8f0", // Light text
+                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+                      border: "2px solid #2d2d3a", // Subtle border
+                      lineHeight: "1.5",
+                      position: "relative"
                     }}
                     {...props}
                   />
