@@ -92,8 +92,6 @@ async function initializeChain(vectorStore: PineconeStore) {
     - Biete Schritt-für-Schritt-Anleitungen an, wenn du Prozesse erklärst.
     - Verwende Fachbegriffe im Zusammenhang mit Abacus-Software, erkläre sie jedoch, wenn sie komplex sind.
     - Bei unklaren Fragen bitte um Präzisierung.
-    - Gib so viele relevante Informationen wie möglich.
-    - Zitiere die Informationsquellen eindeutig.
     - Beende deine Antwort mit einer weiterführenden Frage, wenn es angemessen ist.
 
     ### Formatierung:
