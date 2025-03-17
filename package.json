@@ -27,7 +27,7 @@
     "express": "^4.21.1",
     "langchain": "^0.3.2",
     "next": "14.2.6",
-    "openai": "^4.67.1",
+    "openai": "^4.87.3",
     "pinecone": "^0.1.0",
     "react": "^18",
     "react-dom": "^18",

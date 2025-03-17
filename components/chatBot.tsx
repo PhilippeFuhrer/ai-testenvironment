@@ -302,7 +302,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
                 ol: ({ node, ...props }) => (
                   <ol
                     style={{
-                      marginTop: "30px",
+                      marginTop: "2px",
                       marginBottom: "30px",
                       height: "auto",
                     }}
