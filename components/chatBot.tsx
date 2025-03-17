@@ -266,6 +266,17 @@ const ChatBot: React.FC<ChatBotProps> = ({
                     {...props}
                   />
                 ),
+                h4: ({ node, ...props }) => (
+                  <h4
+                    style={{
+                      fontSize: "22px",
+                      fontWeight: "bold",
+                      marginTop: "40px",
+                      marginBottom: "20px",
+                    }}
+                    {...props}
+                  />
+                ),
                 table: ({ node, ...props }) => (
                   <table
                     style={{ width: "100%", 
@@ -305,7 +316,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
                 ul: ({ node, ...props }) => (
                   <ul
                     style={{
-                      marginTop: "30px",
+                      marginTop: "2px",
                       marginBottom: "30px",
                       lineHeight: "0",
                       height: "auto",
