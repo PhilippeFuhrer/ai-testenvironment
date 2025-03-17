@@ -233,11 +233,9 @@ const ChatBot: React.FC<ChatBotProps> = ({
                   <h1
                     style={{
                       fontSize: "24px",
-                      fontWeight: "bold",
                       marginTop: "30px",
                       marginBottom: "20px",
-                      borderBottom: "1px solid #eaecef",
-                      paddingBottom: "8px",
+                      fontWeight: "bold",
                     }}
                     {...props}
                   />
@@ -246,11 +244,9 @@ const ChatBot: React.FC<ChatBotProps> = ({
                   <h2
                     style={{
                       fontSize: "24px",
-                      fontWeight: "bold",
                       marginTop: "30px",
                       marginBottom: "20x",
-                      borderBottom: "1px solid #eaecef",
-                      paddingBottom: "6px",
+                      fontWeight: "bold",
                     }}
                     {...props}
                   />
@@ -259,8 +255,8 @@ const ChatBot: React.FC<ChatBotProps> = ({
                   <h3
                     style={{
                       fontSize: "24px",
-                      fontWeight: "bold",
                       marginTop: "30px",
+                      fontWeight: "bold",
                       marginBottom: "20px",
                     }}
                     {...props}
@@ -270,9 +266,9 @@ const ChatBot: React.FC<ChatBotProps> = ({
                   <h4
                     style={{
                       fontSize: "22px",
-                      fontWeight: "bold",
                       marginTop: "30px",
                       marginBottom: "20px",
+                      fontWeight: "bold",
                     }}
                     {...props}
                   />
