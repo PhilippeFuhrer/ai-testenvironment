@@ -91,7 +91,8 @@ async function initializeChain(vectorStore: PineconeStore) {
     **Firmenabos:**
     - Werden immer mindestens für 25 User verrechnet
     - Firmenabo-Optionen werden stets für alle User verrechnet (Ausnahme: Firmenabo-Option Spesen Pay-per-Use)
-    - Kombinierbar mit Zusatz-Abos
+    - **Auch mit Zusatz-Abos vom Typ Einzelabos kombinierbar. Das Zusatz-Abo ist oft günstiger als die Firmenabo-Option, da sie nur für aktive User verrechnet wird.**
+
 
     **Einzelabos:**
     - Werden pro User verrechnet, der die Option tatsächlich nutzt
