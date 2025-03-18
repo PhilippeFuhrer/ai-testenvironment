@@ -12,7 +12,10 @@ interface ChatMessage {
   content: string;
 }
 
-export default async function handleMessage(input: string): Promise<string> {
+// Define a type for chat history
+type ChatHistory = [string, string][]; // [user message, assistant response][]
+
+export default async function handleMessage(input: string, existingHistory: ChatHistory = []): Promise<string> {
   // System prompt explicitly requesting multiple sources
   const systemPrompt: string = `
     Du bist ein Blog-Autor für ein Tech-Unternehmen. 
@@ -39,8 +42,23 @@ export default async function handleMessage(input: string): Promise<string> {
 
   const messages: ChatMessage[] = [
     { role: "system", content: systemPrompt },
-    { role: "user", content: input },
   ];
+
+  // Add existing chat history to messages
+  if (existingHistory.length > 0) {
+    for (const [userMsg, assistantMsg] of existingHistory) {
+      messages.push({ role: "user", content: userMsg });
+      messages.push({ role: "assistant", content: assistantMsg });
+    }
+  }
+
+  console.log("History:")
+  for (const history of existingHistory) {
+    console.log(history);
+  }
+
+  // Add the current user input
+  messages.push({ role: "user", content: input });
 
   try {
     // Erster Suchvorgang: Breite Recherche zum Thema
@@ -81,6 +99,7 @@ export default async function handleMessage(input: string): Promise<string> {
 
     console.log({
       input,
+      historyLength: existingHistory.length,
       searchResultsLength: searchResults.length,
       responseLength: response.length,
       timestamp: new Date().toISOString(),

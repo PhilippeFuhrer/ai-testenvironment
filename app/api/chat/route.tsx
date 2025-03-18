@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
 
   try {
     if (botStatus === "DSG") {
-      aiResponse = await handleMessageDSG(lastUserMessage);
+      aiResponse = await handleMessageDSG(lastUserMessage, chatHistory);
     }
     if (botStatus === "ICT") {
       aiResponse = await handleMessageICT(lastUserMessage);
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       aiResponse = await handleMessageAbacus(lastUserMessage, chatHistory);
     }
     if (botStatus === "Blog") {
-      aiResponse = await handleMessageBlog(lastUserMessage);
+      aiResponse = await handleMessageBlog(lastUserMessage, chatHistory);
     }
     if (botStatus === "ESS") {
       aiResponse = await handleMessageEss(lastUserMessage);
