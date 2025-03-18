@@ -23,10 +23,11 @@ const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY!,
 });
 
-console.log("Abacus Agent Initzialized");
+console.log("Abacus Agent Initialized");
 
-// Global variables to store the vector store and chain
+// Global variables to store the vector store, embeddings, chain and history
 let vectorStore: PineconeStore;
+let embeddings: OpenAIEmbeddings;
 let chain: any;
 let conversationHistory: [string, string][] = [];
 
@@ -44,11 +45,13 @@ async function initializeVectorStore() {
       console.log(
         `Existing vectors found in Pinecone index. Total records: ${indexStats.totalRecordCount}`
       );
+      console.log("Index namespaces:", Object.keys(indexStats.namespaces || {}));
     } else {
       console.log("No existing vectors found or unable to determine count.");
     }
-    // Initialize PineconeStore
-    const embeddings = new OpenAIEmbeddings({
+    
+    // Initialize embeddings and make it global
+    embeddings = new OpenAIEmbeddings({
       modelName: "text-embedding-ada-002",
     });
 
@@ -69,7 +72,7 @@ async function initializeChain(vectorStore: PineconeStore) {
   // Initialize the language model
   const model = new ChatOpenAI({
     modelName: "gpt-4o",
-    temperature: 0.8,
+    temperature: 0.5,
     maxTokens: 1500,
   });
 
@@ -99,6 +102,8 @@ async function initializeChain(vectorStore: PineconeStore) {
     - Verwende Überschriften, Aufzählungspunkte und Tabellen zur übersichtlichen Darstellung.
     - Hebe wichtige Informationen hervor (z.B. durch **Fettdruck** oder *Kursivschrift*).
     - Nutze Codeblöcke für Beispielbefehle oder Konfigurationsbeispiele.
+    - Falls die Quelle aus den Informatione der Dokuemente stammt, gibt die Quelle den aus den Metadaten an. Bspw. source: "wiki" -> dann ist wiki die Quelle.
+
   `);
 
   // This chain takes the retrieved documents and combines them with the prompt
@@ -107,11 +112,11 @@ async function initializeChain(vectorStore: PineconeStore) {
     prompt: promptTemplate, // Use the custom prompt template we defined earlier
   });
 
-  // This determines how documents are retrieved from the vector store, only fetch documents the first time of a topic
+  // This determines how documents are retrieved from the vector store - FIXED: always fetch documents
   const retriever = vectorStore.asRetriever({
     searchKwargs: {
-      fetchK: conversationHistory.length === 0 ? 3 : 0, // Adjust fetch count based on conversation history
-      lambda: 0.8, // Balance between relevance and diversity
+      fetchK: conversationHistory.length < 1 ? 3 : 1,
+      lambda: conversationHistory.length < 1 ? 0.5 : 1, // More balanced ratio between relevance and diversity
     },
     searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
   });
@@ -127,25 +132,74 @@ async function initializeChain(vectorStore: PineconeStore) {
 
 // Function to ensure the vector store and chain are initialized
 async function ensureInitialized() {
-  if (!vectorStore || !chain) {
+  if (!vectorStore || !embeddings) {
     try {
       vectorStore = await initializeVectorStore();
-      chain = await initializeChain(vectorStore);
-      console.log("AI and vector store initialized successfully");
+      console.log("Vector store initialized successfully");
     } catch (error) {
-      console.error("Error during initialization:", error);
-      throw new Error("Failed to initialize AI and vector store");
+      console.error("Error during vector store initialization:", error);
+      throw new Error("Failed to initialize vector store");
     }
+  }
+  
+  // Always reinitialize the chain to get fresh retriever configuration
+  try {
+    chain = await initializeChain(vectorStore);
+    console.log("Chain reinitialized successfully");
+  } catch (error) {
+    console.error("Error during chain initialization:", error);
+    throw new Error("Failed to initialize chain");
+  }
+}
+
+// Function to perform a direct similarity search for debugging
+async function testSimilaritySearch(query: string) {
+  try {
+    if (!vectorStore) {
+      throw new Error("Vector store not initialized");
+    }
+    
+    console.log("Running direct similarity search for debugging...");
+    
+    // Diese Methode gibt explizit die Scores zurück
+    const results = await vectorStore.similaritySearchWithScore(query, 5);
+    
+    console.log("Direct similarity search results:");
+    results.forEach(([doc, score], index) => {
+      console.log(`Result ${index + 1}:`);
+      console.log(`Score: ${score}`);
+      console.log(`Content: ${doc.pageContent.substring(0, 200)}...`);
+      console.log("---------------------------------");
+    });
+    
+    // Nur die Dokumente zurückgeben für Kompatibilität mit dem Rest des Codes
+    return results.map(([doc]) => doc);
+  } catch (error) {
+    console.error("Error performing similarity search:", error);
+    return [];
   }
 }
 
 // Updated main function to handle incoming messages
-export default async function handleMessage(input: string) {
+export default async function handleMessage(input: string, existingHistory: [string, string][] = []) {
   try {
-    // Ensure the vector store and chain are initialized
+    // Ensure the vector store is initialized and chain is reinitialized
     await ensureInitialized();
-
+    
+    // Setze die conversationHistory auf die vom Frontend übergebene Historie
+    conversationHistory = existingHistory || [];
+    console.log("Conversation History Length:", conversationHistory.length);
+    
+    // Log the query embedding for debugging
+    console.log("Creating query embedding...");
+    const queryEmbedding = await embeddings.embedQuery(input);
+    console.log("Query embedding created (first 5 dimensions):", queryEmbedding.slice(0, 5));
+    
+    // Perform a direct similarity search for debugging
+    await testSimilaritySearch(input);
+    
     // Use the chain to process the query and get a response
+    console.log("Invoking retrieval chain...");
     const result = await chain.invoke({
       input,
       chat_history: conversationHistory,
@@ -153,16 +207,17 @@ export default async function handleMessage(input: string) {
 
     // Log the retrieved documents for debugging
     console.log(
-      "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
+      "\n--------------------------------------------------------------------------------------------------------------------------"
     );
     console.log("Abgerufene Dokumente:");
 
-    if (result.context) {
+    if (result.context && result.context.length > 0) {
       result.context.forEach((doc: Document, index: number) => {
         console.log(`Dokument ${index + 1}:`);
+        console.log(`Metadata:`, doc.metadata);
         console.log(doc.pageContent);
         console.log(
-          "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
+          "\n--------------------------------------------------------------------------------------------------------------------------"
         );
       });
     } else {
@@ -170,15 +225,13 @@ export default async function handleMessage(input: string) {
     }
     console.log("Response:", result.answer);
 
-    // Update conversation history
+    // Füge die aktuelle Interaktion zur Konversationshistorie hinzu
     conversationHistory.push([input, result.answer]);
 
-    console.log(
-      "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
-    );
-    console.log("Conversation History:", conversationHistory);
+    console.log("Updated Conversation History Length:", conversationHistory.length);
+    console.log("Conversations-Historie " + conversationHistory)
 
-    // Return the generated response
+    // Return the generated response  
     return result.answer;
   } catch (error) {
     console.error("Error processing query:", error);

@@ -10,26 +10,46 @@ export async function POST(request: NextRequest) {
   console.log("POST Request:", body);
 
   const botStatus = body.botStatus;
-  console.log("Timestamp: " + new Date().toISOString())
+  console.log("Timestamp: " + new Date().toISOString());
 
-  const content = body.messages.map((message: { content: any; }) => message.content).join(" ");
+  // Extrahiere die letzte Nachricht (die aktuelle Anfrage)
+  const userMessages = body.messages.filter((msg: any) => msg.role === "User");
+  const lastUserMessage = userMessages[userMessages.length - 1].content;
+  
+  // Erstelle ein Format der Konversationshistorie, das für die Agents passt
+  // Das Format sollte [userMessage, botResponse] Paare sein
+  const chatHistory = [];
+  for (let i = 0; i < userMessages.length - 1; i++) {
+    const userMsg = userMessages[i];
+    // Finde die entsprechende Bot-Antwort
+    const botIndex = body.messages.findIndex((msg: any, idx: number) => 
+      msg.role === "Arcon GPT" && 
+      idx > body.messages.indexOf(userMsg) &&
+      (i === userMessages.length - 2 || idx < body.messages.indexOf(userMessages[i+1]))
+    );
+    
+    if (botIndex !== -1) {
+      chatHistory.push([String(userMsg.content), String(body.messages[botIndex].content)] as [string, string]);
+    }
+  }
+
   let aiResponse = ""; 
 
   try {
     if (botStatus === "DSG") {
-      aiResponse = await handleMessageDSG(content);
+      aiResponse = await handleMessageDSG(lastUserMessage);
     }
     if (botStatus === "ICT") {
-      aiResponse = await handleMessageICT(content);
+      aiResponse = await handleMessageICT(lastUserMessage);
     }
     if (botStatus === "Abacus") {
-      aiResponse = await handleMessageAbacus(content);
+      aiResponse = await handleMessageAbacus(lastUserMessage, chatHistory);
     }
     if (botStatus === "Blog") {
-      aiResponse = await handleMessageBlog(content);
+      aiResponse = await handleMessageBlog(lastUserMessage);
     }
     if (botStatus === "ESS") {
-      aiResponse = await handleMessageEss(content);
+      aiResponse = await handleMessageEss(lastUserMessage);
     }
     
     return NextResponse.json({ response: aiResponse }, { status: 200 });
