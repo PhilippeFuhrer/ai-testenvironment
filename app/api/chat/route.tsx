@@ -4,6 +4,7 @@ import handleMessageDSG from "@/chatBot/chatBotRAG-Pinecone-DSG";
 import handleMessageICT from "@/chatBot/chatBot-ICT";
 import handleMessageBlog from "@/chatBot/chatBot-Blog-Generator";
 import handleMessageEss from "@/chatBot/chatBot-ESS";
+import handleMessageISMS from "@/chatBot/chat-Bot-ISMS";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -50,6 +51,9 @@ export async function POST(request: NextRequest) {
     }
     if (botStatus === "ESS") {
       aiResponse = await handleMessageEss(lastUserMessage);
+    }
+    if (botStatus === "ISMS") {
+      aiResponse = await handleMessageISMS(lastUserMessage, chatHistory);
     }
     
     return NextResponse.json({ response: aiResponse }, { status: 200 });

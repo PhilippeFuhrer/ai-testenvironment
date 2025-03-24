@@ -404,6 +404,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
                 <option value="ICT">ICT Agent</option>
                 <option value="DSG">DSG Agent</option>
                 <option value="Blog">Blog Agent</option>
+                <option value="ISMS">ISMS Agent</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-50">
                 <svg
