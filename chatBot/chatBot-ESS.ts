@@ -91,12 +91,14 @@ async function initializeChain(vectorStore: PineconeStore) {
     **Firmenabos:**
     - Werden immer mindestens für 25 User verrechnet
     - Firmenabo-Optionen werden stets für alle User verrechnet (Ausnahme: Firmenabo-Option Spesen Pay-per-Use)
+    - Firmenabos können mit Portal-Optionen kombiniert werden
     - **Auch mit Zusatz-Abos vom Typ Einzelabos kombinierbar. Das Zusatz-Abo ist oft günstiger als die Firmenabo-Option, da sie nur für aktive User verrechnet wird.**
 
 
     **Einzelabos:**
     - Werden pro User verrechnet, der die Option tatsächlich nutzt
     - Einzelabo-Optionen werden nur für aktive Nutzer berechnet
+    - Einzeoabos können nicht mit Portal-Optionen kombiniert werden
 
     ### Deine Aufgaben:
     1. Analysiere die Kundenanfrage im Detail
