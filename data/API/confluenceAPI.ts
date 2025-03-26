@@ -5,29 +5,24 @@ import path from "path";
 // Lädt die Umgebungsvariablen aus .env
 const result = config({ path: path.resolve(__dirname, "../../.env") });
 
-// Überprüfen, ob das Laden der .env-Datei erfolgreich war
 if (result.error) {
     throw new Error(`Fehler beim Laden der .env-Datei: ${result.error.message}`);
 }
 
 // Umgebungsvariablen abrufen
 const BASE_URL = process.env.CONFLUENCE_BASE_URL;
-const USERNAME = process.env.CONFLUENCE_USERNAME;
-const API_TOKEN = process.env.CONFLUENCE_API_TOKEN;
+const API_TOKEN = process.env.CONFLUENCE_API_TOKEN; // Kein Benutzername mehr nötig!
 
 // Funktion, um alle Seiten eines Spaces abzurufen
 const fetchConfluencePages = async (spaceKey: string) => {
-    if (!BASE_URL || !USERNAME || !API_TOKEN) {
+    if (!BASE_URL || !API_TOKEN) {
         throw new Error("Fehlende Umgebungsvariablen! Stelle sicher, dass .env korrekt geladen wird.");
     }
-
-    // Basic Auth erstellen
-    const auth = Buffer.from(`${USERNAME}:${API_TOKEN}`).toString("base64");
 
     try {
         const response = await axios.get(`${BASE_URL}/rest/api/content?spaceKey=${spaceKey}`, {
             headers: {
-                "Authorization": `Basic ${auth}`,
+                "Authorization": `Bearer ${API_TOKEN}`, // Hier wird das Token als Bearer verwendet
                 "Content-Type": "application/json"
             }
         });
