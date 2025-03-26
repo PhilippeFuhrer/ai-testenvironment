@@ -141,7 +141,7 @@ const fetchContentFromISMS = async () => {
       console.log(`URL: ${content.url}`);
 
       // Store content in the array
-      if (content.content.length > 100) {
+      if (content.content.length > 100 && content.title != "Uebersicht Teilnahme ISO 27001 Schulungen") {
         allContent.push({
           id: page.id,
           title: content.title,
@@ -167,7 +167,7 @@ const fetchContentFromISMS = async () => {
   for (const page of allContent) {
     textContent += "/article----------/\n\n";
     textContent += `Title: ${page.title}\n`;
-    textContent += `URL: ${page.url}\n\n`;
+    textContent += `URL: ${page.url}\n`;
     textContent += `Content: ${page.content}\n\n`;
   }
 
