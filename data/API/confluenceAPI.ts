@@ -1,6 +1,7 @@
 import axios from "axios";
 import { config } from "dotenv";
 import path from "path";
+import { text } from "stream/consumers";
 
 // Load environment variables from .env
 const result = config({ path: path.resolve(__dirname, "../../.env") });
@@ -148,9 +149,9 @@ const fetchContentFromISMS = async () => {
     // Create a formatted text content from all pages
     let textContent = '';
     for (const page of allContent) {
-        textContent += `\n\n========== ${page.title} ==========\n\n`;
-        textContent += page.content;
-        textContent += '\n\n' + '='.repeat(60) + '\n\n';
+        textContent += "/article----------/\n\n"
+        textContent += `${page.title}\n\n`;
+        textContent += page.content + "\n\n";
     }
     
     fs.writeFileSync(outputPath, textContent, 'utf8');
