@@ -37,7 +37,7 @@ config({ path: path.resolve(__dirname, "../.env") });
   async function createNewVectorStore() {
     // Read the source file
     const newDoc = await fs.readFile(
-      '../data/Data-for-RAG/Berechnungsbeispiele-ESS-Abos.txt',
+      '../data/Data-for-RAG/isms_content.txt',
       'utf8'
     );
 
@@ -48,7 +48,7 @@ config({ path: path.resolve(__dirname, "../.env") });
     const docs: Article[] = newDocCollection.map((article, index) => ({
       text: article.trim(),
       metadata: {
-        source: 'Berechnungsbeispiele ESS-Abos.txt',
+        source: 'ISMS',
         articleIndex: index,
       },
     }));
@@ -63,7 +63,7 @@ config({ path: path.resolve(__dirname, "../.env") });
     // Check if index exists, if not create it
     console.log("Initializing vector store...");
 
-    const indexName = process.env.PINECONE_INDEX_NAME_ESS_AGENT_NEU!;
+    const indexName = process.env.PINECONE_INDEX_NAME_ESS_AGENT_ISMS!;
     const index = pinecone.Index(indexName);
 
     // Create embeddings

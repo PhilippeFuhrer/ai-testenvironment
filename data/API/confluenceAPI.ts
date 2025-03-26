@@ -33,7 +33,8 @@ const cleanHtml = (html: string): string => {
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, " ");
+    .replace(/&nbsp;/g, " ")
+    .replace(/falsetrue/g, '');
 
   // Handle line breaks and spacing
   return decoded
@@ -120,8 +121,14 @@ const fetchPageContent = async (pageId: string) => {
 
 // Fetch content from all pages in "ISMS" space
 const fetchContentFromISMS = async () => {
-  console.log("Fetching all pages from ISMS space...");
-  const pages = await fetchAllPageIDs("ISMS");
+    console.log("Fetching all pages from ISMS space...");
+    const ismsPages = await fetchAllPageIDs("ISMS");
+    
+    console.log("Fetching all pages from ICT space...");
+    const ictPages = await fetchAllPageIDs("ICT");
+    
+    // Combine all pages
+    const pages = [...ismsPages, ...ictPages];
 
   if (pages.length === 0) {
     console.log("No pages found in ISMS space.");

@@ -41,4 +41,4 @@ next-env.d.ts
 
 
 # training data
-/trainingData/*
+data/Data-for-RAG/*
