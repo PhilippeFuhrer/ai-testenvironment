@@ -4,7 +4,7 @@ import { query } from "express";
 import path from "path";
 
 // Load env variables
-config({ path: path.resolve(__dirname, "../.env") });
+config({ path: path.resolve(__dirname, "../../.env") });
 
 // Initialize Pinecone with error handling
 let pinecone: Pinecone;
