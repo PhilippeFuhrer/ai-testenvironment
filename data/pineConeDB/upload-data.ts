@@ -14,6 +14,7 @@ interface Article {
   metadata: {
     source: string;
     articleIndex: number;
+    URL?: string;
   };
 }
 
@@ -57,7 +58,7 @@ async function createNewVectorStore() {
     metadata: {
       source: "ISO 27001 Norm",
       articleIndex: index,
-      url: "https://confluence.arcon.ch/display/ISMS/ISMS+der+ARCON+Informatik+AG?preview=/1245264/89129114/ISO%2027001%20Norm%202022%20deutsche%20Fassung.pdf",
+      URL: "https://confluence.arcon.ch/display/ISMS/ISMS+der+ARCON+Informatik+AG?preview=/1245264/89129114/ISO%2027001%20Norm%202022%20deutsche%20Fassung.pdf",
     },
   }));
 
