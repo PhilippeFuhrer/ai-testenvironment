@@ -1,7 +1,6 @@
 import axios from "axios";
 import { config } from "dotenv";
 import path from "path";
-import { text } from "stream/consumers";
 import * as fs from "fs";
 
 // Load environment variables from .env
