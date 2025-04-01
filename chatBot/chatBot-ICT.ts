@@ -12,8 +12,12 @@ interface ChatMessage {
   content: string;
 }
 
-export default async function handleMessage(input: string): Promise<string> {
-  // More comprehensive and structured system prompt
+// Define a type for chat history
+type ChatHistory = [string, string][];
+
+export default async function handleMessage(
+  input: string, existingHistory: ChatHistory = []): Promise<string> {
+  // System prompt
   const systemPrompt: string = `
     Du bist ein erfahrener IT-Support-Spezialist mit umfassendem Fachwissen in verschiedenen technologischen Bereichen. Deine Aufgabe ist es, technische Probleme zu lösen und Anleitungen in klarem, verständlichem Deutsch zu verfassen.
 
@@ -44,32 +48,44 @@ export default async function handleMessage(input: string): Promise<string> {
     - Code-Beispiele in entsprechenden Code-Blöcken mit Syntax-Highlighting
     - Wichtige Begriffe kursiv oder fett markieren
     - Bei längeren Anleitungen Zwischenüberschriften und nummerierte Schritte verwenden
-    `;
+  `;
 
+  // Convert existing chat history to the format expected by the OpenAI API
   const messages: ChatMessage[] = [
-    { role: "system", content: systemPrompt },
-    { role: "user", content: input }
+    { role: "system", content: systemPrompt }
   ];
 
+
+  console.log("history :" + existingHistory);
+  // Add history to messages
+  for (const [userMessage, assistantMessage] of existingHistory) {
+    messages.push({ role: "user", content: userMessage });
+    messages.push({ role: "assistant", content: assistantMessage });
+  }
+
+  // Add the current user input
+  messages.push({ role: "user", content: input });
+
   try {
-    const completion = await openai.chat.completions.create({
+    const completion = await openai.chat.completions.create({ 
       model: 'gpt-4o',
       messages: messages,
       temperature: 0.7,
       max_tokens: 500,
     });
 
-    const response = completion.choices[0].message.content || "I apologize, but I couldn't generate a helpful response.";
-  
+    const response = completion.choices[0].message.content || "Ich entschuldige mich, aber ich konnte keine hilfreiche Antwort generieren.";
+
     console.log({
       input,
       response,
+      historyLength: existingHistory.length,
       timestamp: new Date().toISOString()
     });
 
     return response;
   } catch (error) {
     console.error("OpenAI API Error:", error);
-    return "Sorry, there was an error processing your request. Please try again.";
+    return "Entschuldigung, es gab einen Fehler bei der Verarbeitung Ihrer Anfrage. Bitte versuchen Sie es erneut.";
   }
 }

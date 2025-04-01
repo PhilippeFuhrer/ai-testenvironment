@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       aiResponse = await handleMessageDSG(lastUserMessage, chatHistory);
     }
     if (botStatus === "ICT") {
-      aiResponse = await handleMessageICT(lastUserMessage);
+      aiResponse = await handleMessageICT(lastUserMessage, chatHistory);
     }
     if (botStatus === "Abacus") {
       aiResponse = await handleMessageAbacus(lastUserMessage, chatHistory);

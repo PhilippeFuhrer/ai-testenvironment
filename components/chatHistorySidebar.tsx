@@ -134,7 +134,7 @@ const ChatHistorySidebar: React.FC<SidebarProps> = ({
                     handleBotChange(botType);
                     toggleSidebar();
                   }}
-                  className={`w-full text-left p-2 rounded-lg my-1 transition-colors ${
+                  className={`w-full text-left px-4 py-1 rounded-lg my-1 transition-colors ${
                     selectedBot === botType
                       ? "bg-arcon-light-green text-white"
                       : "text-arcon-green hover:bg-arcon-green hover:bg-opacity-10"
