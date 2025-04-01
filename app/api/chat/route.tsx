@@ -14,12 +14,11 @@ export async function POST(request: NextRequest) {
   const botStatus = body.botStatus;
   console.log("Timestamp: " + new Date().toISOString());
 
-  // Extrahiere die letzte Nachricht (die aktuelle Anfrage)
+  // Extrahiere die letzte Nachricht
   const userMessages = body.messages.filter((msg: any) => msg.role === "User");
   const lastUserMessage = userMessages[userMessages.length - 1].content;
   
-  // Erstelle ein Format der Konversationshistorie, das für die Agents passt
-  // Das Format sollte [userMessage, botResponse] Paare sein
+  // Das Format sollte [userMessage, botResponse] 
   const chatHistory = [];
   for (let i = 0; i < userMessages.length - 1; i++) {
     const userMsg = userMessages[i];
