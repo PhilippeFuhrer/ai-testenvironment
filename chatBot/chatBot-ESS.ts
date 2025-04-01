@@ -28,6 +28,7 @@ console.log("ESS Agent Initzialized");
 // Global variables to store the vector store and chain
 let vectorStore: PineconeStore;
 let chain: any;
+let embeddings: OpenAIEmbeddings;
 let conversationHistory: [string, string][] = [];
 
 // Function to initialize or load the vector store
@@ -48,7 +49,7 @@ async function initializeVectorStore() {
       console.log("No existing vectors found or unable to determine count.");
     }
     // Initialize PineconeStore
-    const embeddings = new OpenAIEmbeddings({
+    embeddings = new OpenAIEmbeddings({
       modelName: "text-embedding-ada-002",
     });
 
@@ -147,13 +148,54 @@ async function ensureInitialized() {
   }
 }
 
-// Updated main function to handle incoming messages
-export default async function handleMessage(input: string) {
+// Function to perform a direct similarity search for debugging
+async function testSimilaritySearch(query: string) {
   try {
-    // Ensure the vector store and chain are initialized
-    await ensureInitialized();
+    if (!vectorStore) {
+      throw new Error("Vector store not initialized");
+    }
+    
+    console.log("Running direct similarity search for debugging...");
+    
+    // Diese Methode gibt explizit die Scores zurück
+    const results = await vectorStore.similaritySearchWithScore(query, 5);
+    
+    console.log("Direct similarity search results:");
+    results.forEach(([doc, score], index) => {
+      console.log(`Result ${index + 1}:`);
+      console.log(`Score: ${score}`);
+      console.log(`Content: ${doc.pageContent.substring(0, 200)}...`);
+      console.log("---------------------------------");
+    });
+    
+    // Nur die Dokumente zurückgeben für Kompatibilität mit dem Rest des Codes
+    return results.map(([doc]) => doc);
+  } catch (error) {
+    console.error("Error performing similarity search:", error);
+    return [];
+  }
+}
 
+// Updated main function to handle incoming messages
+export default async function handleMessage(input: string, existingHistory: [string, string][] = []) {
+  try {
+    // Ensure the vector store is initialized and chain is reinitialized
+    await ensureInitialized();
+    
+    // Setze die conversationHistory auf die vom Frontend übergebene Historie
+    conversationHistory = existingHistory || [];
+    console.log("Conversation History Length:", conversationHistory.length);
+    
+    // Log the query embedding for debugging
+    console.log("Creating query embedding...");
+    const queryEmbedding = await embeddings.embedQuery(input);
+    console.log("Query embedding created (first 5 dimensions):", queryEmbedding.slice(0, 5));
+    
+    // Perform a direct similarity search for debugging
+    await testSimilaritySearch(input);
+    
     // Use the chain to process the query and get a response
+    console.log("Invoking retrieval chain...");
     const result = await chain.invoke({
       input,
       chat_history: conversationHistory,
@@ -161,33 +203,30 @@ export default async function handleMessage(input: string) {
 
     // Log the retrieved documents for debugging
     console.log(
-      "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
+      "\n--------------------------------------------------------------------------------------------------------------------------"
     );
     console.log("Abgerufene Dokumente:");
 
-    if (result.context) {
+    if (result.context && result.context.length > 0) {
       result.context.forEach((doc: Document, index: number) => {
         console.log(`Dokument ${index + 1}:`);
+        console.log(`Metadata:`, doc.metadata);
         console.log(doc.pageContent);
         console.log(
-          "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
+          "\n--------------------------------------------------------------------------------------------------------------------------"
         );
       });
     } else {
       console.log("Keine Dokumente abgerufen oder Kontext nicht verfügbar.");
     }
-
     console.log("Response:", result.answer);
 
-    // Update conversation history
+    // Füge die aktuelle Interaktion zur Konversationshistorie hinzu
     conversationHistory.push([input, result.answer]);
 
-    console.log(
-      "\n\n\n--------------------------------------------------------------------------------------------------------------------------"
-    );
-    console.log("Conversation History:", conversationHistory);
+    console.log("Updated Conversation History Length:", conversationHistory.length);
 
-    // Return the generated response
+    // Return the generated response  
     return result.answer;
   } catch (error) {
     console.error("Error processing query:", error);

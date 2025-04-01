@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       aiResponse = await handleMessageBlog(lastUserMessage, chatHistory);
     }
     if (botStatus === "ESS") {
-      aiResponse = await handleMessageEss(lastUserMessage);
+      aiResponse = await handleMessageEss(lastUserMessage, chatHistory);
     }
     if (botStatus === "ISMS") {
       aiResponse = await handleMessageISMS(lastUserMessage, chatHistory);
