@@ -5,6 +5,7 @@ import handleMessageICT from "@/chatBot/chatBot-ICT";
 import handleMessageBlog from "@/chatBot/chatBot-Blog-Generator";
 import handleMessageEss from "@/chatBot/chatBot-ESS";
 import handleMessageISMS from "@/chatBot/chat-Bot-ISMS";
+import handleMessageISONorm from "@/chatBot/chat-Bot-ISO-Norm";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -54,6 +55,9 @@ export async function POST(request: NextRequest) {
     }
     if (botStatus === "ISMS") {
       aiResponse = await handleMessageISMS(lastUserMessage, chatHistory);
+    }
+    if (botStatus === "ISONorm") {
+      aiResponse = await handleMessageISONorm(lastUserMessage, chatHistory);
     }
     
     return NextResponse.json({ response: aiResponse }, { status: 200 });

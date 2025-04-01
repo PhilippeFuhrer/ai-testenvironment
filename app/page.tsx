@@ -11,7 +11,8 @@ const agentGreetings: Record<string, string> = {
   ICT: "Hi, ich bin der ICT Agent. Ich stehe bereit, um dir bei IT- und Technologiefragen zu assistieren.",
   DSG: "Hi, ich bin der DSG Agent. Ich beantworte gerne deine Fragen zum neuen DSG.",
   Blog: "Hi, ich bin der Blog Agent. Ich erstelle dir SEO optimierte Blogs in der gewünschten Tonalität.",
-  ISMS: "Hi, ich bin der ISMS Agent. Ich helfe dir bei Fragen rund um das ISMS."
+  ISMS: "Hi, ich bin der ISMS Agent. Ich helfe dir bei Fragen rund um das ISMS.",
+  ISONorm: "Hi, ich bin der ISO Normen Agent. Ich helfe dir bei Fragen rund um die ISO Norm."
 };
 
 export default function Home() {
