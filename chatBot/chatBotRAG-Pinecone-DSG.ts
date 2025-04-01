@@ -5,7 +5,6 @@ import { PineconeStore } from "@langchain/pinecone";
 import { Pinecone } from "@pinecone-database/pinecone";
 import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
-import * as fs from "fs/promises";
 import { createRetrievalChain } from "langchain/chains/retrieval";
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { Document } from "@langchain/core/documents";
@@ -31,145 +30,39 @@ const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY!,
 });
 
+// Function to initialize the QA chain
 // Function to initialize or load the vector store
 async function initializeVectorStore() {
   console.log("Initializing vector store...");
 
-  const indexName = process.env.PINECONE_INDEX_NAME_DEMO_DSG_ONLY!;
+  const indexName = process.env.PINECONE_INDEX_NAME!;
   const index = pinecone.Index(indexName);
 
   try {
     // Check if the index already exists and has vectors
     const indexStats = await index.describeIndexStats();
-
     if (indexStats.totalRecordCount && indexStats.totalRecordCount > 0) {
       console.log(
         `Existing vectors found in Pinecone index. Total records: ${indexStats.totalRecordCount}`
       );
+      console.log("Index namespaces:", Object.keys(indexStats.namespaces || {}));
     } else {
-      console.log(
-        "No existing vectors found or unable to determine count. Creating new vector store..."
-      );
-      await createNewVectorStore(index);
+      console.log("No existing vectors found or unable to determine count.");
     }
+    
+    // Initialize embeddings and make it global
+    embeddings = new OpenAIEmbeddings({
+      modelName: "text-embedding-ada-002",
+    });
 
-    // Initialize PineconeStore
-    embeddings = new OpenAIEmbeddings();
     vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
       pineconeIndex: index,
     });
-
     return vectorStore;
   } catch (error) {
     console.error("Error initializing vector store:", error);
     throw error;
   }
-}
-
-// Function to create a new vector store
-async function createNewVectorStore(index: any) {
-  // Read multiple source files asynchronously
-  const [drupalWiki] = await Promise.all([
-    fs.readFile(
-      "trainingData/DSG-Demo-cleaned.txt",
-      "utf8"
-    ),
-    /*fs.readFile(
-        "trainingData/Export-J-patches-und-support-HR-cleaned.txt",
-        "utf8"
-      ),
-      fs.readFile("trainingData/test.txt", "utf8"),*/
-  ]);
-
-  // Function to split text into articles
-  function splitIntoArticles(text: string): string[] {
-    // Split the text on "article----------"
-    const articles = text.split(/article----------/);
-
-    // Process all articles
-    const processedArticles: string[] = articles.flatMap(
-      (article: string): string[] => {
-        const articleParts: string[] = [];
-        let remainingText: string = article;
-
-        while (remainingText.length > 10000) {
-          articleParts.push(remainingText.slice(0, 10000));
-          remainingText = remainingText.slice(10000);
-        }
-
-        if (remainingText.length > 0) {
-          articleParts.push(remainingText);
-        }
-
-        return articleParts;
-      }
-    );
-
-    return processedArticles;
-  }
-
-  // Split each source into articles
-  const drupalWikiArticles = splitIntoArticles(drupalWiki);
-  //const jHrPdfsArticles = splitIntoArticles(j_hr_pdfs);
-  //const testArticles = splitIntoArticles(test);
-
-  // Combine all articles
-  const allArticles = [
-    ...drupalWikiArticles,
-    //...jHrPdfsArticles,
-    //...testArticles,
-  ];
-
-  // Create documents from articles
-  const docs = allArticles.map((article, index) => ({
-    pageContent: article.trim(),
-    metadata: {
-      source: "wiki",
-      articleIndex: index,
-    },
-  }));
-
-  console.log(`Number of articles created: ${docs.length}`);
-
-  // Create embeddings
-  const embeddings = new OpenAIEmbeddings({
-    modelName: "text-embedding-ada-002",
-  });
-
-  // Initialize vector store
-  let vectorStore: PineconeStore | null = null;
-
-  // Process documents in batches
-  const batchSize = 1; // Adjust this value based on your needs
-  for (let i = 0; i < docs.length; i += batchSize) {
-    const batch = docs.slice(i, i + batchSize);
-    console.log(`Processing article ${i + 1} of ${docs.length}`);
-    console.log(`Article length: ${batch[0].pageContent.length} characters`);
-
-    if (vectorStore === null) {
-      // Initialize the vector store with the first batch
-      vectorStore = await PineconeStore.fromDocuments(batch, embeddings, {
-        pineconeIndex: index,
-        textKey: "text",
-      });
-    } else {
-      // Add subsequent batches to the existing vector store
-      await vectorStore.addDocuments(batch);
-    }
-
-    console.log(
-      `Processed batch ${Math.floor(i / batchSize) + 1} of ${Math.ceil(
-        docs.length / batchSize
-      )}`
-    );
-  }
-
-  if (vectorStore === null) {
-    throw new Error("Failed to create vector store");
-  }
-
-  console.log("New vector store created in Pinecone");
-  return vectorStore;
 }
 
 // Function to initialize the QA chain
@@ -178,10 +71,10 @@ async function initializeChain(vectorStore: PineconeStore) {
 
   // Initialize the language model
   const model = new ChatOpenAI({
-    modelName: "gpt-4",
-    temperature: 0.7,
-    maxTokens: 500,
-  });
+    modelName: "gpt-4o",
+    temperature: 0.5,
+    maxTokens: 1500,
+  })
 
   // Define the prompt template for the AI
   const promptTemplate = PromptTemplate.fromTemplate(`

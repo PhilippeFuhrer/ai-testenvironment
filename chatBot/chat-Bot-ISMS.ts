@@ -111,8 +111,8 @@ async function initializeChain(vectorStore: PineconeStore) {
   // This determines how documents are retrieved from the vector store, only fetch documents the first time of a topic
   const retriever = vectorStore.asRetriever({
     searchKwargs: {
-      fetchK: 3,
-      lambda: 0.5,
+      fetchK: conversationHistory.length < 1 ? 3 : 1,
+      lambda: conversationHistory.length < 1 ? 0.5 : 1, // More balanced ratio between relevance and diversity
     },
     searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
   });
@@ -176,7 +176,7 @@ export default async function handleMessage(input: string, existingHistory: [str
     
     // Setze die conversationHistory auf die vom Frontend übergebene Historie
     conversationHistory = existingHistory || [];
-    console.log("Conversation History Length:", conversationHistory.length);
+    console.log("Conversation History Length: ", conversationHistory.length);
     
     // Log the query embedding for debugging
     console.log("Creating query embedding...");
