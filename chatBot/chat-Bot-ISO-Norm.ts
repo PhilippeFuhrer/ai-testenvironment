@@ -118,8 +118,6 @@ async function initializeChain(vectorStore: PineconeStore, historyLength: number
       searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
     });
   
-    console.log(`Retriever configured with fetchK: ${historyLength < 1 ? 3 : 1}`);
-  
     // This combines the document chain and the retriever
     const retrievalChain = await createRetrievalChain({
       combineDocsChain: documentChain, // Use the document chain we created above
