@@ -150,13 +150,14 @@ async function testSimilaritySearch(query: string) {
     console.log("Running direct similarity search for debugging...");
 
     // Diese Methode gibt explizit die Scores zurück
-    const results = await vectorStore.similaritySearchWithScore(query, 5);
+    const results = await vectorStore.similaritySearchWithScore(query, 3);
 
+    console.log("\n--------------------------------------------------------------------------------------------------------------------------\n")
     console.log("Direct similarity search results:");
     results.forEach(([doc, score], index) => {
       console.log(`Result ${index + 1}:`);
       console.log(`Score: ${score}`);
-      console.log(`Content: ${doc.pageContent.substring(0, 200)}...`);
+      console.log(`Content: ${doc.pageContent.substring(0, 1000)}...`);
       console.log("---------------------------------");
     });
 
@@ -176,7 +177,6 @@ export default async function handleMessage(
   try {
     // Set conversation history from the frontend
     conversationHistory = existingHistory || [];
-    console.log("Conversation History Length: ", conversationHistory.length);
 
     // Ensure vector store is initialized
     await ensureVectorStoreInitialized();
@@ -192,7 +192,7 @@ export default async function handleMessage(
     ) {
       if (history.length > 0) {
         const lastExchange = history[history.length - 1];
-        const contextualQuery = `${lastExchange[0]} ${input}`;
+        const contextualQuery = `${lastExchange} ${input}`;
         console.log("Using contextual query:", contextualQuery);
         return contextualQuery;
       }
