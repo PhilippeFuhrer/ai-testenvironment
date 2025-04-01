@@ -1,11 +1,10 @@
 import { OpenAI } from "openai";
 import { config } from "dotenv";
-import { convertPromptToOpenAI, OpenAIEmbeddings } from "@langchain/openai";
+import { OpenAIEmbeddings } from "@langchain/openai";
 import { PineconeStore } from "@langchain/pinecone";
 import { Pinecone } from "@pinecone-database/pinecone";
 import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
-import * as fs from "fs/promises";
 import { createRetrievalChain } from "langchain/chains/retrieval";
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { Document } from "@langchain/core/documents";
@@ -23,11 +22,10 @@ const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY!,
 });
 
-console.log("ISMS Agent Initzialized");
+console.log("ISMS Agent Initialized");
 
-// Global variables to store the vector store and chain
+// Global variables to store the vector store and embeddings
 let vectorStore: PineconeStore;
-let chain: any;
 let embeddings: OpenAIEmbeddings;
 let conversationHistory: [string, string][] = [];
 
@@ -64,8 +62,8 @@ async function initializeVectorStore() {
 }
 
 // Function to initialize the QA chain
-async function initializeChain(vectorStore: PineconeStore) {
-  console.log("Initializing chain...");
+async function initializeChain(vectorStore: PineconeStore, historyLength: number) {
+  console.log("Initializing chain with history length:", historyLength);
 
   // Initialize the language model
   const model = new ChatOpenAI({
@@ -108,14 +106,17 @@ async function initializeChain(vectorStore: PineconeStore) {
     prompt: promptTemplate, // Use the custom prompt template we defined earlier
   });
 
-  // This determines how documents are retrieved from the vector store, only fetch documents the first time of a topic
+  // This determines how documents are retrieved from the vector store
+  // Dynamically set fetchK based on current conversation history length
   const retriever = vectorStore.asRetriever({
     searchKwargs: {
-      fetchK: conversationHistory.length < 1 ? 3 : 1,
-      lambda: conversationHistory.length < 1 ? 0.5 : 1, // More balanced ratio between relevance and diversity
+      fetchK: historyLength < 1 ? 3 : 1,
+      lambda: 0.5,
     },
     searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
   });
+
+  console.log(`Retriever configured with fetchK: ${historyLength < 1 ? 3 : 1}`);
 
   // This combines the document chain and the retriever
   const retrievalChain = await createRetrievalChain({
@@ -126,16 +127,15 @@ async function initializeChain(vectorStore: PineconeStore) {
   return retrievalChain;
 }
 
-// Function to ensure the vector store and chain are initialized
-async function ensureInitialized() {
-  if (!vectorStore || !chain) {
+// Function to ensure the vector store is initialized
+async function ensureVectorStoreInitialized() {
+  if (!vectorStore) {
     try {
       vectorStore = await initializeVectorStore();
-      chain = await initializeChain(vectorStore);
-      console.log("AI and vector store initialized successfully");
+      console.log("Vector store initialized successfully");
     } catch (error) {
-      console.error("Error during initialization:", error);
-      throw new Error("Failed to initialize AI and vector store");
+      console.error("Error during vector store initialization:", error);
+      throw new Error("Failed to initialize vector store");
     }
   }
 }
@@ -146,12 +146,12 @@ async function testSimilaritySearch(query: string) {
     if (!vectorStore) {
       throw new Error("Vector store not initialized");
     }
-    
+
     console.log("Running direct similarity search for debugging...");
-    
+
     // Diese Methode gibt explizit die Scores zurück
     const results = await vectorStore.similaritySearchWithScore(query, 5);
-    
+
     console.log("Direct similarity search results:");
     results.forEach(([doc, score], index) => {
       console.log(`Result ${index + 1}:`);
@@ -159,7 +159,7 @@ async function testSimilaritySearch(query: string) {
       console.log(`Content: ${doc.pageContent.substring(0, 200)}...`);
       console.log("---------------------------------");
     });
-    
+
     // Nur die Dokumente zurückgeben für Kompatibilität mit dem Rest des Codes
     return results.map(([doc]) => doc);
   } catch (error) {
@@ -169,28 +169,63 @@ async function testSimilaritySearch(query: string) {
 }
 
 // Updated main function to handle incoming messages
-export default async function handleMessage(input: string, existingHistory: [string, string][] = []) {
+export default async function handleMessage(
+  input: string,
+  existingHistory: [string, string][] = []
+) {
   try {
-    // Ensure the vector store is initialized and chain is reinitialized
-    await ensureInitialized();
-    
-    // Setze die conversationHistory auf die vom Frontend übergebene Historie
+    // Set conversation history from the frontend
     conversationHistory = existingHistory || [];
     console.log("Conversation History Length: ", conversationHistory.length);
+
+    // Ensure vector store is initialized
+    await ensureVectorStoreInitialized();
     
+    // Initialize chain with the current conversation history length
+    // This ensures the retriever uses the correct fetchK value
+    const chain = await initializeChain(vectorStore, conversationHistory.length);
+
+    // enrich the embedding query, so it can retrieve document to the whole context
+    async function createContextualQuery(
+      input: string,
+      history: [string, string][]
+    ) {
+      if (history.length > 0) {
+        const lastExchange = history[history.length - 1];
+        const contextualQuery = `${lastExchange[0]} ${input}`;
+        console.log("Using contextual query:", contextualQuery);
+        return contextualQuery;
+      }
+      return input;
+    }
+
     // Log the query embedding for debugging
     console.log("Creating query embedding...");
-    const queryEmbedding = await embeddings.embedQuery(input);
-    console.log("Query embedding created (first 5 dimensions):", queryEmbedding.slice(0, 5));
-    
+    const contextualQuery = await createContextualQuery(
+      input,
+      conversationHistory
+    );
+    const queryEmbedding = await embeddings.embedQuery(contextualQuery);
+
+    console.log(
+      "Query embedding created (first 5 dimensions):",
+      queryEmbedding.slice(0, 5)
+    );
+
     // Perform a direct similarity search for debugging
     await testSimilaritySearch(input);
-    
+
     // Use the chain to process the query and get a response
     console.log("Invoking retrieval chain...");
+    
+    // Convert conversation history to a simple string format that LangChain can process
+    const formattedHistory = conversationHistory.map(
+      ([question, answer]) => `User: ${question}\nAssistent: ${answer}`
+    ).join("\n\n");
+    
     const result = await chain.invoke({
       input,
-      chat_history: conversationHistory,
+      chat_history: formattedHistory,
     });
 
     // Log the retrieved documents for debugging
@@ -200,6 +235,7 @@ export default async function handleMessage(input: string, existingHistory: [str
     console.log("Abgerufene Dokumente:");
 
     if (result.context && result.context.length > 0) {
+      console.log(`Number of documents retrieved: ${result.context.length}`);
       result.context.forEach((doc: Document, index: number) => {
         console.log(`Dokument ${index + 1}:`);
         console.log(`Metadata:`, doc.metadata);
@@ -213,13 +249,16 @@ export default async function handleMessage(input: string, existingHistory: [str
     }
     console.log("Response:", result.answer);
 
-    // Füge die aktuelle Interaktion zur Konversationshistorie hinzu
+    // Add the current interaction to the conversation history
     conversationHistory.push([input, result.answer]);
 
-    console.log("Updated Conversation History Length:", conversationHistory.length);
-    console.log("Conversations-Historie " + conversationHistory)
+    console.log(
+      "Updated Conversation History Length:",
+      conversationHistory.length
+    );
+    console.log("Conversations-Historie:", conversationHistory);
 
-    // Return the generated response  
+    // Return the generated response
     return result.answer;
   } catch (error) {
     console.error("Error processing query:", error);
