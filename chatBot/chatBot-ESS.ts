@@ -118,13 +118,11 @@ async function initializeChain(vectorStore: PineconeStore, historyLength: number
     // Dynamically set fetchK based on current conversation history length
     const retriever = vectorStore.asRetriever({
       searchKwargs: {
-        fetchK: historyLength < 1 ? 3 : 0,
+        fetchK: historyLength < 1 ? 3 : 1,
         lambda: 0.5,
       },
       searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
     });
-  
-    console.log(`Retriever configured with fetchK: ${historyLength < 1 ? 3 : 0}`);
   
     // This combines the document chain and the retriever
     const retrievalChain = await createRetrievalChain({
