@@ -42,7 +42,7 @@ const fetchAllTickets = async (projectKey: string) => {
           jql: `project = ${projectKey}`,
           startAt: startAt,
           maxResults: maxResults,
-          fields: "key,summary, description, status, assignee, updated",
+          fields: "key,summary, description, status, assignee, updated, comment",
         },
       });
 
@@ -67,13 +67,14 @@ const fetchAllTickets = async (projectKey: string) => {
         ...ticket.fields,
         assignee: ticket.fields.assignee ? ticket.fields.assignee.name : null,
         status: ticket.fields.status ? ticket.fields.status.name : null,
+        comments: ticket.fields.comment ? ticket.fields.comment.comments : [],
       },
     }));
 
     console.log(
       `Total tickets found in ${projectKey} project: ${allTickets.length}`
     );
-    console.log("example ticket:", allTickets[0]);
+    console.log("example ticket:", allTickets[1]);
 
     return allTickets;
   } catch (error) {
@@ -90,7 +91,7 @@ const saveTicketsToFile = (tickets: Array<any>, filename: string) => {
 
     const fileContent = tickets
       .map(ticket =>
-        `Key: ${ticket.key}\n URL: ${ticket.URL}\n Summary: ${ticket.fields.summary}\nDescription: ${ticket.fields.description}\nUpdated: ${ticket.fields.updated}\nAssignee: ${ticket.fields.assignee}\nStatus: ${ticket.fields.status}`
+        `Key: ${ticket.key}\n URL: ${ticket.URL}\n Summary: ${ticket.fields.summary}\nDescription: ${ticket.fields.description}\nUpdated: ${ticket.fields.updated}\nAssignee: ${ticket.fields.assignee}\nStatus: ${ticket.fields.status}\n Comments: ${ticket.fields.comments.map((comment: { body: any; }) => comment.body).join("\n")}`
       )
       .join("\n\n/article----------/\n\n");
 
