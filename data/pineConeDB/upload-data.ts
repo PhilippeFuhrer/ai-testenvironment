@@ -19,7 +19,7 @@ interface Article {
 }
 
 // Reading the file
-const filePath = path.join(__dirname, "../Data-for-RAG/ISO-27002-Norm.txt");
+const filePath = path.join(__dirname, "../Data-for-RAG/JIRA-tickets.txt");
 if (!fs.existsSync(filePath)) {
   console.error("File does not exist:", filePath);
   process.exit(1);
@@ -56,9 +56,8 @@ async function createNewVectorStore() {
   const docs: Article[] = newDocCollection.map((article, index) => ({
     text: article.trim(),
     metadata: {
-      source: "ISO 27002 Norm",
+      source: "JIRA Ticket",
       articleIndex: index,
-      URL: "https://confluence.arcon.ch/display/ISMS/ISMS+der+ARCON+Informatik+AG?preview=/1245264/89129113/ISO%2027002%20Norm%202022%20deutsche%20Fassung.pdf",
     },
   }));
 
@@ -72,7 +71,7 @@ async function createNewVectorStore() {
   // Check if index exists, if not create it
   console.log("Initializing vector store...");
 
-  const indexName = process.env.PINECONE_INDEX_NAME_ISO_NORM!;
+  const indexName = process.env.PINECONE_INDEX_NAME_ISMS!;
   const index = pinecone.Index(indexName);
 
   // Create embeddings
