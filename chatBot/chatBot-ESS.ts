@@ -192,31 +192,6 @@ async function initializeChain(vectorStore: PineconeStore, historyLength: number
       const chain = await initializeChain(vectorStore, conversationHistory.length);
   
       // enrich the embedding query, so it can retrieve document to the whole context
-      async function createContextualQuery(
-        input: string,
-        history: [string, string][]
-      ) {
-        if (history.length > 0) {
-          const lastExchange = history[history.length - 1];
-          const contextualQuery = `${lastExchange} ${input}`;
-          console.log("Using contextual query:", contextualQuery);
-          return contextualQuery;
-        }
-        return input;
-      }
-  
-      // Log the query embedding for debugging
-      console.log("Creating query embedding...");
-      const contextualQuery = await createContextualQuery(
-        input,
-        conversationHistory
-      );
-      const queryEmbedding = await embeddings.embedQuery(contextualQuery);
-  
-      console.log(
-        "Query embedding created (first 5 dimensions):",
-        queryEmbedding.slice(0, 5)
-      );
   
       // Perform a direct similarity search for debugging
       await testSimilaritySearch(input);

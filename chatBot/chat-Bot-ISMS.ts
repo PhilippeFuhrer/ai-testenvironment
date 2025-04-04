@@ -9,6 +9,7 @@ import { createRetrievalChain } from "langchain/chains/retrieval";
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { Document } from "@langchain/core/documents";
 
+
 // Load environment variables
 config();
 
@@ -183,33 +184,6 @@ export default async function handleMessage(
     // This ensures the retriever uses the correct fetchK value
     const chain = await initializeChain(vectorStore, conversationHistory.length);
 
-    // enrich the embedding query, so it can retrieve document to the whole context
-    async function createContextualQuery(
-      input: string,
-      history: [string, string][]
-    ) {
-      if (history.length > 0) {
-        const lastExchange = history[history.length - 1];
-        const contextualQuery = `${lastExchange} ${input}`;
-        console.log("Using contextual query:", contextualQuery);
-        return contextualQuery;
-      }
-      return input;
-    }
-
-    // Log the query embedding for debugging
-    console.log("Creating query embedding...");
-    const contextualQuery = await createContextualQuery(
-      input,
-      conversationHistory
-    );
-    const queryEmbedding = await embeddings.embedQuery(contextualQuery);
-
-    console.log(
-      "Query embedding created (first 5 dimensions):",
-      queryEmbedding.slice(0, 5)
-    );
-
     // Perform a direct similarity search for debugging
     await testSimilaritySearch(input);
 
@@ -220,9 +194,11 @@ export default async function handleMessage(
     const formattedHistory = conversationHistory.map(
       ([question, answer]) => `User: ${question}\nAssistent: ${answer}`
     ).join("\n\n");
+
+
     
     const result = await chain.invoke({
-      input,
+      input: input,
       chat_history: formattedHistory,
     });
 
