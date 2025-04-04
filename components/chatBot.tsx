@@ -9,7 +9,7 @@ import {
   getConversationById,
   getConversationMessages,
 } from "@/supabase";
-import { SendIcon } from 'lucide-react';
+import { SendIcon } from "lucide-react";
 
 type Message = {
   role: string;
@@ -206,7 +206,6 @@ const ChatBot: React.FC<ChatBotProps> = ({
     }
   }, [selectedBot]);
 
-
   // Scroll to the bottom of the chat when new messages are added
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -375,69 +374,69 @@ const ChatBot: React.FC<ChatBotProps> = ({
 
       {/* Chat input */}
       <div className="rounded-2xl bg-white p-4 fixed bottom-6 left-0 right-0 max-w-4xl mx-auto shadow-lg">
-      <form onSubmit={handleSubmit} className="flex flex-col">
-        <div className="relative">
-          <textarea
-            className="w-full p-4 rounded-xl text-gray-800 min-h-[56px] max-h-[200px] resize-none pr-12 focus:outline-none bg-gray-100"
-            value={input}
-            onChange={handleInputChange}
-            rows={1}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSubmit(e);
-              }
-            }}
-          />
-          <button
-            type="submit"
-            disabled={!input.trim() || loading}
-            className={`absolute right-4 bottom-4 p-2 rounded-lg ${
-              input.trim() && !loading 
-                ? 'bg-arcon-light-green text-white hover:bg-arcon-green' 
-                : 'bg-gray-200 text-gray-500'
-            } transition-colors`}
-          >
-            {loading ? (
-              <div className="w-5 h-5 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
-            ) : (
-              <SendIcon size={20} />
-            )}
-          </button>
-        </div>
-        
-        <div className="flex items-center mt-3 gap-4">
-          <button
-            className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium transition-colors"
-            type="button"
-            onClick={newConversation}
-          >
-            Neues Thema
-          </button>
-          
+        <form onSubmit={handleSubmit} className="flex flex-col">
           <div className="relative">
-            <select
-              className="appearance-none bg-arcon-light-green text-white text-sm font-medium py-2 px-4 pr-1 rounded-lg focus:outline-none hover:bg-gray-800 transition-colors"
-              onChange={(e) => handleBotChange(e.target.value)}
-              value={selectedBot}
+            <textarea
+              className="w-full p-4 rounded-xl text-gray-800 min-h-[56px] max-h-[200px] resize-none pr-12 focus:outline-none bg-gray-100"
+              value={input}
+              onChange={handleInputChange}
+              rows={1}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
+            />
+            <button
+              type="submit"
+              disabled={!input.trim() || loading}
+              className={`absolute right-4 bottom-4 p-2 rounded-lg ${
+                input.trim() && !loading
+                  ? "bg-arcon-light-green text-white hover:bg-arcon-green"
+                  : "bg-gray-200 text-gray-500"
+              } transition-colors`}
             >
-              <option value="ESS">ESS Agent</option>
-              <option value="Abacus">Abacus Agent</option>
-              <option value="ICT">ICT Agent</option>
-              <option value="DSG">DSG Agent</option>
-              <option value="Blog">Blog Agent</option>
-              <option value="ISMS">ISMS Agent</option>
-              <option value="ISONorm">ISO-Norm Agent</option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-1 flex items-center px-2 text-white">
-              <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                <path d="M7 10l5 5 5-5H7z"></path>
-              </svg>
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
+              ) : (
+                <SendIcon size={20} />
+              )}
+            </button>
+          </div>
+
+          <div className="flex items-center mt-3 gap-4">
+            <button
+              className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium transition-colors"
+              type="button"
+              onClick={newConversation}
+            >
+              Neues Thema
+            </button>
+
+            <div className="relative inline-block">
+              <select
+                className="appearance-none bg-arcon-light-green text-white text-sm font-medium py-2 px-4 pr-8 rounded-lg focus:outline-none hover:bg-gray-800 transition-colors min-w-max whitespace-nowrap"
+                onChange={(e) => handleBotChange(e.target.value)}
+                value={selectedBot}
+              >
+                <option value="ESS">ESS Agent</option>
+                <option value="Abacus">Abacus Agent</option>
+                <option value="ICT">ICT Agent</option>
+                <option value="DSG">DSG Agent</option>
+                <option value="Blog">Blog Agent</option>
+                <option value="ISMS">ISMS Agent</option>
+                <option value="ISONorm">ISO-Norm Agent</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-white">
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                  <path d="M7 10l5 5 5-5H7z"></path>
+                </svg>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
     </div>
   );
 };
