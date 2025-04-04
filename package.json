@@ -25,6 +25,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "langchain": "^0.3.2",
+    "lucide-react": "^0.487.0",
     "next": "14.2.6",
     "openai": "^4.87.3",
     "pinecone": "^0.1.0",

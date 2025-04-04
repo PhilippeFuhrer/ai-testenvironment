@@ -9,6 +9,7 @@ import {
   getConversationById,
   getConversationMessages,
 } from "@/supabase";
+import { SendIcon } from 'lucide-react';
 
 type Message = {
   role: string;
@@ -216,7 +217,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
 
   return (
     <div className="flex flex-col max-w-4xl min-w-96 mx-auto">
-      <div className="flex-grow p-4 pb-64">
+      <div className="flex-grow p-4 pb-40">
         {messages.map((message, index) => (
           <div
             key={index}
@@ -373,62 +374,70 @@ const ChatBot: React.FC<ChatBotProps> = ({
       </div>
 
       {/* Chat input */}
-      <div className="border-2 rounded-2xl bg-slate-100 p-4 fixed bottom-10 left-0 right-0 max-w-4xl mx-auto shadow-2xl">
-        <form onSubmit={handleSubmit} className="flex flex-col">
+      <div className="rounded-2xl bg-white p-4 fixed bottom-6 left-0 right-0 max-w-4xl mx-auto shadow-lg">
+      <form onSubmit={handleSubmit} className="flex flex-col">
+        <div className="relative">
           <textarea
-            className="w-full p-3 border-2 hover:shadow-sm rounded-xl text-xl bg-white text-gray-900 mb-4"
+            className="w-full p-4 rounded-xl text-gray-800 min-h-[56px] max-h-[200px] resize-none pr-12 focus:outline-none bg-gray-100"
             value={input}
             onChange={handleInputChange}
-            rows={3}
+            rows={1}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e);
+              }
+            }}
           />
-          <div className="flex space-x-4">
-            <button
-              type="submit"
-              className="btn bg-arcon-light-green border-none text-slate-50 px-4 py-2 rounded-lg text-md"
+          <button
+            type="submit"
+            disabled={!input.trim() || loading}
+            className={`absolute right-4 bottom-4 p-2 rounded-lg ${
+              input.trim() && !loading 
+                ? 'bg-arcon-light-green text-white hover:bg-arcon-green' 
+                : 'bg-gray-200 text-gray-500'
+            } transition-colors`}
+          >
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
+            ) : (
+              <SendIcon size={20} />
+            )}
+          </button>
+        </div>
+        
+        <div className="flex items-center mt-3 gap-4">
+          <button
+            className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium transition-colors"
+            type="button"
+            onClick={newConversation}
+          >
+            Neues Thema
+          </button>
+          
+          <div className="relative">
+            <select
+              className="appearance-none bg-arcon-light-green text-white text-sm font-medium py-2 px-4 pr-1 rounded-lg focus:outline-none hover:bg-gray-800 transition-colors"
+              onChange={(e) => handleBotChange(e.target.value)}
+              value={selectedBot}
             >
-              {loading ? (
-                <span className="loading loading-spinner"></span>
-              ) : (
-                "Los geht's!"
-              )}
-            </button>
-            <button
-              className="btn bg-arcon-green text-slate-50 hover:text-white py-2 rounded-lg text-sm font-semibold border-none"
-              type="button"
-              onClick={newConversation}
-            >
-              Neues Thema
-            </button>
-            <div className="relative">
-              <select
-                className="appearance-none w-full bg-gray-500 text-slate-50 text-sm font-semibold py-3.5 px-4 hover:bg-black ease-in-out duration-200 rounded-lg mr-4 focus:outline-none"
-                onChange={(e) => {
-                  const selectedValue = e.target.value;
-                  handleBotChange(selectedValue);
-                }}
-                value={selectedBot}
-              >
-                <option value="ESS">ESS Agent</option>
-                <option value="Abacus">Abacus Agent</option>
-                <option value="ICT">ICT Agent</option>
-                <option value="DSG">DSG Agent</option>
-                <option value="Blog">Blog Agent</option>
-                <option value="ISMS">ISMS Agent</option>
-                <option value="ISONorm">ISO-Norm Agent</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-50">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
-              </div>
+              <option value="ESS">ESS Agent</option>
+              <option value="Abacus">Abacus Agent</option>
+              <option value="ICT">ICT Agent</option>
+              <option value="DSG">DSG Agent</option>
+              <option value="Blog">Blog Agent</option>
+              <option value="ISMS">ISMS Agent</option>
+              <option value="ISONorm">ISO-Norm Agent</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-1 flex items-center px-2 text-white">
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                <path d="M7 10l5 5 5-5H7z"></path>
+              </svg>
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
+    </div>
     </div>
   );
 };
