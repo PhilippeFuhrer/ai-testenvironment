@@ -9,7 +9,7 @@ import {
   getConversationById,
   getConversationMessages,
 } from "@/supabase";
-import { SendIcon } from "lucide-react";
+import { Plus, SendIcon } from "lucide-react";
 
 type Message = {
   role: string;
@@ -97,6 +97,8 @@ const ChatBot: React.FC<ChatBotProps> = ({
     setLoading(true);
 
     const userContent = input;
+    setInput("");
+
     const newMessage = { role: "User", content: userContent };
     setMessages([...messages, newMessage]);
 
@@ -168,7 +170,6 @@ const ChatBot: React.FC<ChatBotProps> = ({
       ]);
     } finally {
       setLoading(false);
-      setInput("");
     }
   };
 
@@ -377,7 +378,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
         <form onSubmit={handleSubmit} className="flex flex-col">
           <div className="relative">
             <textarea
-              className="w-full p-4 rounded-xl text-gray-800 min-h-[56px] max-h-[200px] resize-none pr-12 focus:outline-none bg-gray-100"
+              className="w-full p-4 rounded-xl text-gray-800 min-h-[30px] max-h-[200px] resize-none pr-12 focus:outline-none bg-gray-100"
               value={input}
               onChange={handleInputChange}
               rows={1}
@@ -405,14 +406,17 @@ const ChatBot: React.FC<ChatBotProps> = ({
             </button>
           </div>
 
-          <div className="flex items-center mt-3 gap-4">
-            <button
-              className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium transition-colors"
-              type="button"
-              onClick={newConversation}
-            >
-              Neues Thema
-            </button>
+          <div className="flex items-center mt-1 gap-4">
+            <div className="flex flex-row">
+              <button
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                type="button"
+                onClick={newConversation}
+              >
+                <Plus size={16} />
+                Neues Thema
+              </button>
+            </div>
 
             <div className="relative inline-block">
               <select
