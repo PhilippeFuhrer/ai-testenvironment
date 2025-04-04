@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CopyButton from "@/components/copyButton";
@@ -205,6 +205,15 @@ const ChatBot: React.FC<ChatBotProps> = ({
     }
   }, [selectedBot]);
 
+
+  // Scroll to the bottom of the chat when new messages are added
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   return (
     <div className="flex flex-col max-w-4xl min-w-96 mx-auto">
       <div className="flex-grow p-4 pb-64">
@@ -222,9 +231,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
                 p: ({ node, ...props }) => (
                   <p
                     style={{
-
                       marginTop: "10px",
-
                     }}
                     {...props}
                   />
@@ -275,11 +282,12 @@ const ChatBot: React.FC<ChatBotProps> = ({
                 ),
                 table: ({ node, ...props }) => (
                   <table
-                    style={{ width: "100%", 
+                    style={{
+                      width: "100%",
                       borderCollapse: "collapse",
                       marginTop: "16px",
-                      marginBottom: "16px", }}
-
+                      marginBottom: "16px",
+                    }}
                     {...props}
                   />
                 ),
@@ -349,7 +357,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
                       boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
                       border: "2px solid #2d2d3a", // Subtle border
                       lineHeight: "1.5",
-                      position: "relative"
+                      position: "relative",
                     }}
                     {...props}
                   />
@@ -361,6 +369,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
             <CopyButton text={message.content}></CopyButton>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Chat input */}
