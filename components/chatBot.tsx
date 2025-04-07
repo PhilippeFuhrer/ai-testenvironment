@@ -89,7 +89,12 @@ const ChatBot: React.FC<ChatBotProps> = ({
   const handleInputChange = (e: {
     target: { value: React.SetStateAction<string> };
   }) => {
-    setInput(e.target.value);
+    const textarea = e.target as HTMLTextAreaElement;
+    setInput(textarea.value);
+    
+    // Auto-resize logic
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
