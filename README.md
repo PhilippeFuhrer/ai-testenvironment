@@ -37,18 +37,21 @@ Als grundlegende Datenbank wird https://supabase.com/dashboard/project SupaBase 
 
 2. VS Code öffnen und einen Pull-Request machen, um den aktuellen Code zu fetchen.
 
-3. CMD im root (C:\Arcon Agent\ai-generator-multi-purpose>): 
+3. CMD im root:
+    cd C:\Arcon Agent\ai-generator-multi-purpose
     npm install (alle neuen Libraries installieren)
 
 4. Prüfen ob .env variablen verändert wurden, falls ja updaten. (Bspw. beim hinzufügen einer neuen Datenbank auf PineCone).
 
 5. Altes .exe File löschen (um sicher zu gehen, das der build 100% neu gemacht wird).
 
-6. CMD als Admin öffnen: Im root folgendes eigeben: C:\Arcon Agent\ai-generator-multi-purpose>
+6. CMD als Admin öffnen: Im root folgendes eigeben: 
+    cd C:\Arcon Agent\ai-generator-multi-purpose
     npx pkg index.js -o arcon-agent.exe -t node16-win-x64
     (Buildfile: index.js)
 
-7. CMD als Admin öffnen: Registrieren und Starten des Dienstes via NSSM auf Windows Server auf C:\Util\nssm\win64>
+7. CMD als Admin öffnen: Registrieren und Starten des Dienstes via NSSM auf Windows Server auf 
+    cd C:\Util\nssm\win64>
     nssm remove arcon-agent confirm
     nssm install arcon-agent (Path -> exe file, directory -> root directory of app)
     nssm start arcon-agent
