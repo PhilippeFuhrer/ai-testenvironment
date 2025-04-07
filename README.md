@@ -51,7 +51,7 @@ Als grundlegende Datenbank wird https://supabase.com/dashboard/project SupaBase 
     (Buildfile: index.js)
 
 7. CMD als Admin öffnen: Registrieren und Starten des Dienstes via NSSM auf Windows Server auf 
-    cd C:\Util\nssm\win64>
+    cd C:\Util\nssm\win64
     nssm remove arcon-agent confirm
     nssm install arcon-agent (Path -> exe file, directory -> root directory of app)
     nssm start arcon-agent
