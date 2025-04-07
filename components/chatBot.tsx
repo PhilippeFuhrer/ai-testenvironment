@@ -383,10 +383,11 @@ const ChatBot: React.FC<ChatBotProps> = ({
         <form onSubmit={handleSubmit} className="flex flex-col">
           <div className="relative">
             <textarea
-              className="w-full p-4 rounded-xl text-gray-800 min-h-[30px] max-h-[200px] resize-none pr-12 focus:outline-none bg-gray-100"
+              className="w-full p-4 rounded-xl text-gray-800 min-h-[30px] max-h-[200px] resize-none pr-16 focus:outline-none bg-gray-100"
               value={input}
               onChange={handleInputChange}
               rows={1}
+              placeholder="Agenten fragen..."
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
