@@ -47,8 +47,8 @@ Als grundlegende Datenbank wird https://supabase.com/dashboard/project SupaBase 
 
 6. CMD als Admin öffnen: Im root folgendes eigeben: 
     cd C:\Arcon Agent\ai-generator-multi-purpose
-    npx pkg index.js -o arcon-agent.exe -t node20-win-x64
-    (Basiert auf node 20, nicht die aktuellste version, pkg ist auch nicht ideal, optimal wäre docker mit eigener runtime, oder evt electronjs)
+    npx pkg index.js -o arcon-agent.exe -t node16-win-x64
+    (Basiert auf node 16, nicht die aktuellste version, pürfen für node20, allgemein pkg ist auch nicht ideal, optimal wäre docker mit eigener runtime, oder evt electronjs)
     (Buildfile: index.js)
 
 7. CMD als Admin öffnen: Registrieren und Starten des Dienstes via NSSM auf Windows Server auf 
