@@ -17,7 +17,7 @@ async function getData() {
       `https://arcon.drupal-wiki.net/api/rest/scope/api/page`,
       {
         headers: {
-          "X-Auth-Token": token,
+          "Authorization": token,
           "Accept": "application/json, application/vnd.dw+json, application/vnd.dw.v1+json", // Explicitly request JSON
         },
       }
