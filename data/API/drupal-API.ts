@@ -1,8 +1,9 @@
 import axios from "axios";
 import { config } from "dotenv";
 import path from "path";
+import { text } from "stream/consumers";
 
-// API documentation https://arcon.drupal-wiki.net/api/operations/getPages
+// API documentation https://arcon.drupal-wiki.net/api/
 
 // Load environment variables from .env
 const result = config({ path: path.resolve(__dirname, "../../.env") });
@@ -78,22 +79,28 @@ async function fetchAllPagesContent() {
   // Get all page IDs
   const pageIds = await getPageIds();
   console.log(`Found ${pageIds.length} pages`);
-  
+
   // Get content for each page
-  const allPages = [];
+  let textContent = "";
   
   for (const pageId of pageIds) {
     const content = await getPageContent(pageId);
+    const cleanBody = content.body.replace(/<[^>]*>/g, '');
+
     if (content) {
-      allPages.push(content);
-      console.log(`Fetched content for page ID ${pageId}`);
+      textContent += "/article----------/\n\n";
+      textContent += `Title: ${content.title}\n`;
+      textContent += `Inhalt: ${cleanBody}\n`;
+      textContent += `URL: https://arcon.drupal-wiki.net/node/${pageId}\n\n`;
     }
   }
-  
-  console.log(`Successfully fetched ${allPages.length} pages with full content`);
-  console.log(allPages);
-  return allPages;
+
+  console.log(textContent);
+  return textContent;
 }
+
+
 
 // Run the script
 fetchAllPagesContent();
+
