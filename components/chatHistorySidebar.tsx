@@ -126,7 +126,7 @@ const ChatHistorySidebar: React.FC<SidebarProps> = ({
             )}
 
             <div className="mt-8 pt-4 border-t">
-              <h3 className="font-medium text-gray-800 mb-3">Assistenten</h3>
+              <h3 className="font-semibold text-gray-800 mb-3">Assistenten</h3>
               {Object.keys(agentGreetings).map((botType) => (
                 <button
                   key={botType}
@@ -134,7 +134,7 @@ const ChatHistorySidebar: React.FC<SidebarProps> = ({
                     handleBotChange(botType);
                     toggleSidebar();
                   }}
-                  className={`w-full text-left px-4 py-1 rounded-lg my-1 transition-colors ${
+                  className={`w-full text-left font-medium px-3 py-2 rounded-lg my-1 transition-colors ${
                     selectedBot === botType
                       ? "bg-arcon-light-green text-white"
                       : "text-arcon-green hover:bg-arcon-green hover:bg-opacity-10"
