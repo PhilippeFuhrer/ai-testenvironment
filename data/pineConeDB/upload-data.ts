@@ -19,7 +19,7 @@ interface Article {
 }
 
 // Reading the file
-const filePath = path.join(__dirname, "../Data-for-RAG/JIRA-tickets.txt");
+const filePath = path.join(__dirname, "../Data-for-RAG/drupal_export.txt");
 if (!fs.existsSync(filePath)) {
   console.error("File does not exist:", filePath);
   process.exit(1);
@@ -56,7 +56,7 @@ async function createNewVectorStore() {
   const docs: Article[] = newDocCollection.map((article, index) => ({
     text: article.trim(),
     metadata: {
-      source: "JIRA Ticket",
+      source: "Drupal Wiki",
       articleIndex: index,
     },
   }));
@@ -71,7 +71,7 @@ async function createNewVectorStore() {
   // Check if index exists, if not create it
   console.log("Initializing vector store...");
 
-  const indexName = process.env.PINECONE_INDEX_NAME_ISMS!;
+  const indexName = process.env.PINECONE_INDEX_NAME!;
   const index = pinecone.Index(indexName);
 
   // Create embeddings

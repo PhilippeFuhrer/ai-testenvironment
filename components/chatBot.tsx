@@ -242,6 +242,15 @@ const ChatBot: React.FC<ChatBotProps> = ({
                     {...props}
                   />
                 ),
+                a: ({ node, ...props }) => (
+                  <a
+                    style={{
+                      textDecoration: "underline",
+                    }}
+                    target="_blank"
+                    {...props}
+                  />
+                ),
                 h1: ({ node, ...props }) => (
                   <h1
                     style={{
@@ -405,7 +414,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
               } transition-colors`}
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
+                <div className="w-5 h-5 border-2 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
               ) : (
                 <SendIcon size={20} />
               )}
