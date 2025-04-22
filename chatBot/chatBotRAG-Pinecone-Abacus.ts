@@ -86,13 +86,12 @@ async function initializeChain(vectorStore: PineconeStore, historyLength: number
     Chat-Verlauf: {chat_history}
     
     Grundsätze für deine Antworten:
-    - Basiere alle Antworten ausschließlich auf dem bereitgestellten Kontext, den abgerufenen Artikeln und deinem Fachwissen über Abacus-Software.
+    - Verwende primär die Informationen, die du aus dem Drupal Wiki der ARCON Informatik AG erhalten hast.
     - Antworte auf Deutsch in einem klaren, professionellen Stil.
     - Wenn du bereits Informationen zu diesem Thema gegeben hast, konzentriere dich auf neue Aspekte oder Details, die bisher nicht behandelt wurden.
     - Falls keine neuen Informationen verfügbar sind, stelle dies klar dar und schlage verwandte Themen vor, die für den Nutzer interessant sein könnten.
     - Wenn der Kontext oder die abgerufenen Artikel keine relevanten Informationen enthalten, nutze dein allgemeines Wissen über Abacus-Software, aber weise ausdrücklich darauf hin.
     - Biete Schritt-für-Schritt-Anleitungen an, wenn du Prozesse erklärst.
-    - Verwende Fachbegriffe im Zusammenhang mit Abacus-Software, erkläre sie jedoch, wenn sie komplex sind.
     - Bei unklaren Fragen bitte um Präzisierung.
     - Beende deine Antwort mit einer weiterführenden Frage, wenn es angemessen ist.
     
@@ -104,7 +103,7 @@ async function initializeChain(vectorStore: PineconeStore, historyLength: number
     - Schließe komplexere Antworten mit einer kurzen Zusammenfassung ab.
     
     Quellenangabe:
-    - Gib die Quelle an, wenn möglich in Form eins URL.
+    - Gib immer Quelle der Information in Form eins URL an, wenn möglich.
     - Wenn du keine ausreichenden Informationen zu einer Frage hast, kommuniziere das klar und präzise, ohne zu spekulieren.
 
   `);
