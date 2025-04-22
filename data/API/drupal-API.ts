@@ -1,7 +1,7 @@
 import axios from "axios";
 import { config } from "dotenv";
 import path from "path";
-import { text } from "stream/consumers";
+import fs from "fs";
 
 // API documentation https://arcon.drupal-wiki.net/api/
 
@@ -19,7 +19,7 @@ async function getPageIds() {
   const allPageIds = [];
   let currentPage = 1;
   let hasMorePages = true;
-  
+
   while (hasMorePages) {
     try {
       console.log(`Fetching page IDs from page ${currentPage}...`);
@@ -27,18 +27,20 @@ async function getPageIds() {
         `https://arcon.drupal-wiki.net/api/rest/scope/api/page?page=${currentPage}`,
         {
           headers: {
-            "Authorization": token,
-            "Accept": "application/json"
-          }
+            Authorization: token,
+            Accept: "application/json",
+          },
         }
       );
-      
+
       // Extract page IDs from current page
-      const pageIds = response.data.content.map((page: { id: any; }) => page.id);
+      const pageIds = response.data.content.map((page: { id: any }) => page.id);
       allPageIds.push(...pageIds);
-      
-      console.log(`Retrieved ${pageIds.length} page IDs from page ${currentPage}`);
-      
+
+      console.log(
+        `Retrieved ${pageIds.length} page IDs from page ${currentPage}`
+      );
+
       // Check if there are more pages
       if (!response.data.content || response.data.content.length === 0) {
         hasMorePages = false;
@@ -50,7 +52,7 @@ async function getPageIds() {
       hasMorePages = false;
     }
   }
-  
+
   return allPageIds;
 }
 
@@ -61,12 +63,12 @@ async function getPageContent(pageId: any) {
       `https://arcon.drupal-wiki.net/api/rest/scope/api/page/${pageId}`,
       {
         headers: {
-          "Authorization": token,
-          "Accept": "application/json"
-        }
+          Authorization: token,
+          Accept: "application/json",
+        },
       }
     );
-    
+
     return response.data;
   } catch (error) {
     console.error(`Error fetching content for page ID ${pageId}:`, error);
@@ -82,10 +84,11 @@ async function fetchAllPagesContent() {
 
   // Get content for each page
   let textContent = "";
-  
+
   for (const pageId of pageIds) {
     const content = await getPageContent(pageId);
-    const cleanBody = content.body.replace(/<[^>]*>/g, '');
+    console
+    const cleanBody = content.body.replace(/<(?!\/?a(?=>|\s.*>))[^>]*>/g, '');
 
     if (content) {
       textContent += "/article----------/\n\n";
@@ -95,12 +98,17 @@ async function fetchAllPagesContent() {
     }
   }
 
-  console.log(textContent);
+  // Save all content to a text file
+  const outputPath = path.resolve(
+    __dirname,
+    "../../data/Data-for-RAG/drupal_export.txt"
+  );
+
+  fs.writeFileSync(outputPath, textContent, "utf8");
+  console.log(`Content saved to: ${outputPath}`);
+
   return textContent;
 }
 
-
-
 // Run the script
 fetchAllPagesContent();
-
