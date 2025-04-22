@@ -47,9 +47,7 @@ const ChatHistorySidebar: React.FC<SidebarProps> = ({
     <>
       {/* Backdrop overlay when sidebar is open */}
       <div
-        className={`fixed inset-0 bg-black z-20 transition-opacity duration-300 ease-in-out ${
-          isOpen ? "opacity-50" : "opacity-0 pointer-events-none"
-        }`}
+        className={`duration-300 ease-in-out`}
         onClick={toggleSidebar}
       />
 
@@ -102,11 +100,9 @@ const ChatHistorySidebar: React.FC<SidebarProps> = ({
                 {conversations.slice(0, 5).map((conversation) => (
                   <div
                     key={conversation.id}
-                    onClick={() => { onConversationSelect(conversation.id); toggleSidebar(); }}
+                    onClick={() => { onConversationSelect(conversation.id);}}
                     className={`border-l-4 ${
-                      selectedConversationId === conversation.id
-                        ? "border-arcon-green"
-                        : new Date(conversation.updated_at) > new Date(Date.now() - 24 * 60 * 60 * 1000)
+                        new Date(conversation.updated_at) > new Date(Date.now() - 24 * 60 * 60 * 1000)
                         ? "border-arcon-light-green"
                         : "border-gray-300"
                     } pl-3 py-2 hover:bg-gray-50 cursor-pointer`}
@@ -132,7 +128,6 @@ const ChatHistorySidebar: React.FC<SidebarProps> = ({
                   key={botType}
                   onClick={() => {
                     handleBotChange(botType);
-                    toggleSidebar();
                   }}
                   className={`w-full text-left font-medium px-3 py-2 rounded-lg my-1 transition-colors ${
                     selectedBot === botType
