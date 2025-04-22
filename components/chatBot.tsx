@@ -52,7 +52,8 @@ const ChatBot: React.FC<ChatBotProps> = ({
       // Only attempt to load if we have a conversation ID and it's different from current
       if (
         selectedConversationId &&
-        selectedConversationId !== currentConversationId
+        selectedConversationId !== currentConversationId ||
+        selectedConversationId == ""
       ) {
         setLoading(true);
         try {
@@ -183,7 +184,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
     setLoading(false);
     setMessages([]);
     setInput("");
-    setCurrentConversationId(null);
+    setCurrentConversationId("");
 
     // Directly set the greeting for the current bot type
     setTimeout(() => {
@@ -198,19 +199,19 @@ const ChatBot: React.FC<ChatBotProps> = ({
 
   // Display initial greeting when the component mounts or selectedBot changes
   // Only show greeting if no conversation is selected
+  
   useEffect(() => {
-    if (!currentConversationId) {
+    if (!currentConversationId && !selectedConversationId) {
       setMessages([]);
-
-      setTimeout(() => {
         const initialGreeting = {
           role: "Arcon GPT",
           content: agentGreetings[selectedBot as keyof typeof agentGreetings],
         };
         setMessages([initialGreeting]);
-      }, 300);
+
     }
   }, [selectedBot]);
+
 
   // Scroll to the bottom of the chat when new messages are added
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
