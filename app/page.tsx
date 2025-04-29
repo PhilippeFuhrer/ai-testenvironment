@@ -7,7 +7,7 @@ import ChatBot from "@/components/chatBot";
 const agentGreetings: Record<string, string> = {
   ESS: "Hi, ich bin der ESS Agent. Ich helfe dir, dich im ESS-Abo-Jungle zurecht zu finden und kalkuliere die Abo Kosten für dich.",
   Abacus:
-    "Hi, ich bin der Abacus Agent. Ich verfüge über spezifisches Abacus Wissen und helfe dir gerne bei Abacus Supportanfragen.",
+    "Hi, ich bin der Abacus Agent. Ich verfüge über das Wissen vom Drupal-Wiki und helfe dir gerne bei Abacus Supportanfragen.",
   ICT: "Hi, ich bin der ICT Agent. Ich stehe bereit, um dir bei IT- und Technologiefragen zu assistieren.",
   DSG: "Hi, ich bin der DSG Agent. Ich beantworte gerne deine Fragen zum neuen DSG.",
   Blog: "Hi, ich bin der Blog Agent. Ich erstelle dir SEO optimierte Blogs in der gewünschten Tonalität.",
