@@ -18,6 +18,7 @@ Als Grundlegendes LLM Modell wird GPT-4.o verwendet. Guthaben für die API Abfra
 Als grundlegende Datenbank wird https://supabase.com/dashboard/project SupaBase verwendet. (Login via Github Konto von philippe.fuhrer@hotmail.com)
 
 ## Neue Daten für RAG hochladen
+
 1. Sind die Daten für eine vorhandene oder neue Vektordatenbank? Falls für eine neue auf PineCone (Login auf https://login.pinecone.io/login? via Google Konto: philippe.fuhrer@arcon.ch) eine eröffnen.
     Embedding Modell: custom emedding: vector type: dense, dimensions: 1536,  metric: cosine, Embedding wird bereits über Langchain gemacht!
 
@@ -30,32 +31,26 @@ Als grundlegende Datenbank wird https://supabase.com/dashboard/project SupaBase 
 5. Im directory, wo das File "Upload" abgelegt ist: npx tsx Upload-data-to-pineCone.ts -> Start upload
     ("C:\Programming\ai-generator-multi-purpose\pineConeDB>npx tsx Upload-data-to-pineCone.ts")
 
-
 ## Update auf Arcon Server (PW im PWS: ARCONKI01)
 
 1. Dienst beenden auf Windows Dienste.
 
 2. VS Code öffnen und einen Pull-Request machen, um den aktuellen Code zu fetchen.
 
-3. CMD im root:
+3. CMD als Admin öffnen: 
     cd C:\Arcon Agent\ai-generator-multi-purpose
-    npm install (alle neuen Libraries installieren)
+    npm install
+    npm run build
 
 4. Prüfen ob .env variablen verändert wurden, falls ja updaten. (Bspw. beim hinzufügen einer neuen Datenbank auf PineCone).
 
-5. Altes .exe File löschen (um sicher zu gehen, das der build 100% neu gemacht wird).
-
-6. CMD als Admin öffnen: Im root folgendes eigeben: 
-    cd C:\Arcon Agent\ai-generator-multi-purpose
-    npx pkg index.js -o arcon-agent.exe -t node16-win-x64
-    (Basiert auf node 16, nicht die aktuellste version, pürfen für node20, allgemein pkg ist auch nicht ideal, optimal wäre docker mit eigener runtime, oder evt electronjs)
-    (Buildfile: index.js)
-
-7. CMD als Admin öffnen: Registrieren und Starten des Dienstes via NSSM auf Windows Server auf 
+4. CMD als Admin öffnen: Registrieren und Starten des Dienstes via NSSM auf Windows Server auf 
     cd C:\Util\nssm\win64
     nssm remove arcon-agent confirm
-    nssm install arcon-agent (Path -> exe file, directory -> root directory of app)
+    nssm install arcon-agent 
+        Path: C:\Program Files\nodejs\node.exe
+        Start directory: C:\Arcon Agent\ai-generator-multi-purpose
+        Arguments: C:\Arcon Agent\ai-generator-multi-purpose\node_modules\next\dist\bin\next start -p 3000
     nssm start arcon-agent
 
-8. Testing auf eigenem Laptop im VPN, nicht direkt hier auf Server! Dauert ca. 30 sec bis live.
-
+5. Testing auf eigenem Laptop im VPN, nicht direkt hier auf Server! Dauert ca. 30 sec bis live.
