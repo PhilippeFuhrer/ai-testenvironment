@@ -37,20 +37,21 @@ Als grundlegende Datenbank wird https://supabase.com/dashboard/project SupaBase 
 
 2. VS Code öffnen und einen Pull-Request machen, um den aktuellen Code zu fetchen.
 
-3. CMD als Admin öffnen: 
+4. Prüfen ob .env variablen verändert wurden, falls ja updaten. (Bspw. beim hinzufügen einer neuen Datenbank auf PineCone).
+
+4. CMD als Admin öffnen: 
     cd C:\Arcon Agent\ai-generator-multi-purpose
     npm install
     npm run build
+    npm run start (Testing der App)
 
-4. Prüfen ob .env variablen verändert wurden, falls ja updaten. (Bspw. beim hinzufügen einer neuen Datenbank auf PineCone).
-
-4. CMD als Admin öffnen: Registrieren und Starten des Dienstes via NSSM auf Windows Server auf 
+5. CMD als Admin öffnen: Registrieren und Starten des Dienstes via NSSM auf Windows Server auf 
     cd C:\Util\nssm\win64
     nssm remove arcon-agent confirm
     nssm install arcon-agent 
         Path: C:\Program Files\nodejs\node.exe
-        Start directory: C:\Arcon Agent\ai-generator-multi-purpose
-        Arguments: C:\Arcon Agent\ai-generator-multi-purpose\node_modules\next\dist\bin\next start -p 3000
+        Start directory: C:\arcon_agent\ai-generator-multi-purpose
+        Arguments: C:\arcon_agent\ai-generator-multi-purpose\node_modules\next\dist\bin\next start -p 3000
     nssm start arcon-agent
 
-5. Testing auf eigenem Laptop im VPN, nicht direkt hier auf Server! Dauert ca. 30 sec bis live.
+6. Testing auf eigenem Laptop im VPN, nicht direkt hier auf Server! Dauert ca. 30 sec bis live.
