@@ -28,7 +28,6 @@ console.log("Abacus Agent Initialized");
 // Global variables to store the vector store, embeddings, chain and history
 let vectorStore: PineconeStore;
 let embeddings: OpenAIEmbeddings;
-let chain: any;
 let conversationHistory: [string, string][] = [];
 
 // Function to initialize or load the vector store
@@ -203,6 +202,8 @@ async function initializeChain(vectorStore: PineconeStore, historyLength: number
       const formattedHistory = conversationHistory.map(
         ([question, answer]) => `User: ${question}\nAssistent: ${answer}`
       ).join("\n\n");
+
+      console.log("Formatted chat history:", formattedHistory);
       
       const result = await chain.invoke({
         input,
@@ -237,7 +238,6 @@ async function initializeChain(vectorStore: PineconeStore, historyLength: number
         "Updated Conversation History Length:",
         conversationHistory.length
       );
-      console.log("Conversations-Historie:", conversationHistory);
   
       // Return the generated response
       return result.answer;

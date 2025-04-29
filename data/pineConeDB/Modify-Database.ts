@@ -1,6 +1,5 @@
 import { Pinecone } from "@pinecone-database/pinecone";
 import { config } from "dotenv";
-import { query } from "express";
 import path from "path";
 
 // Load env variables
