@@ -38,6 +38,7 @@ export default async function handleMessage(input: string, existingHistory: Chat
     Output:
     - Optimiere den Artikel für Suchmaschinen (SEO) und gib am Ende des Artikels das SEO-Keyword an.
     - Füge nach dem SEO-Keyword eine Liste aller verwendeten Quellen unter der Überschrift "Quellen:" hinzu.
+    - Der Umfang des Beitrages soll zwischen 800 und 1200 Wörtern liegen.
     `;
 
   const messages: ChatMessage[] = [
@@ -91,7 +92,7 @@ export default async function handleMessage(input: string, existingHistory: Chat
       model: "gpt-4o",
       messages: messages,
       temperature: 0.7,
-      max_tokens: 1200, // Erhöht für mehr Platz für Quellen
+      max_tokens: 10000,
     });
 
     const response = blogCompletion.choices[0].message.content || 
