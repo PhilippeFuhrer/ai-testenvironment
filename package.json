@@ -15,7 +15,7 @@
     "@langchain/core": "^0.3.7",
     "@langchain/openai": "^0.3.5",
     "@langchain/pinecone": "^0.1.1",
-    "@pinecone-database/pinecone": "^3.0.3",
+    "@pinecone-database/pinecone": "^5.1.2",
     "@supabase/supabase-js": "^2.49.1",
     "ai": "^3.4.33",
     "axios": "^1.7.7",
