@@ -40,7 +40,7 @@ Als grundlegende Datenbank wird https://supabase.com/dashboard/project SupaBase 
 4. Prüfen ob .env variablen verändert wurden, falls ja updaten. (Bspw. beim hinzufügen einer neuen Datenbank auf PineCone).
 
 4. CMD als Admin öffnen: 
-    cd C:\Arcon Agent\ai-generator-multi-purpose
+    cd C:\arcon_agent\ai-generator-multi-purpose
     npm install
     npm run build
     npm run start (Testing der App)
