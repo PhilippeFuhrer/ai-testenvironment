@@ -71,7 +71,7 @@ async function initializeChain(vectorStore: PineconeStore, historyLength: number
   // Initialize the language model
   const model = new ChatOpenAI({
     modelName: "gpt-4.1",
-    temperature: 0.5,
+    temperature: 0.3,
     maxTokens: 20000,
   });
 
@@ -117,13 +117,13 @@ async function initializeChain(vectorStore: PineconeStore, historyLength: number
     // Dynamically set fetchK based on current conversation history length
     const retriever = vectorStore.asRetriever({
       searchKwargs: {
-        fetchK: historyLength < 1 ? 3 : 1,
+        fetchK: historyLength < 1 ? 5 : 3,
         lambda: 0.5,
       },
       searchType: "mmr", // Use Maximum Marginal Relevance for diverse results
     });
   
-    console.log(`Retriever configured with fetchK: ${historyLength < 1 ? 3 : 1}`);
+    console.log(`Retriever configured with fetchK: ${historyLength < 1 ? 5 : 3}`);
   
     // This combines the document chain and the retriever
     const retrievalChain = await createRetrievalChain({
