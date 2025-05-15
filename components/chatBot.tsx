@@ -51,8 +51,8 @@ const ChatBot: React.FC<ChatBotProps> = ({
     const loadConversation = async () => {
       // Only attempt to load if we have a conversation ID and it's different from current
       if (
-        selectedConversationId &&
-        selectedConversationId !== currentConversationId ||
+        (selectedConversationId &&
+          selectedConversationId !== currentConversationId) ||
         selectedConversationId == ""
       ) {
         setLoading(true);
@@ -92,9 +92,9 @@ const ChatBot: React.FC<ChatBotProps> = ({
   }) => {
     const textarea = e.target as HTMLTextAreaElement;
     setInput(textarea.value);
-    
+
     // Auto-resize logic
-    textarea.style.height = 'auto';
+    textarea.style.height = "auto";
     textarea.style.height = `${textarea.scrollHeight}px`;
   };
 
@@ -199,19 +199,17 @@ const ChatBot: React.FC<ChatBotProps> = ({
 
   // Display initial greeting when the component mounts or selectedBot changes
   // Only show greeting if no conversation is selected
-  
+
   useEffect(() => {
     if (!currentConversationId && !selectedConversationId) {
       setMessages([]);
-        const initialGreeting = {
-          role: "Arcon GPT",
-          content: agentGreetings[selectedBot as keyof typeof agentGreetings],
-        };
-        setMessages([initialGreeting]);
-
+      const initialGreeting = {
+        role: "Arcon GPT",
+        content: agentGreetings[selectedBot as keyof typeof agentGreetings],
+      };
+      setMessages([initialGreeting]);
     }
   }, [selectedBot]);
-
 
   // Scroll to the bottom of the chat when new messages are added
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -374,6 +372,17 @@ const ChatBot: React.FC<ChatBotProps> = ({
                       border: "2px solid #2d2d3a", // Subtle border
                       lineHeight: "1.5",
                       position: "relative",
+                    }}
+                    {...props}
+                  />
+                ),
+                hr: ({ node, ...props }) => (
+                  <hr
+                    style={{
+                      color: "transparent",
+                      backgroundColor: "transparent",
+                      borderColor: "transparent",
+                      margin: "8px 0",
                     }}
                     {...props}
                   />

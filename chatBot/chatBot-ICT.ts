@@ -68,10 +68,10 @@ export default async function handleMessage(
 
   try {
     const completion = await openai.chat.completions.create({ 
-      model: 'gpt-4o',
+      model: 'gpt-4.1',
       messages: messages,
       temperature: 0.7,
-      max_tokens: 500,
+      max_tokens: 20000,
     });
 
     const response = completion.choices[0].message.content || "Ich entschuldige mich, aber ich konnte keine hilfreiche Antwort generieren.";

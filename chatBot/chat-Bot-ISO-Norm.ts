@@ -67,9 +67,9 @@ async function initializeChain(vectorStore: PineconeStore, historyLength: number
 
   // Initialize the language model
   const model = new ChatOpenAI({
-    modelName: "gpt-4o",
+    modelName: "gpt-4.1",
     temperature: 0.2,
-    maxTokens: 4000,
+    maxTokens: 20000,
   });
 
   // Define the prompt template for the AI
