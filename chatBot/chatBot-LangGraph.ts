@@ -14,20 +14,29 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { AIMessage } from "@langchain/core/messages";
 import { StateGraph } from "@langchain/langgraph";
 import { START } from "@langchain/langgraph";
+import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
+import { createClient } from "@supabase/supabase-js";
 
 // Load environment variables
 config({ path: "../.env" });
 new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Pinecone setup
-const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY! });
-const index = pinecone.Index(process.env.PINECONE_INDEX_NAME!);
+  // Initialize Supabase client
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  const tableName = process.env.SUPABASE_TABLE_NAME!;
+  const client = createClient(supabaseUrl, supabaseKey);
+
 const embeddings = new OpenAIEmbeddings({
-  modelName: "text-embedding-ada-002",
+  modelName: "text-embedding-3-large",
 });
-const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
-  pineconeIndex: index,
+
+const vectorStore = await SupabaseVectorStore.fromExistingIndex(embeddings, {
+  client,
+  tableName,
+  queryName: "match_documents", // or your custom query function name
 });
+
 const retriever = vectorStore.asRetriever({
   searchKwargs: {
     fetchK: 5, // or any number you want

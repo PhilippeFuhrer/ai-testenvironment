@@ -4,22 +4,19 @@ import { createClient } from "@supabase/supabase-js";
 import * as fs from "fs";
 import { config } from "dotenv";
 import { Document } from "langchain/document";
-import path from "path";
 
 // Load env variables
-config({ path: path.resolve(__dirname, "../../.env") });
+config({ path: "../../.env" });
 
 interface Article {
   text: string;
-  metadata: {
-    source: string;
-    articleIndex: number;
-    URL?: string;
-  };
-}
+  source: string;
+  index: number;
+  URL?: string;
+  }
 
 // Reading the file
-const filePath = path.join(__dirname, "../Data-for-RAG/drupal_export.txt");
+const filePath = "../Data-for-RAG/drupal_export.txt";
 if (!fs.existsSync(filePath)) {
   console.error("File does not exist:", filePath);
   process.exit(1);
@@ -55,17 +52,15 @@ async function createNewVectorStore() {
   // Create documents from articles
   const docs: Article[] = newDocCollection.map((article, index) => ({
     text: article.trim(),
-    metadata: {
-      source: "Drupal Wiki",
-      articleIndex: index,
-    },
+    source: "Drupal Wiki",
+    index: index,
   }));
 
   console.log(`Number of articles created: ${docs.length}`);
 
   // Initialize Supabase client
-  const supabaseUrl = process.env.SUPABASE_URL!;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
   const tableName = process.env.SUPABASE_TABLE_NAME!;
   const client = createClient(supabaseUrl, supabaseKey);
 
@@ -93,7 +88,7 @@ async function createNewVectorStore() {
 
     // Convert Article to Document
     const documents = batch.map(
-      (doc) => new Document({ pageContent: doc.text, metadata: doc.metadata })
+      (doc) => new Document({ pageContent: doc.text, metadata: {source: doc.source, index: doc.index} })
     );
 
     // Add documents to vector store
