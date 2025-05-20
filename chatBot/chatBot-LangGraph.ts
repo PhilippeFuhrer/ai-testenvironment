@@ -28,7 +28,11 @@ const embeddings = new OpenAIEmbeddings({
 const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
   pineconeIndex: index,
 });
-const retriever = vectorStore.asRetriever();
+const retriever = vectorStore.asRetriever({
+  searchKwargs: {
+    fetchK: 5, // or any number you want
+  },
+});
 
 // --------------------- Agent state ----------------------------
 
@@ -108,6 +112,18 @@ async function gradeDocuments(
   const score = await chain.invoke({
     question: messages[0].content as string,
     context: lastMessage.content as string,
+  });
+
+  // Log each article 
+  const articles = (lastMessage.content as string).split('\n\n');
+  articles
+  .map(article => article.trim())
+  .filter(article => article.length > 0 && article !== "/")
+  .forEach((article, idx) => {
+    console.log(`Article ${idx + 1}:`);
+    console.log(article);
+    console.log("Relevance:", score.tool_calls?.[0]?.args?.binaryScore ?? "unknown");
+    console.log('---------------------------------------------');
   });
 
   return {
@@ -268,43 +284,28 @@ async function generate(
 
 // Define the graph
 const workflow = new StateGraph(GraphState)
-  // Define the nodes which we'll cycle between.
   .addNode("agent", agent)
   .addNode("retrieve", toolNode)
   .addNode("gradeDocuments", gradeDocuments)
   .addNode("rewrite", rewrite)
   .addNode("generate", generate);
 
-
-
-// Call agent node to decide to retrieve or not
 workflow.addEdge(START, "agent");
-
-// Decide whether to retrieve
 workflow.addConditionalEdges(
   "agent",
-  // Assess agent decision
   shouldRetrieve
 );
-
 workflow.addEdge("retrieve", "gradeDocuments");
-
-// Edges taken after the `action` node is called.
 workflow.addConditionalEdges(
   "gradeDocuments",
-  // Assess agent decision
   checkRelevance,
   {
-    // Call tool node
     yes: "generate",
-    no: "rewrite", // placeholder
+    no: "rewrite", 
   }
 );
-
 workflow.addEdge("generate", END);
 workflow.addEdge("rewrite", "agent");
-
-// Compile
 const app = workflow.compile();
 
 export default async function handleMessage(
