@@ -21,7 +21,9 @@ import { createClient } from "@supabase/supabase-js";
 config({ path: "../.env" });
 new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-  // Initialize Supabase client
+
+// ------------------------ Connect Vector store ----------------------------
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
   const tableName = process.env.SUPABASE_TABLE_NAME!;
@@ -39,7 +41,7 @@ const vectorStore = await SupabaseVectorStore.fromExistingIndex(embeddings, {
 
 const retriever = vectorStore.asRetriever({
   searchKwargs: {
-    fetchK: 5, // or any number you want
+    fetchK: 5,
   },
 });
 
@@ -169,9 +171,6 @@ async function agent(
   console.log("---CALL AGENT---");
 
   const { messages } = state;
-  // Find the AIMessage which contains the `give_relevance_score` tool call,
-  // and remove it if it exists. This is because the agent does not need to know
-  // the relevance score.
   const filteredMessages = messages.filter((message) => {
     if (
       "tool_calls" in message &&
