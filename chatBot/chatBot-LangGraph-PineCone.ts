@@ -111,7 +111,8 @@ async function gradeDocuments(
 
   const model = new ChatOpenAI({
     model: "gpt-4o",
-    temperature: 0.3,
+    streaming: true,
+    temperature: 0,
   }).bindTools([tool], {
     tool_choice: tool.name,
   });
@@ -125,17 +126,20 @@ async function gradeDocuments(
     context: lastMessage.content as string,
   });
 
-  // Log each article 
-  const articles = (lastMessage.content as string).split('\n\n');
+  // Log each article
+  const articles = (lastMessage.content as string).split("\n\n");
   articles
-  .map(article => article.trim())
-  .filter(article => article.length > 0 && article !== "/")
-  .forEach((article, idx) => {
-    console.log(`Article ${idx + 1}:`);
-    console.log(article);
-    console.log("Relevance:", score.tool_calls?.[0]?.args?.binaryScore ?? "unknown");
-    console.log('---------------------------------------------');
-  });
+    .map((article) => article.trim())
+    .filter((article) => article.length > 0 && article !== "/")
+    .forEach((article, idx) => {
+      console.log(`Article ${idx + 1}:`);
+      console.log(article);
+      console.log(
+        "Relevance:",
+        score.tool_calls?.[0]?.args?.binaryScore ?? "unknown"
+      );
+      console.log("---------------------------------------------");
+    });
 
   return {
     messages: [score],
@@ -202,7 +206,7 @@ async function rewrite(
   const { messages } = state;
   const question = messages[0].content as string;
   const prompt = ChatPromptTemplate.fromTemplate(
-      `Look at the input and try to reason about the underlying semantic intent / meaning. \n 
+    `Look at the input and try to reason about the underlying semantic intent / meaning. \n 
       Here is the initial question:
       \n ------- \n
       {question} 
@@ -271,7 +275,7 @@ async function generate(
 
   const llm = new ChatOpenAI({
     model: "gpt-4o",
-    temperature: 0.5,
+    temperature: 0.3,
     streaming: true,
   });
 
@@ -289,7 +293,6 @@ async function generate(
 
 // ------------------------ Graph ------------------------------------------
 
-
 // Define the graph
 const workflow = new StateGraph(GraphState)
   .addNode("agent", agent)
@@ -299,19 +302,12 @@ const workflow = new StateGraph(GraphState)
   .addNode("generate", generate);
 
 workflow.addEdge(START, "agent");
-workflow.addConditionalEdges(
-  "agent",
-  shouldRetrieve
-);
+workflow.addConditionalEdges("agent", shouldRetrieve);
 workflow.addEdge("retrieve", "gradeDocuments");
-workflow.addConditionalEdges(
-  "gradeDocuments",
-  checkRelevance,
-  {
-    yes: "generate",
-    no: "rewrite", 
-  }
-);
+workflow.addConditionalEdges("gradeDocuments", checkRelevance, {
+  yes: "generate",
+  no: "rewrite",
+});
 workflow.addEdge("generate", END);
 workflow.addEdge("rewrite", "agent");
 const app = workflow.compile();
@@ -322,7 +318,9 @@ export default async function handleMessage(
 ): Promise<string> {
   const messages = [
     ...existingHistory
-      .map(([user, assistant]) => [new HumanMessage(user)])
+      .map(([user, assistant]) => [
+        new HumanMessage(user),
+        new AIMessage(assistant),])
       .flat(),
     new HumanMessage(input),
   ];

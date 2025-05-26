@@ -107,7 +107,7 @@ async function gradeDocuments(
   );
 
   const model = new ChatOpenAI({
-    model: "gpt-4o",
+    model: "gpt-4-turbo",
     streaming: true,
     temperature: 0,
   }).bindTools([tool], {
@@ -184,7 +184,7 @@ async function agent(
   });
 
   const model = new ChatOpenAI({
-    model: "gpt-4o",
+    model: "gpt-4-turbo",
     temperature: 0,
     streaming: true,
   }).bindTools(tools);
@@ -213,7 +213,7 @@ async function rewrite(
 
   // Grader
   const model = new ChatOpenAI({
-    model: "gpt-4o",
+    model: "gpt-4-turbo",
     temperature: 0,
     streaming: true,
   });
@@ -249,21 +249,21 @@ async function generate(
   Frage: {question}
 
   Grundsätze für deine Antworten:
-  - Verwende primär die Informationen, die du aus dem Drupal Wiki der ARCON Informatik AG erhalten hast.
   - Antworte auf Deutsch in einem klaren, professionellen Stil.
-  - Wenn du bereits Informationen zu diesem Thema gegeben hast, konzentriere dich auf neue Aspekte oder Details, die bisher nicht behandelt wurden.
-  - Falls keine neuen Informationen verfügbar sind, stelle dies klar dar und schlage verwandte Themen vor, die für den Nutzer interessant sein könnten.
-  - Wenn der Kontext oder die abgerufenen Artikel keine relevanten Informationen enthalten, nutze dein allgemeines Wissen über Abacus-Software, aber weise ausdrücklich darauf hin.
+  - Bitte wiederhole dich nicht, sondern liefere immer neue, relevante Informationen.
+  - Verwende primär die Informationen, die du aus dem Drupal Wiki der ARCON Informatik AG erhalten hast.
+  - Sekundär verwende auch dein allgemeines Wissen über Abacus-Software, wenn die Informationen aus dem Wiki nicht ausreichen.
+  - Schau dir dafür auch die Abacus-Website an: https://www.abacus.ch/de/
   - Biete Schritt-für-Schritt-Anleitungen an, wenn du Prozesse erklärst.
   - Bei unklaren Fragen bitte um Präzisierung.
   - Beende deine Antwort mit einer weiterführenden Frage, wenn es angemessen ist.
 
   Format deiner Antworten:
   - Antworte immer auf Deutsch.
-  - Beginne mit einer prägnanten Zusammenfassung der Antwort.
+  - Beginne mit einer prägnanten Zusammenfassung der Anfrage.
   - Strukturiere längere Antworten übersichtlich mit Zwischenüberschriften.
   - Verwende bei Bedarf Aufzählungen für bessere Übersichtlichkeit.
-  - Schließe komplexere Antworten mit einer kurzen Zusammenfassung ab.
+  - Schliesse deine Antworten mit einer kurzen Zusammenfassung ab.
 
   Quellenangabe:
   - Gib immer Quelle der Information in Form eins URL an, wenn möglich.
@@ -271,7 +271,7 @@ async function generate(
 `);
 
   const llm = new ChatOpenAI({
-    model: "gpt-4o",
+    model: "gpt-4",
     temperature: 0.3,
     streaming: true,
   });
@@ -315,10 +315,16 @@ export default async function handleMessage(
 ): Promise<string> {
   const messages = [
     ...existingHistory
-      .map(([user, assistant]) => [new HumanMessage(user)])
+      .map(([user, assistant]) => [
+        new HumanMessage(user),
+        new AIMessage(assistant),])
       .flat(),
     new HumanMessage(input),
   ];
+
+  messages.forEach((msg, idx) => {
+    console.log(`Message history: ${idx} [${msg._getType()}] ${msg.content}`);
+});
 
   let finalState;
   for await (const output of await app.stream({ messages })) {
