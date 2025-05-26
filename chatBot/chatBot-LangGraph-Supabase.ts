@@ -19,13 +19,12 @@ import { createClient } from "@supabase/supabase-js";
 config({ path: "../.env" });
 new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-
 // ------------------------ Connect Vector store ----------------------------
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-  const tableName = process.env.SUPABASE_TABLE_NAME!;
-  const client = createClient(supabaseUrl, supabaseKey);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const tableName = process.env.SUPABASE_TABLE_NAME!;
+const client = createClient(supabaseUrl, supabaseKey);
 
 const embeddings = new OpenAIEmbeddings({
   modelName: "text-embedding-3-large",
@@ -109,6 +108,7 @@ async function gradeDocuments(
 
   const model = new ChatOpenAI({
     model: "gpt-4o",
+    streaming: true,
     temperature: 0,
   }).bindTools([tool], {
     tool_choice: tool.name,
@@ -123,17 +123,20 @@ async function gradeDocuments(
     context: lastMessage.content as string,
   });
 
-  // Log each article 
-  const articles = (lastMessage.content as string).split('\n\n');
+  // Log each article
+  const articles = (lastMessage.content as string).split("\n\n");
   articles
-  .map(article => article.trim())
-  .filter(article => article.length > 0 && article !== "/")
-  .forEach((article, idx) => {
-    console.log(`Article ${idx + 1}:`);
-    console.log(article);
-    console.log("Relevance:", score.tool_calls?.[0]?.args?.binaryScore ?? "unknown");
-    console.log('---------------------------------------------');
-  });
+    .map((article) => article.trim())
+    .filter((article) => article.length > 0 && article !== "/")
+    .forEach((article, idx) => {
+      console.log(`Article ${idx + 1}:`);
+      console.log(article);
+      console.log(
+        "Relevance:",
+        score.tool_calls?.[0]?.args?.binaryScore ?? "unknown"
+      );
+      console.log("---------------------------------------------");
+    });
 
   return {
     messages: [score],
@@ -200,7 +203,7 @@ async function rewrite(
   const { messages } = state;
   const question = messages[0].content as string;
   const prompt = ChatPromptTemplate.fromTemplate(
-      `Look at the input and try to reason about the underlying semantic intent / meaning. \n 
+    `Look at the input and try to reason about the underlying semantic intent / meaning. \n 
       Here is the initial question:
       \n ------- \n
       {question} 
@@ -287,7 +290,6 @@ async function generate(
 
 // ------------------------ Graph ------------------------------------------
 
-
 // Define the graph
 const workflow = new StateGraph(GraphState)
   .addNode("agent", agent)
@@ -297,19 +299,12 @@ const workflow = new StateGraph(GraphState)
   .addNode("generate", generate);
 
 workflow.addEdge(START, "agent");
-workflow.addConditionalEdges(
-  "agent",
-  shouldRetrieve
-);
+workflow.addConditionalEdges("agent", shouldRetrieve);
 workflow.addEdge("retrieve", "gradeDocuments");
-workflow.addConditionalEdges(
-  "gradeDocuments",
-  checkRelevance,
-  {
-    yes: "generate",
-    no: "rewrite", 
-  }
-);
+workflow.addConditionalEdges("gradeDocuments", checkRelevance, {
+  yes: "generate",
+  no: "rewrite",
+});
 workflow.addEdge("generate", END);
 workflow.addEdge("rewrite", "agent");
 const app = workflow.compile();
