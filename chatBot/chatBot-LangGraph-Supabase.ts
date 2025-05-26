@@ -1,7 +1,5 @@
 import { config } from "dotenv";
 import { OpenAIEmbeddings } from "@langchain/openai";
-import { Pinecone } from "@pinecone-database/pinecone";
-import { PineconeStore } from "@langchain/pinecone";
 import { HumanMessage } from "@langchain/core/messages";
 import { OpenAI, ChatOpenAI } from "@langchain/openai";
 import { Annotation } from "@langchain/langgraph";
