@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import handleMessageAbacus from "@/chatBot/chatBot-LangGraph";
+import handleMessageAbacus from "@/chatBot/chatBot-LangGraph-Supabase";
 import handleMessageDSG from "@/chatBot/chatBotRAG-Pinecone-DSG";
 import handleMessageICT from "@/chatBot/chatBot-ICT";
 import handleMessageBlog from "@/chatBot/chatBot-Blog-Generator";
